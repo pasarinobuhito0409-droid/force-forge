@@ -28,15 +28,20 @@
 
   .cta {
     display: block; width: 100%; margin-top: 14px; padding: 14px; border: none; border-radius: 13px;
-    font: inherit; font-weight: 900; font-size: 15px; color: #071019; cursor: pointer;
+    font: inherit; font-weight: 900; font-size: 16px; color: #071019; cursor: pointer;
     background: linear-gradient(135deg, #4fd1ff, #67e8ff);
     box-shadow: 0 0 18px rgba(79,209,255,0.35);
   }
+  .cta.alt {
+    color: #efe8ff; border: 1.5px solid rgba(160,123,255,0.65);
+    background: linear-gradient(135deg, rgba(160,123,255,0.28), rgba(79,209,255,0.16));
+    box-shadow: 0 0 14px rgba(160,123,255,0.25);
+  }
   .cta:disabled { opacity: 0.35; box-shadow: none; }
   .opt {
-    display: block; width: 100%; margin-top: 10px; padding: 14px 15px; border-radius: 13px;
-    border: 1.5px solid #24344a; background: #0b1220; color: #cfe0f2;
-    font: inherit; font-size: 14.5px; font-weight: 700; text-align: left; cursor: pointer;
+    display: block; width: 100%; margin-top: 10px; padding: 15px 16px; border-radius: 13px;
+    border: 1.5px solid #2a3c56; background: #0b1220; color: #dfeaf6;
+    font: inherit; font-size: 16px; font-weight: 700; text-align: left; cursor: pointer;
   }
   .opt.correct { border-color: #3ef0a0; color: #d9ffee; background: rgba(62,240,160,0.10); box-shadow: 0 0 14px rgba(62,240,160,0.25); }
   .opt.wrong { border-color: #ff5d4d; color: #ffd9d0; background: rgba(255,93,77,0.08); }
@@ -47,7 +52,7 @@
     text-align: center; font-size: 30px; font-weight: 900; letter-spacing: 5px; color: #eaf6ff;
     margin-top: 12px; text-shadow: 0 0 16px rgba(79,209,255,0.8), 0 0 44px rgba(79,209,255,0.3);
   }
-  .home-sub { text-align: center; font-size: 12px; color: #8fa6bd; margin: 6px 0 18px; }
+  .home-sub { text-align: center; font-size: 13px; color: #9fb4cb; margin: 6px 0 18px; }
   .resume {
     display: block; width: 100%; padding: 15px; border: 1px solid rgba(79,209,255,0.65); border-radius: 14px;
     background: linear-gradient(135deg, rgba(79,209,255,0.22), rgba(160,123,255,0.20));
@@ -76,7 +81,7 @@
   .node.lock { opacity: 0.35; cursor: default; }
   .chap2 {
     margin-top: 18px; padding: 13px 14px; border-radius: 13px;
-    border: 1px dashed #24344a; color: #5d7690; font-size: 12px; line-height: 1.7;
+    border: 1px dashed #24344a; color: #7b90a6; font-size: 13px; line-height: 1.7;
   }
   .streak { margin-top: 16px; text-align: center; font-size: 12.5px; color: #ffb45d; }
   .installhint { margin-top: 20px; text-align: center; font-size: 10.5px; color: #3d5169; }
@@ -98,9 +103,9 @@
     background: linear-gradient(160deg, rgba(255,157,77,0.10), rgba(7,10,16,0.2));
     box-shadow: 0 0 22px rgba(255,157,77,0.15);
   }
-  .mno { font-size: 11px; color: #ffb45d; font-weight: 800; letter-spacing: 2px; }
-  .mq { font-size: 18px; font-weight: 900; color: #fff2e3; line-height: 1.6; margin-top: 9px; }
-  .mhint { margin-top: 12px; font-size: 12px; color: #b08a63; }
+  .mno { font-size: 12px; color: #ffb45d; font-weight: 800; letter-spacing: 2px; }
+  .mq { font-size: 20px; font-weight: 900; color: #fff2e3; line-height: 1.65; margin-top: 9px; }
+  .mhint { margin-top: 12px; font-size: 13.5px; color: #c39d72; }
 
   .stage3d {
     position: relative; border-radius: 15px; overflow: hidden;
@@ -112,7 +117,7 @@
     background: rgba(10,12,16,0.72); padding: 4px 10px; border-radius: 999px;
     border: 1px solid rgba(200,220,240,0.25); pointer-events: none;
   }
-  .guessline { font-size: 11.5px; color: #ff8f85; margin-bottom: 8px; }
+  .guessline { font-size: 13px; color: #ff9d94; margin-bottom: 8px; font-weight: 700; }
   .boom {
     position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
     flex-direction: column; gap: 6px; background: rgba(120,20,10,0.18); pointer-events: none;
@@ -121,23 +126,23 @@
   .boom .b1 { font-size: 30px; font-weight: 900; color: #ffe2da; text-shadow: 0 0 22px rgba(255,60,40,0.95); transform: rotate(-8deg); }
   .boom .b2 { font-size: 12px; font-weight: 800; color: #cfe0f0; text-shadow: 0 1px 6px #000; }
   .flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
-  .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px 12px; margin-top: 10px; font-size: 11px; color: #9fb4cb; }
-  .sliderrow { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 13px; color: #bcd2e8; }
-  .sliderrow input[type=range] { flex: 1; accent-color: #ff9d4d; min-width: 0; height: 28px; }
-  .sliderrow .val { min-width: 56px; text-align: right; font-weight: 800; color: #ffb45d; font-size: 14px; }
+  .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px 12px; margin-top: 10px; font-size: 12.5px; color: #bccddf; }
+  .sliderrow { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 14.5px; color: #d0e0f0; }
+  .sliderrow input[type=range] { flex: 1; accent-color: #ff9d4d; min-width: 0; height: 32px; }
+  .sliderrow .val { min-width: 62px; text-align: right; font-weight: 800; color: #ffb45d; font-size: 16px; }
   .extra { margin-top: 10px; }
   .extra .btnrow { display: flex; gap: 8px; }
   .extra .sbtn {
-    flex: 1; padding: 10px 4px; border-radius: 11px; border: 1.5px solid #24344a; background: #0b1220;
-    color: #9fb4cb; font: inherit; font-size: 12.5px; font-weight: 800; cursor: pointer;
+    flex: 1; padding: 12px 4px; border-radius: 11px; border: 1.5px solid #2a3c56; background: #0b1220;
+    color: #b3c5d8; font: inherit; font-size: 14px; font-weight: 800; cursor: pointer;
   }
   .extra .sbtn.on { border-color: #4fd1ff; color: #7fdcff; background: rgba(79,209,255,0.10); }
-  .readout { margin-top: 9px; text-align: center; font-size: 12.5px; color: #ffb45d; font-weight: 700; }
+  .readout { margin-top: 9px; text-align: center; font-size: 14px; color: #ffb45d; font-weight: 700; }
   .gauge { position: relative; margin-top: 10px; height: 14px; border-radius: 8px; background: #101825; overflow: hidden; }
   .gauge .gfill { height: 100%; width: 0%; background: linear-gradient(90deg, #4fd1ff, #ffb45d, #ff5d4d); }
   .gauge .gmark { position: absolute; top: -2px; bottom: -2px; left: 80%; width: 2px; background: #ff5d4d; box-shadow: 0 0 8px rgba(255,93,77,0.9); }
-  .gcap { display: flex; justify-content: space-between; font-size: 10px; color: #5d7690; margin-top: 3px; }
-  .trynote { margin-top: 10px; text-align: center; font-size: 11.5px; color: #5d7690; line-height: 1.6; }
+  .gcap { display: flex; justify-content: space-between; font-size: 11px; color: #7b90a6; margin-top: 3px; }
+  .trynote { margin-top: 10px; text-align: center; font-size: 13px; color: #93a8bd; line-height: 1.65; }
 
   .result-banner {
     border: 1.5px solid rgba(62,240,160,0.6); border-radius: 14px; padding: 13px;
@@ -146,21 +151,21 @@
   }
   .result-banner small { display: block; font-weight: 600; font-size: 11.5px; color: #8fd8b4; margin-top: 4px; }
   .minicard {
-    border: 1px solid #1d2c42; border-radius: 15px; padding: 22px 18px; margin-top: 14px;
+    border: 1px solid #1d2c42; border-radius: 15px; padding: 24px 18px; margin-top: 14px;
     background: linear-gradient(165deg, #0d1524, #0a0f1a);
-    font-size: 17px; color: #cfe0f2; line-height: 1.8; min-height: 150px;
-    display: flex; align-items: center; justify-content: center; text-align: center;
+    font-size: 19.5px; color: #e2edf8; line-height: 1.85; min-height: 160px;
+    display: flex; align-items: center; justify-content: center; text-align: center; font-weight: 600;
   }
   .minicard b { color: #7fdcff; }
   .minicard em { font-style: normal; color: #ff8f85; }
   .dots { text-align: center; margin-top: 12px; letter-spacing: 6px; color: #24344a; font-size: 13px; }
   .dots span { color: #4fd1ff; }
 
-  .qhead { font-size: 12px; font-weight: 800; color: #a07bff; letter-spacing: 1px; margin-bottom: 8px; }
-  .q { font-size: 16.5px; font-weight: 800; color: #eaf6ff; line-height: 1.65; }
+  .qhead { font-size: 13px; font-weight: 800; color: #b491ff; letter-spacing: 1px; margin-bottom: 8px; }
+  .q { font-size: 18px; font-weight: 800; color: #eaf6ff; line-height: 1.7; }
   .expl {
-    margin-top: 13px; padding: 12px 13px; border-left: 3px solid #3ef0a0; border-radius: 7px;
-    background: rgba(62,240,160,0.06); font-size: 13px; color: #b8d8c8; line-height: 1.7;
+    margin-top: 13px; padding: 13px 14px; border-left: 3px solid #3ef0a0; border-radius: 7px;
+    background: rgba(62,240,160,0.06); font-size: 14.5px; color: #c6e4d5; line-height: 1.75;
   }
 
   .center { text-align: center; }
@@ -173,7 +178,7 @@
   }
   @keyframes stampin { 0% { transform: rotate(-11deg) scale(2.2); opacity: 0; } 100% { transform: rotate(-11deg) scale(1); opacity: 1; } }
   .stamp small { display: block; font-size: 11px; font-weight: 700; }
-  .clearmsg { margin-top: 18px; font-size: 13.5px; color: #9fb4cb; line-height: 1.8; }
+  .clearmsg { margin-top: 18px; font-size: 15px; color: #b3c5d8; line-height: 1.85; }
   .bossscore { margin-top: 30px; font-size: 42px; font-weight: 900; color: #eaf6ff; text-shadow: 0 0 18px rgba(79,209,255,0.7); }
 </style>
 </head>
@@ -191,7 +196,7 @@
     <div class="chap2">🔒 第2章 未来よち（CAE）L8〜L14<br>第1章クリアで解放（次のアップデートで配信）</div>
     <div class="streak" id="streakLine"></div>
     <div class="installhint">スマホ：ブラウザの共有メニュー →「ホーム画面に追加」でアプリになる</div>
-    <div class="verline">FORCE FORGE v1.1 ─ 第1章（リアル試験室仕様）</div>
+    <div class="verline">FORCE FORGE v1.2 ─ 第1章（リアル試験室＋ミクロの目）</div>
   </section>
 
   <!-- ============ レッスン ============ -->
@@ -221,6 +226,7 @@
       <div class="sliderrow"><span id="sliderLabel"></span><input type="range" id="loadRange" min="0" max="100" value="0"><span class="val" id="loadVal">0kg</span></div>
       <div class="extra" id="extraCtrls"></div>
       <div class="trynote" id="expNote"></div>
+      <button class="cta alt" id="btnMicro">🔬 ミクロの目（原子で見る）</button>
       <button class="cta" id="btnToReveal" disabled>答え合わせ →</button>
     </div>
 
@@ -1496,6 +1502,189 @@ function buildL6() {
 const BUILDERS = { l1: buildL1, l2: buildL2, l3: buildL3, l4: buildL4, l5: buildL5, l6: buildL6 };
 
 /* ================================================================
+   🔬 ミクロの目 ── 原子格子エンジン（全レッスン共通）
+   金属＝原子（球）＋結合（バネ＝棒）。常に震える＝温度。
+   のびた結合＝赤／ちぢんだ結合＝青。限界でバネがちぎれる。
+================================================================ */
+const MICRO_LEGEND = '<span style="color:#ff7a6e">■ 赤＝のびた結合（バネ）</span><span style="color:#6db4ff">■ 青＝ちぢんだ結合</span><span style="color:#bccddf">震え＝温度</span>';
+
+const MICRO = {
+  l1: {
+    grabAxis: "any", gain: 8, breakable: false,
+    note: "🔬 金属＝原子がバネ（結合）で組んだジャングルジム。<br>押す→バネがたわむ→離すと戻る。これが<b>弾性</b>の正体。",
+    blocks: [{ cols: 11, rows: 6, cx: 0, cy: 0, disp: (x, y, l) => [-l * 0.25 * (y + 0.65), 0] }]
+  },
+  l2: {
+    grabAxis: "x", gain: 4, breakable: true, snapAt: 0.35,
+    note: "🔬 細い板＝<b>担ぐ原子の列が少ない</b>。<br>1本のバネに力が集中→先に赤→ちぎれる。これが応力の正体。",
+    blocks: [
+      { cols: 10, rows: 6, cx: 0, cy: 0.85, disp: (x, y, l) => [x * l * 0.045, 0] },
+      { cols: 10, rows: 2, cx: 0, cy: -0.85, disp: (x, y, l) => [x * l * 0.115, 0] }
+    ]
+  },
+  l3: {
+    grabAxis: "x", gain: 3, breakable: false,
+    note: "🔬 バネの硬さ＝<b>ヤング率</b>。<br>上＝鉄（硬いバネ・のびない）／下＝ゴム（やわバネ・ぐんぐんのびる）。",
+    blocks: [
+      { cols: 11, rows: 3, cx: 0, cy: 0.7, disp: (x, y, l) => [x * l * 0.03, 0] },
+      { cols: 11, rows: 3, cx: 0, cy: -0.7, disp: (x, y, l) => [x * l * 0.28, 0] }
+    ]
+  },
+  l4: {
+    grabAxis: "y", gain: 4.5, breakable: false,
+    note: "🔬 曲げると──上の列＝バネちぢむ（青）／下＝のびる（赤）。<br>真ん中の列だけ無色＝<b>中立軸</b>。",
+    blocks: [{ cols: 15, rows: 5, cx: 0, cy: 0.1, disp: (x, y, l) => [-y * l * 0.5 * Math.sin(Math.PI * x / 4.2), -l * 0.5 * Math.cos(Math.PI * x / 4.2)] }]
+  },
+  l5: {
+    grabAxis: "x", gain: 4, breakable: true, snapAt: 0.35,
+    note: "🔬 穴＝<b>担ぎ手がいない場所</b>。<br>ふちのバネに集中→そこから切れ始める。ヒビの正体。",
+    blocks: [{
+      cols: 13, rows: 7, cx: 0, cy: 0,
+      occ: (x, y) => Math.sqrt(x * x + y * y) > 0.36,
+      disp: (x, y, l) => {
+        const d = Math.max(0.36, Math.sqrt(x * x + y * y));
+        const k = 1 + 1.4 * Math.exp(-(d - 0.36) * 2.5);
+        return [x * l * 0.05 * k, -y * l * 0.012];
+      }
+    }]
+  },
+  l6: {
+    grabAxis: "y", gain: 1.2, breakable: true, snapAt: 0.55,
+    note: "🔬 力の道が角で急カーブ→<b>内側の角のバネが泣く</b>。<br>角にR（丸み）＝バネを増やして分担させる。",
+    blocks: [{
+      cols: 13, rows: 7, cx: 0.1, cy: 0,
+      occ: (x, y) => (x < -0.62) || (y > 0.31),
+      disp: (x, y, l) => {
+        if (y > 0.31 && x > -0.62) return [l * 0.35 * (y - 0.31), -l * 0.35 * (x + 0.62)];
+        return [0, 0];
+      }
+    }]
+  }
+};
+
+function buildMicro(id) {
+  const cfg = MICRO[id];
+  const a = 0.26;
+  const dummy = new THREE.Object3D();
+  const atoms = [], bonds = [];
+  cfg.blocks.forEach((B) => {
+    const idx = {};
+    for (let i = 0; i < B.cols; i++) for (let j = 0; j < B.rows; j++) for (let k = 0; k < 2; k++) {
+      const lx = (i - (B.cols - 1) / 2) * a, ly = (j - (B.rows - 1) / 2) * a;
+      if (B.occ && !B.occ(lx, ly)) continue;
+      idx[i + "," + j + "," + k] = atoms.length;
+      atoms.push({ B, lx, ly, lz: (k - 0.5) * a, ph: Math.random() * 6.283 });
+    }
+    for (const key in idx) {
+      const p = key.split(",").map(Number);
+      [[p[0] + 1, p[1], p[2]], [p[0], p[1] + 1, p[2]], [p[0], p[1], p[2] + 1]].forEach((n) => {
+        const nk = n.join(",");
+        if (idx[nk] !== undefined) bonds.push({ i1: idx[key], i2: idx[nk], dead: false, w: 0.85 + Math.random() * 0.4 });
+      });
+    }
+  });
+  const atomMesh = new THREE.InstancedMesh(
+    new THREE.SphereGeometry(0.085, 14, 10),
+    new THREE.MeshStandardMaterial({ color: 0xc9d3dd, metalness: 0.85, roughness: 0.3, envMapIntensity: 1.2 }),
+    atoms.length
+  );
+  atomMesh.castShadow = true;
+  const bondMesh = new THREE.InstancedMesh(
+    new THREE.CylinderGeometry(0.024, 0.024, 1, 8),
+    new THREE.MeshStandardMaterial({ color: 0xffffff, metalness: 0.4, roughness: 0.5 }),
+    bonds.length
+  );
+  ST.group.add(atomMesh);
+  ST.group.add(bondMesh);
+  const proxy = new THREE.Mesh(new THREE.BoxGeometry(3.8, 2.6, 1.0), new THREE.MeshBasicMaterial({ visible: false }));
+  ST.group.add(proxy);
+
+  const up = new THREE.Vector3(0, 1, 0), dir = new THREE.Vector3(), q = new THREE.Quaternion();
+  const P = atoms.map(() => new THREE.Vector3());
+  let load = 0, anyDead = false;
+  const gain = cfg.gain || 3.5;
+
+  function step(t) {
+    for (let i = 0; i < atoms.length; i++) {
+      const at = atoms[i];
+      const d = at.B.disp ? at.B.disp(at.lx, at.ly, load) : [0, 0];
+      const jig = 0.010;
+      P[i].set(
+        (at.B.cx || 0) + at.lx + d[0] + Math.sin(t * 3.1 + at.ph) * jig,
+        (at.B.cy || 0) + at.ly + d[1] + Math.cos(t * 2.7 + at.ph * 1.3) * jig,
+        at.lz + Math.sin(t * 2.3 + at.ph * 2.1) * jig
+      );
+      dummy.position.copy(P[i]);
+      dummy.rotation.set(0, 0, 0);
+      dummy.scale.set(1, 1, 1);
+      dummy.updateMatrix();
+      atomMesh.setMatrixAt(i, dummy.matrix);
+    }
+    atomMesh.instanceMatrix.needsUpdate = true;
+
+    if (load < 0.08 && anyDead) { bonds.forEach((b) => (b.dead = false)); anyDead = false; } // 0で新品に
+    let newDead = false;
+    for (let i = 0; i < bonds.length; i++) {
+      const b = bonds[i];
+      dir.subVectors(P[b.i2], P[b.i1]);
+      const len = dir.length();
+      const strain = (len / a - 1) * gain;
+      if (cfg.breakable && !b.dead && strain > (cfg.snapAt || 0.9) * b.w) { b.dead = true; anyDead = true; newDead = true; }
+      if (b.dead) {
+        dummy.position.set(0, -50, 0);
+        dummy.scale.set(0.0001, 0.0001, 0.0001);
+        dummy.rotation.set(0, 0, 0);
+      } else {
+        dummy.position.copy(P[b.i1]).add(P[b.i2]).multiplyScalar(0.5);
+        q.setFromUnitVectors(up, dir.normalize());
+        dummy.quaternion.copy(q);
+        dummy.scale.set(1, len, 1);
+      }
+      dummy.updateMatrix();
+      bondMesh.setMatrixAt(i, dummy.matrix);
+      const s = Math.max(-1, Math.min(1, strain));
+      if (s > 0) tc().setRGB(0.85 + 0.15 * s, 0.85 - 0.65 * s, 0.85 - 0.72 * s);
+      else tc().setRGB(0.85 + 0.35 * s, 0.85 + 0.15 * s, 0.85 - 0.15 * s);
+      bondMesh.setColorAt(i, tc());
+    }
+    bondMesh.instanceMatrix.needsUpdate = true;
+    if (bondMesh.instanceColor) bondMesh.instanceColor.needsUpdate = true;
+    if (newDead) vib(10);
+  }
+  step(0);
+  ST.sceneApi = {
+    proxy, grabAxis: cfg.grabAxis || "x", springBack: true,
+    update(l) { load = l; },
+    tick(dt, now) { step(now * 0.001); },
+    _deadCount() { return bonds.filter((b) => b.dead).length; }
+  };
+}
+
+// ミクロ⇔部品の切りかえ
+let microOn = false;
+function setMicro(on) {
+  if (!ST || ST.fake || !cur) return;
+  microOn = on;
+  const keep = +$("loadRange").value;
+  ST.clearScene();
+  ST.resetView();
+  setExtraHTML("");
+  if (on) {
+    buildMicro(cur.id);
+    $("btnMicro").textContent = "🔭 部品の世界へもどる";
+    $("expNote").innerHTML = MICRO[cur.id].note;
+    $("expLegend").innerHTML = MICRO_LEGEND;
+  } else {
+    BUILDERS[cur.id]();
+    $("btnMicro").textContent = "🔬 ミクロの目（原子で見る）";
+    $("expNote").innerHTML = cur.note;
+    $("expLegend").innerHTML = cur.legend.map((x) => "<span>" + x + "</span>").join("");
+  }
+  $("loadRange").value = keep;
+  onLoadInput();
+}
+
+/* ================================================================
    レッスンの流れ：予想 → 実験 → 種明かし → クイズ → クリア
 ================================================================ */
 let curIdx = 0, cur = null, missionPick = -1, cardIdx = 0;
@@ -1542,6 +1731,8 @@ function startExp() {
   const btn = $("btnToReveal");
   btn.disabled = true;
 
+  microOn = false;
+  $("btnMicro").textContent = "🔬 ミクロの目（原子で見る）";
   ensureStage();
   if (ST.fake) { btn.disabled = false; return; }
   ST.clearScene();
@@ -1549,6 +1740,7 @@ function startExp() {
   BUILDERS[cur.id]();
   ST.resize();
 }
+$("btnMicro").addEventListener("click", () => setMicro(!microOn));
 
 function onLoadInput() {
   const v = +$("loadRange").value;
