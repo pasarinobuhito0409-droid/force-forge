@@ -112,6 +112,10 @@
     border: 1px solid #182436; background: #14171d; height: 46vh; max-height: 340px; min-height: 250px;
   }
   .stage3d canvas { display: block; touch-action: none; cursor: grab; }
+  .stage3d::after { /* 写真っぽい周辺減光（ビネット） */
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 75% 70% at 50% 45%, transparent 55%, rgba(0,0,0,0.38) 100%);
+  }
   .hint3d {
     position: absolute; top: 9px; right: 9px; font-size: 10.5px; color: #cfe0f0;
     background: rgba(10,12,16,0.72); padding: 4px 10px; border-radius: 999px;
@@ -196,7 +200,7 @@
     <div class="chap2">🔒 第2章 未来よち（CAE）L8〜L14<br>第1章クリアで解放（次のアップデートで配信）</div>
     <div class="streak" id="streakLine"></div>
     <div class="installhint">スマホ：ブラウザの共有メニュー →「ホーム画面に追加」でアプリになる</div>
-    <div class="verline">FORCE FORGE v1.2 ─ 第1章（リアル試験室＋ミクロの目）</div>
+    <div class="verline">FORCE FORGE v1.3 ─ 第1章（写真級リアル＋ミクロの目）</div>
   </section>
 
   <!-- ============ レッスン ============ -->
@@ -275,6 +279,7 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
 <script>
 "use strict";
 
@@ -546,19 +551,30 @@ function brushedTexOf() {
   tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
   return tex;
 }
-function concreteTexOf() {
+function tableTexOf() {
   const cv = document.createElement("canvas");
-  cv.width = 256; cv.height = 256;
+  cv.width = 512; cv.height = 512;
   const ctx = cv.getContext("2d");
-  ctx.fillStyle = "#585d64"; ctx.fillRect(0, 0, 256, 256);
-  for (let i = 0; i < 5200; i++) {
-    const g = 70 + Math.random() * 50 | 0;
-    ctx.fillStyle = "rgba(" + g + "," + (g + 3) + "," + (g + 7) + "," + (0.12 + Math.random() * 0.2) + ")";
-    ctx.fillRect(Math.random() * 256, Math.random() * 256, 1 + Math.random() * 2, 1 + Math.random() * 2);
+  ctx.fillStyle = "#767b83"; ctx.fillRect(0, 0, 512, 512);
+  for (let i = 0; i < 2600; i++) {
+    const g = 100 + Math.random() * 50 | 0;
+    ctx.fillStyle = "rgba(" + g + "," + (g + 2) + "," + (g + 6) + "," + (0.10 + Math.random() * 0.15) + ")";
+    ctx.fillRect(Math.random() * 512, Math.random() * 512, 1 + Math.random() * 3, 1 + Math.random() * 2);
+  }
+  // 穴あき定盤の穴＋面取りの光
+  for (let ix = 0; ix < 8; ix++) for (let iy = 0; iy < 8; iy++) {
+    const x = 32 + ix * 64, y = 32 + iy * 64;
+    ctx.fillStyle = "#101317";
+    ctx.beginPath(); ctx.arc(x, y, 13, 0, 6.29); ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.25)";
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(x, y, 14.5, Math.PI * 0.7, Math.PI * 1.6); ctx.stroke();
+    ctx.strokeStyle = "rgba(0,0,0,0.5)";
+    ctx.beginPath(); ctx.arc(x, y, 14.5, Math.PI * 1.7, Math.PI * 2.55); ctx.stroke();
   }
   const tex = new THREE.CanvasTexture(cv);
   tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
-  tex.repeat.set(3, 3);
+  tex.repeat.set(2, 1.5);
   return tex;
 }
 
@@ -586,7 +602,18 @@ function ensureStage() {
   camera.position.set(0, 0.9, 5.6);
   camera.lookAt(0, -0.15, 0);
 
-  // 映り込み環境（無彩色スタジオ）
+  // 本物の鋼板テクスチャ（写真素材・読み込めたら差し替え）
+  const texLoader = new THREE.TextureLoader();
+  const steelTex = {};
+  [["col", "assets/steel_col.jpg", true], ["rough", "assets/steel_rough.jpg", false], ["nrm", "assets/steel_nrm.jpg", false]].forEach((it) => {
+    texLoader.load(it[1], (t) => {
+      t.wrapS = t.wrapT = THREE.RepeatWrapping;
+      if (it[2]) t.encoding = THREE.sRGBEncoding;
+      steelTex[it[0]] = t;
+    });
+  });
+
+  // 映り込み環境：まず手作りスタジオ→工場HDRI（本物の光の写真）が届いたら差し替え
   (function makeEnv() {
     const es = new THREE.Scene();
     const box = new THREE.BoxGeometry(1, 1, 1);
@@ -602,28 +629,63 @@ function ensureStage() {
     const pmrem = new THREE.PMREMGenerator(renderer);
     scene.environment = pmrem.fromScene(es, 0.02).texture;
   })();
+  try {
+    if (THREE.RGBELoader) {
+      new THREE.RGBELoader().load("assets/env.hdr", (hdr) => {
+        const pm = new THREE.PMREMGenerator(renderer);
+        scene.environment = pm.fromEquirectangular(hdr).texture;
+        hdr.dispose();
+        pm.dispose();
+      });
+    }
+  } catch (e) {}
 
-  scene.add(new THREE.HemisphereLight(0xbfd0e0, 0x2b2620, 0.4));
-  const key = new THREE.DirectionalLight(0xfff4e6, 1.1);
+  const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+  scene.add(new THREE.HemisphereLight(0xbfd0e0, 0x2b2620, 0.35));
+  const key = new THREE.DirectionalLight(0xfff4e6, 1.05);
   key.position.set(3, 5, 2.5);
   key.castShadow = true;
-  key.shadow.mapSize.set(1024, 1024);
+  key.shadow.mapSize.set(isMobile ? 1024 : 2048, isMobile ? 1024 : 2048);
   key.shadow.camera.left = -3.5; key.shadow.camera.right = 3.5;
   key.shadow.camera.top = 3.5; key.shadow.camera.bottom = -3.5;
   key.shadow.bias = -0.0004;
   scene.add(key);
-  const rim = new THREE.PointLight(0x8fb8d8, 0.25, 16); rim.position.set(-3.4, 1.6, -2.6); scene.add(rim);
+  const rim = new THREE.PointLight(0x8fb8d8, 0.22, 16); rim.position.set(-3.4, 1.6, -2.6); scene.add(rim);
 
   const group = new THREE.Group();
   scene.add(group);
+
+  // 穴あき定盤（じょうばん＝機械の作業台）。君の画像の台と同じやつ
   const floor = new THREE.Mesh(
-    new THREE.CircleGeometry(5.5, 64),
-    new THREE.MeshStandardMaterial({ map: concreteTexOf(), color: 0x8a8f96, metalness: 0.04, roughness: 0.93 })
+    new THREE.BoxGeometry(7, 0.35, 5),
+    new THREE.MeshStandardMaterial({ map: tableTexOf(), bumpMap: null, metalness: 0.72, roughness: 0.5, envMapIntensity: 1.1 })
   );
-  floor.rotation.x = -Math.PI / 2;
-  floor.position.y = FLOOR_Y;
+  floor.material.bumpMap = floor.material.map;
+  floor.material.bumpScale = 0.03;
+  floor.position.y = FLOOR_Y - 0.175;
   floor.receiveShadow = true;
+  floor.userData.keep = true;
   group.add(floor);
+
+  // 接地の暗がり（置いてある感）
+  const blobCv = document.createElement("canvas");
+  blobCv.width = 256; blobCv.height = 256;
+  (function () {
+    const c2 = blobCv.getContext("2d");
+    const g = c2.createRadialGradient(128, 128, 10, 128, 128, 125);
+    g.addColorStop(0, "rgba(0,0,0,0.55)");
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    c2.fillStyle = g;
+    c2.fillRect(0, 0, 256, 256);
+  })();
+  const blob = new THREE.Mesh(
+    new THREE.PlaneGeometry(4.4, 2.8),
+    new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(blobCv), transparent: true, opacity: 0.5, depthWrite: false })
+  );
+  blob.rotation.x = -Math.PI / 2;
+  blob.position.y = FLOOR_Y + 0.002;
+  blob.userData.keep = true;
+  group.add(blob);
 
   const brush = brushedTexOf();
 
@@ -704,14 +766,14 @@ function ensureStage() {
   resize();
 
   ST = {
-    group, camera, brush,
+    group, camera, brush, steel: steelTex,
     sceneApi: null, broken: false, springing: false, timeScale: 1, shake: 0,
     resize,
     resetView() { rotY = -0.5; rotX = 0.12; touched = false; camera.position.z = 5.6; },
     clearScene() {
-      while (group.children.length > 1) { // 床は残す
-        const c = group.children[group.children.length - 1];
-        if (c === floor) break;
+      for (let i = group.children.length - 1; i >= 0; i--) {
+        const c = group.children[i];
+        if (c.userData && c.userData.keep) continue; // 定盤と接地影は残す
         group.remove(c);
         c.traverse && c.traverse((o) => {
           if (o.geometry) o.geometry.dispose();
@@ -766,11 +828,19 @@ function setBoom(on, label) {
 }
 
 // ---- 共通部品メーカー ----
+// 鋼の質感：写真テクスチャが届いていればそれを使う（本物の鋼板の肌）
+function steelMaps(extra) {
+  const s = ST.steel;
+  const base = (s && s.col)
+    ? { color: 0xd8dde2, metalness: 0.9, roughness: 1.0,
+        map: s.col, roughnessMap: s.rough, normalMap: s.nrm,
+        normalScale: new THREE.Vector2(0.6, 0.6), envMapIntensity: 1.25 }
+    : { color: 0xb8c2cc, metalness: 0.85, roughness: 0.36,
+        roughnessMap: ST.brush, bumpMap: ST.brush, bumpScale: 0.012, envMapIntensity: 1.2 };
+  return Object.assign(base, extra || {});
+}
 function steelMatOf(extra) {
-  return new THREE.MeshStandardMaterial(Object.assign({
-    color: 0xb8c2cc, metalness: 0.85, roughness: 0.36,
-    roughnessMap: ST.brush, bumpMap: ST.brush, bumpScale: 0.012, envMapIntensity: 1.2
-  }, extra || {}));
+  return new THREE.MeshStandardMaterial(steelMaps(extra));
 }
 function rampColor(s, c) {
   s = Math.max(0, Math.min(1, s));
@@ -808,11 +878,11 @@ function makeGrip(side, s) {
   const g = new THREE.Group();
   const body = new THREE.Mesh(
     new THREE.BoxGeometry(0.55 * s, 1.05 * s, 0.55 * s),
-    new THREE.MeshStandardMaterial({ color: 0x4b525c, metalness: 0.75, roughness: 0.5, envMapIntensity: 0.9 })
+    steelMatOf({ color: 0x555e6a, envMapIntensity: 1.0 })
   );
   body.castShadow = true;
   g.add(body);
-  const jawMat = new THREE.MeshStandardMaterial({ color: 0x363c44, metalness: 0.7, roughness: 0.6 });
+  const jawMat = steelMatOf({ color: 0x3d454f });
   [0.14 * s, -0.14 * s].forEach((y) => {
     const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.42 * s, 0.12 * s, 0.5 * s), jawMat);
     jaw.position.set(-side * 0.42 * s, y, 0);
@@ -820,7 +890,7 @@ function makeGrip(side, s) {
     g.add(jaw);
   });
   const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.09 * s, 0.09 * s, 1.6 * s, 24),
-    new THREE.MeshStandardMaterial({ color: 0x5a626c, metalness: 0.85, roughness: 0.35, envMapIntensity: 1.1 }));
+    steelMatOf({ color: 0xe8edf2, roughness: 0.5, envMapIntensity: 1.35 }));
   rod.rotation.z = Math.PI / 2;
   rod.position.x = side * 1.05 * s;
   rod.castShadow = true;
@@ -872,7 +942,7 @@ function tc() { if (!tmpC2.c) tmpC2.c = new THREE.Color(); return tmpC2.c; }
 function buildL1() {
   // ベンチ（鋼の台）
   const bench = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.5, 1.5),
-    new THREE.MeshStandardMaterial({ color: 0x3c434c, metalness: 0.6, roughness: 0.6 }));
+    steelMatOf({ color: 0x49515c }));
   bench.position.y = -0.85;
   bench.castShadow = true; bench.receiveShadow = true;
   ST.group.add(bench);
@@ -982,7 +1052,7 @@ function buildL2() {
       load = l;
       bars.forEach((b, bi) => {
         const s = Math.min(1, l * b.k * 1.4);
-        b.mat.color.copy(rampColor(s, tc()).clone().lerp(new THREE.Color(0xb8c2cc), 1 - s * 0.9));
+        b.mat.color.copy(rampColor(s, tc()).clone().lerp(new THREE.Color(0xe8edf2), 1 - s * 0.9));
         if (!(bi === 1 && ST.broken)) b.bar.scale.x = 1 + 0.05 * l * b.k;
         const gx = 1.25 + 0.05 * l * b.k + (bi === 1 && ST.broken ? b.off : 0);
         b.gL.position.x = -gx; b.gR.position.x = gx;
@@ -1069,15 +1139,12 @@ function buildL4() {
   const base = pos.array.slice();
   const colAttr = new THREE.BufferAttribute(new Float32Array(pos.count * 3), 3);
   geo.setAttribute("color", colAttr);
-  const beam = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
-    vertexColors: true, metalness: 0.8, roughness: 0.38,
-    roughnessMap: ST.brush, bumpMap: ST.brush, bumpScale: 0.012, envMapIntensity: 1.1
-  }));
+  const beam = new THREE.Mesh(geo, new THREE.MeshStandardMaterial(steelMaps({ vertexColors: true })));
   beam.castShadow = true;
   ST.group.add(beam);
 
   // 支持台（鋼のアンビル2つ・床から生えてる）
-  const supMat = new THREE.MeshStandardMaterial({ color: 0x454c56, metalness: 0.7, roughness: 0.55 });
+  const supMat = steelMatOf({ color: 0x4a525d });
   [-1.3, 1.3].forEach((x) => {
     const post = new THREE.Mesh(new THREE.BoxGeometry(0.34, (-halfH - 0.05) - FLOOR_Y, 0.6), supMat);
     post.position.set(x, ((-halfH - 0.05) + FLOOR_Y) / 2, 0);
@@ -1092,7 +1159,7 @@ function buildL4() {
 
   // プレスのラム（上から押す棒）
   const ram = new THREE.Group();
-  const ramMat = new THREE.MeshStandardMaterial({ color: 0x5a626c, metalness: 0.85, roughness: 0.35, envMapIntensity: 1.1 });
+  const ramMat = steelMatOf({ color: 0xdfe5ea, roughness: 0.55, envMapIntensity: 1.3 });
   const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 1.4, 24), ramMat);
   shaft.position.y = 0.82;
   shaft.castShadow = true;
@@ -1119,9 +1186,9 @@ function buildL4() {
       a[i3 + 1] = y - bend * shp;
       let s = -(y / halfH) * shp * (load + plastic * 0.6) * 1.45;
       s = Math.max(-1, Math.min(1, s));
-      let r = 0.72, g = 0.74, b = 0.78;
-      if (s > 0) { r += (0.96 - r) * s; g += (0.2 - g) * s; b += (0.15 - b) * s; }
-      else if (s < 0) { const t2 = -s; r += (0.2 - r) * t2; g += (0.5 - g) * t2; b += (1.0 - b) * t2; }
+      let r = 1, g = 1, b = 1; // 白ベース×写真テクスチャ
+      if (s > 0) { r += (1.5 - r) * s; g += (0.28 - g) * s; b += (0.2 - b) * s; }
+      else if (s < 0) { const t2 = -s; r += (0.28 - r) * t2; g += (0.75 - g) * t2; b += (1.5 - b) * t2; }
       c[i3] = r; c[i3 + 1] = g; c[i3 + 2] = b;
     }
     pos.needsUpdate = true;
@@ -1150,10 +1217,7 @@ function buildL5() {
   const base = pos.array.slice();
   const colAttr = new THREE.BufferAttribute(new Float32Array(pos.count * 3), 3);
   geo.setAttribute("color", colAttr);
-  const mat = new THREE.MeshStandardMaterial({
-    vertexColors: true, metalness: 0.85, roughness: 0.36,
-    roughnessMap: ST.brush, bumpMap: ST.brush, bumpScale: 0.012, envMapIntensity: 1.2
-  });
+  const mat = new THREE.MeshStandardMaterial(steelMaps({ vertexColors: true }));
   const plate = new THREE.Mesh(geo, mat);
   plate.castShadow = true;
   ST.group.add(plate);
@@ -1263,9 +1327,9 @@ function buildL5() {
       const s = Math.min(1, load * stressAt(x0, y0) * 1.1 + plastic * 0.5 * local);
       rampColor(s, tc());
       const w = s * 0.85;
-      c[i3] = 0.72 * (1 - w) + tc().r * w;
-      c[i3 + 1] = 0.74 * (1 - w) + tc().g * w;
-      c[i3 + 2] = 0.78 * (1 - w) + tc().b * w;
+      c[i3] = 1 - w + tc().r * 1.5 * w;
+      c[i3 + 1] = 1 - w + tc().g * 1.5 * w;
+      c[i3 + 2] = 1 - w + tc().b * 1.5 * w;
     }
     pos.needsUpdate = true;
     colAttr.needsUpdate = true;
@@ -1343,7 +1407,7 @@ function buildL5() {
 function buildL6() {
   // 壁
   const wall = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.9, 1.3),
-    new THREE.MeshStandardMaterial({ color: 0x3a4048, metalness: 0.3, roughness: 0.8 }));
+    steelMatOf({ color: 0x454c55 }));
   wall.position.set(-0.85, -0.2, 0);
   wall.castShadow = true; wall.receiveShadow = true;
   ST.group.add(wall);
@@ -1358,10 +1422,7 @@ function buildL6() {
   const base = pos.array.slice();
   const colAttr = new THREE.BufferAttribute(new Float32Array(pos.count * 3), 3);
   geo.setAttribute("color", colAttr);
-  const mat = new THREE.MeshStandardMaterial({
-    vertexColors: true, metalness: 0.85, roughness: 0.36,
-    roughnessMap: ST.brush, bumpMap: ST.brush, bumpScale: 0.012, envMapIntensity: 1.2
-  });
+  const mat = new THREE.MeshStandardMaterial(steelMaps({ vertexColors: true }));
   const brk = new THREE.Mesh(geo, mat);
   brk.castShadow = true;
   ST.group.add(brk);
@@ -1381,7 +1442,7 @@ function buildL6() {
   rod.castShadow = true;
   ST.group.add(rod);
   const weight = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.42, 0.42),
-    new THREE.MeshStandardMaterial({ color: 0x6a5a42, metalness: 0.55, roughness: 0.5 }));
+    steelMatOf({ color: 0x6a5a42 }));
   weight.castShadow = true;
   ST.group.add(weight);
 
@@ -1438,9 +1499,9 @@ function buildL6() {
       const s = Math.min(1, load * (0.18 + 0.82 * Math.exp(-2.6 * d)) * 1.3);
       rampColor(s, tc());
       const w = s * 0.85;
-      c[i3] = 0.72 * (1 - w) + tc().r * w;
-      c[i3 + 1] = 0.74 * (1 - w) + tc().g * w;
-      c[i3 + 2] = 0.78 * (1 - w) + tc().b * w;
+      c[i3] = 1 - w + tc().r * 1.5 * w;
+      c[i3 + 1] = 1 - w + tc().g * 1.5 * w;
+      c[i3 + 2] = 1 - w + tc().b * 1.5 * w;
     }
     pos.needsUpdate = true;
     colAttr.needsUpdate = true;
