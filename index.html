@@ -26,7 +26,6 @@
   .phase { display: none; }
   .phase.active { display: block; }
 
-  /* ===== ボタン共通 ===== */
   .cta {
     display: block; width: 100%; margin-top: 14px; padding: 14px; border: none; border-radius: 13px;
     font: inherit; font-weight: 900; font-size: 15px; color: #071019; cursor: pointer;
@@ -94,7 +93,6 @@
     color: #7fdcff; padding: 3px 9px; border-radius: 7px; font-size: 12px; white-space: nowrap;
   }
 
-  /* ミッション */
   .mission-card {
     border: 1.5px solid rgba(255,157,77,0.7); border-radius: 16px; padding: 18px 16px;
     background: linear-gradient(160deg, rgba(255,157,77,0.10), rgba(7,10,16,0.2));
@@ -104,28 +102,29 @@
   .mq { font-size: 18px; font-weight: 900; color: #fff2e3; line-height: 1.6; margin-top: 9px; }
   .mhint { margin-top: 12px; font-size: 12px; color: #b08a63; }
 
-  /* 実験 */
   .stage3d {
     position: relative; border-radius: 15px; overflow: hidden;
-    border: 1px solid #182436; background: #0a101c; height: 46vh; max-height: 330px; min-height: 240px;
+    border: 1px solid #182436; background: #14171d; height: 46vh; max-height: 340px; min-height: 250px;
   }
   .stage3d canvas { display: block; touch-action: none; cursor: grab; }
   .hint3d {
-    position: absolute; top: 9px; right: 9px; font-size: 10.5px; color: #7fdcff;
-    background: rgba(7,10,16,0.72); padding: 4px 10px; border-radius: 999px;
-    border: 1px solid rgba(79,209,255,0.4); pointer-events: none;
+    position: absolute; top: 9px; right: 9px; font-size: 10.5px; color: #cfe0f0;
+    background: rgba(10,12,16,0.72); padding: 4px 10px; border-radius: 999px;
+    border: 1px solid rgba(200,220,240,0.25); pointer-events: none;
   }
   .guessline { font-size: 11.5px; color: #ff8f85; margin-bottom: 8px; }
   .boom {
     position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
-    background: rgba(120,20,10,0.25); pointer-events: none;
+    flex-direction: column; gap: 6px; background: rgba(120,20,10,0.18); pointer-events: none;
   }
   .boom.show { display: flex; }
-  .boom span { font-size: 30px; font-weight: 900; color: #ffd9d0; text-shadow: 0 0 22px rgba(255,60,40,0.95); transform: rotate(-8deg); }
+  .boom .b1 { font-size: 30px; font-weight: 900; color: #ffe2da; text-shadow: 0 0 22px rgba(255,60,40,0.95); transform: rotate(-8deg); }
+  .boom .b2 { font-size: 12px; font-weight: 800; color: #cfe0f0; text-shadow: 0 1px 6px #000; }
+  .flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; }
   .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px 12px; margin-top: 10px; font-size: 11px; color: #9fb4cb; }
   .sliderrow { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 13px; color: #bcd2e8; }
-  .sliderrow input[type=range] { flex: 1; accent-color: #4fd1ff; min-width: 0; height: 28px; }
-  .sliderrow .val { min-width: 56px; text-align: right; font-weight: 800; color: #7fdcff; font-size: 14px; }
+  .sliderrow input[type=range] { flex: 1; accent-color: #ff9d4d; min-width: 0; height: 28px; }
+  .sliderrow .val { min-width: 56px; text-align: right; font-weight: 800; color: #ffb45d; font-size: 14px; }
   .extra { margin-top: 10px; }
   .extra .btnrow { display: flex; gap: 8px; }
   .extra .sbtn {
@@ -140,7 +139,6 @@
   .gcap { display: flex; justify-content: space-between; font-size: 10px; color: #5d7690; margin-top: 3px; }
   .trynote { margin-top: 10px; text-align: center; font-size: 11.5px; color: #5d7690; line-height: 1.6; }
 
-  /* 種明かし */
   .result-banner {
     border: 1.5px solid rgba(62,240,160,0.6); border-radius: 14px; padding: 13px;
     background: rgba(62,240,160,0.07); text-align: center;
@@ -158,7 +156,6 @@
   .dots { text-align: center; margin-top: 12px; letter-spacing: 6px; color: #24344a; font-size: 13px; }
   .dots span { color: #4fd1ff; }
 
-  /* クイズ */
   .qhead { font-size: 12px; font-weight: 800; color: #a07bff; letter-spacing: 1px; margin-bottom: 8px; }
   .q { font-size: 16.5px; font-weight: 800; color: #eaf6ff; line-height: 1.65; }
   .expl {
@@ -166,7 +163,6 @@
     background: rgba(62,240,160,0.06); font-size: 13px; color: #b8d8c8; line-height: 1.7;
   }
 
-  /* クリア */
   .center { text-align: center; }
   .stamp {
     display: inline-block; margin-top: 34px; padding: 25px 22px; border: 3.5px solid #4fd1ff; border-radius: 50%;
@@ -192,10 +188,10 @@
     <div class="prog-row"><span id="progText"></span><div class="prog-bar"><div class="prog-fill" id="progFill"></div></div><span>クリア</span></div>
     <div class="chap-title">第1章 力を見る <span>（力学のきそ・全7回）</span></div>
     <div class="nodes" id="nodes1"></div>
-    <div class="chap2" id="chap2box">🔒 第2章 未来よち（CAE）L8〜L14<br>第1章クリアで解放（次のアップデートで配信）</div>
+    <div class="chap2">🔒 第2章 未来よち（CAE）L8〜L14<br>第1章クリアで解放（次のアップデートで配信）</div>
     <div class="streak" id="streakLine"></div>
     <div class="installhint">スマホ：ブラウザの共有メニュー →「ホーム画面に追加」でアプリになる</div>
-    <div class="verline">FORCE FORGE v1.0 ─ 第1章</div>
+    <div class="verline">FORCE FORGE v1.1 ─ 第1章（リアル試験室仕様）</div>
   </section>
 
   <!-- ============ レッスン ============ -->
@@ -217,8 +213,9 @@
     <div id="phExp" class="phase">
       <div class="guessline" id="guessLine"></div>
       <div class="stage3d" id="stage3d">
-        <div class="hint3d">🔄 指でまわせる</div>
-        <div class="boom" id="boom"><span>💥 バキッ！</span></div>
+        <div class="hint3d" id="hint3d">🖐 部品をつかんで動かせ／背景ドラッグ＝回転</div>
+        <div class="flash" id="flash"></div>
+        <div class="boom" id="boom"><span class="b1" id="boomText">破断!!</span><span class="b2">🔧 画面タップで新しい試験片をセット</span></div>
       </div>
       <div class="legend" id="expLegend"></div>
       <div class="sliderrow"><span id="sliderLabel"></span><input type="range" id="loadRange" min="0" max="100" value="0"><span class="val" id="loadVal">0kg</span></div>
@@ -276,9 +273,9 @@
 "use strict";
 
 /* ================================================================
-   FORCE FORGE v1.0 ── 第1章「力を見る」
-   型：合体（マップ型ホーム × ミッション型レッスン）
-   予想 → 3D実験 → 種明かし → ミニクイズ → スタンプ
+   FORCE FORGE v1.1 ── 第1章「力を見る」リアル試験室仕様
+   確定レシピ：影＋実照明／試験機ツカミ／塑性→ヒビ→破断／
+   重力破片／指で直接つかんで壊す／タップで再生成
 ================================================================ */
 
 // ---------------- レッスンデータ ----------------
@@ -286,17 +283,18 @@ const LESSONS = [
   {
     id: "l1", tag: "L1", label: "力", title: "力ってなに？",
     mission: {
-      no: "MISSION 01 ── L字ブラケット（板金）",
-      q: "手で押してへこませた。<br>押すのを<b>やめたら</b>へこみは？",
-      opts: ["へこんだまま", "元にもどる"], ans: 1,
-      ansLine: "元にもどる（壊れるほど押さなければ）"
+      no: "MISSION 01 ── ベンチのL字ブラケット",
+      q: "手で押してたわませた。<br>手を<b>離したら</b>どうなる？",
+      opts: ["たわんだまま", "元にもどる"], ans: 1,
+      ansLine: "元にもどる（壊れるほど押さなければ＝弾性）"
     },
-    sliderLabel: "力", note: "ボタンで力の向きも変えてみて。<br>スライダーを0に戻すと…元通り！",
+    sliderLabel: "力", grabAxis: "any", springBack: true,
+    note: "🖐 ブラケットをつかんで動かせ。ボタンで力の向きも変えられる。<br>手を離すと…スッと戻る！",
     legend: ['<span style="color:#ffb45d">■ 矢印＝力（長さ＝大きさ・向き＝方向）</span>'],
     cards: [
       "力（ちから）＝押す・引く。<br><em>目には見えない</em>。",
       "だから<b>矢印</b>で描く。<br>長さ＝大きさ、向き＝方向。",
-      "やめれば元にもどる<br>（＝弾性〈だんせい〉）。<br>もどらない＝壊れ始め。"
+      "手を離せば元にもどる<br>（＝弾性〈だんせい〉）。<br>もどらない＝壊れ始め。"
     ],
     quiz: {
       q: "力の矢印の「長さ」が表すのは？",
@@ -308,11 +306,12 @@ const LESSONS = [
     id: "l2", tag: "L2", label: "応力", title: "応力＝ぎゅうぎゅう度",
     mission: {
       no: "MISSION 02 ── 太い帯板 vs 細い帯板",
-      q: "同じ50kgで引っぱる。<br>先に悲鳴を上げるのは？",
+      q: "同じ力で引っぱる。<br>先に<b>ちぎれる</b>のは？",
       opts: ["太い板", "細い板", "同時"], ans: 1,
-      ansLine: "細い板（同じ力でも中はぎゅうぎゅう）"
+      ansLine: "細い板（72kgで破断。太い方は無事）"
     },
-    sliderLabel: "引く力", note: "上＝太い板（切り口ひろい）／下＝細い板。<br>色＝中のぎゅうぎゅう度。",
+    sliderLabel: "引く力", grabAxis: "x", springBack: true,
+    note: "🖐 板をつかんで横へ引け。上＝太い板／下＝細い板。<br>同じ力なのに、色の上がり方がちがう…",
     legend: ['<span style="color:#6db4ff">■ 青＝ひま</span>', '<span style="color:#58e08c">■ 緑＝ふつう</span>', '<span style="color:#ff7a6e">■ 赤＝限界</span>'],
     cards: [
       "応力（おうりょく）＝<br>材料の中の<em>ぎゅうぎゅう度</em>。",
@@ -333,7 +332,8 @@ const LESSONS = [
       opts: ["鉄", "アルミ", "同じ"], ans: 1,
       ansLine: "アルミ（鉄より約3倍のびる）"
     },
-    sliderLabel: "引く力", note: "材料ボタンを切りかえて比べて。<br>※実物の金属のびは小さすぎるので、3Dはおおげさに動かしてる。",
+    sliderLabel: "引く力", grabAxis: "x", springBack: true,
+    note: "🖐 板をつかんで引け。材料ボタンで切りかえ。<br>青いワク＝元の長さ。※金属の実際ののびは小さいので3Dは大げさ表示。",
     legend: ['<span style="color:#4fd1ff">─ 青いワク＝元の長さ</span>'],
     cards: [
       "ひずみ＝<em>のびた割合</em>。<br>のび ÷ 元の長さ。",
@@ -349,12 +349,13 @@ const LESSONS = [
   {
     id: "l4", tag: "L4", label: "曲げ", title: "曲げ＝上下でつなひき",
     mission: {
-      no: "MISSION 04 ── 両端で支えた帯板",
-      q: "真ん中に重り。<br>いちばん<b>ラクしてる</b>場所は？",
+      no: "MISSION 04 ── プレスにかけた帯板",
+      q: "真ん中を押して曲げる。<br>いちばん<b>ラクしてる</b>場所は？",
       opts: ["上の面", "板の真ん中", "下の面"], ans: 1,
       ansLine: "板の真ん中（＝中立軸。のびもちぢみもしない）"
     },
-    sliderLabel: "荷重", note: "回して横からも見て。<br>上下の色、真ん中の色に注目。",
+    sliderLabel: "押す力", grabAxis: "y", springBack: true,
+    note: "🖐 板の真ん中をつかんで下へ押せ。回して横からも見て。<br>60kgを超えると…クセがついて戻らなくなる（塑性）。",
     legend: ['<span style="color:#6db4ff">■ 上＝ちぢむ</span>', '<span style="color:#ff7a6e">■ 下＝のびる</span>', '<span style="color:#cfd8e3">■ まん中＝セーフ</span>'],
     cards: [
       "曲げ＝<em>上下のつなひき</em>。<br>上ちぢむ・下のびる。",
@@ -370,13 +371,14 @@ const LESSONS = [
   {
     id: "l5", tag: "L5", label: "集中", title: "応力集中＝穴のふちのワナ",
     mission: {
-      no: "MISSION 05 ── 穴あきブラケット",
+      no: "MISSION 05 ── 穴あき鋼板の引張試験",
       q: "板に穴をあけた。<br>強さはどれだけ落ちる？",
       opts: ["穴の分だけ", "穴の分より ずっと落ちる"], ans: 1,
       ansLine: "ずっと落ちる（ふちに力が集中、約3倍！）"
     },
-    sliderLabel: "引く力", note: "穴のふちが先に赤くなる。<br>80kgで…💥",
-    legend: ['<span style="color:#6db4ff">■ 青＝ひま</span>', '<span style="color:#58e08c">■ 緑＝ふつう</span>', '<span style="color:#ff7a6e">■ 赤＝限界</span>'],
+    sliderLabel: "引く力", grabAxis: "x", springBack: true,
+    note: "🖐 板をつかんで引きちぎれ。55kg〜穴が伸び、65kg〜ヒビ、80kgで…",
+    legend: ['<span style="color:#6db4ff">■ 青＝ひま</span>', '<span style="color:#58e08c">■ 緑＝ふつう</span>', '<span style="color:#ff7a6e">■ 赤＝限界</span>', '<span style="color:#ffd27a">・光の粒＝力の流れ</span>'],
     cards: [
       "力は穴を<em>よけて</em>流れる。",
       "よけた力が ふちに<b>集中</b>。<br>約3倍！<br>（＝応力集中〈おうりょくしゅうちゅう〉）",
@@ -396,7 +398,8 @@ const LESSONS = [
       opts: ["ある", "ない"], ans: 1,
       ansLine: "ない（80÷50＝1.6。2に足りない）"
     },
-    sliderLabel: "ぶら下げ", note: "ゲージの赤線＝壊れる80kg。<br>角の色にも注目（L5の復習）。",
+    sliderLabel: "ぶら下げ", grabAxis: "y", springBack: false,
+    note: "🖐 重りをつかんで下へ引け（重くなる）。ゲージの赤線＝壊れる80kg。<br>角のヒビにも注目（L5の復習）。",
     legend: ['<span style="color:#6db4ff">■ 青＝ひま</span>', '<span style="color:#ff7a6e">■ 赤＝限界</span>', '<span style="color:#ffb45d">安全率＝壊れる力÷使う力</span>'],
     cards: [
       "安全率＝<br><b>壊れる力 ÷ 使う力</b>。",
@@ -411,7 +414,6 @@ const LESSONS = [
   }
 ];
 
-// ---------------- ボス戦データ ----------------
 const BOSS = [
   { q: "力の矢印が表すものは？", opts: ["大きさと向き", "重さと色", "速さと温度"], ans: 0,
     exp: "力＝大きさ＋向き。だから矢印で描く。" },
@@ -436,11 +438,9 @@ try {
   const raw = localStorage.getItem(STORE_KEY);
   if (raw) progress = Object.assign(progress, JSON.parse(raw));
 } catch (e) {}
-
 function saveProgress() {
   try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); } catch (e) {}
 }
-
 function isoWeek(d) {
   const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
   const day = (t.getUTCDay() + 6) % 7;
@@ -448,17 +448,7 @@ function isoWeek(d) {
   const firstThu = new Date(Date.UTC(t.getUTCFullYear(), 0, 4));
   const fday = (firstThu.getUTCDay() + 6) % 7;
   firstThu.setUTCDate(firstThu.getUTCDate() - fday + 3);
-  const wk = 1 + Math.round((t - firstThu) / (7 * 24 * 3600 * 1000));
-  return t.getUTCFullYear() + "-W" + String(wk).padStart(2, "0");
-}
-
-function bumpStreak() {
-  const wk = isoWeek(new Date());
-  const s = progress.streak;
-  if (s.week === wk) return;
-  const prev = s.week;
-  s.n = (prev && nextWeekOf(prev) === wk) ? s.n + 1 : 1;
-  s.week = wk;
+  return t.getUTCFullYear() + "-W" + String(1 + Math.round((t - firstThu) / 6048e5)).padStart(2, "0");
 }
 function nextWeekOf(wkStr) {
   const m = wkStr.match(/(\d+)-W(\d+)/);
@@ -466,6 +456,13 @@ function nextWeekOf(wkStr) {
   const d = new Date(Date.UTC(+m[1], 0, 4));
   d.setUTCDate(d.getUTCDate() + (+m[2]) * 7);
   return isoWeek(d);
+}
+function bumpStreak() {
+  const wk = isoWeek(new Date());
+  const s = progress.streak;
+  if (s.week === wk) return;
+  s.n = (s.week && nextWeekOf(s.week) === wk) ? s.n + 1 : 1;
+  s.week = wk;
 }
 
 // ---------------- 画面切りかえ ----------------
@@ -478,15 +475,15 @@ function setPhase(name) {
   ["phMission", "phExp", "phReveal", "phQuiz", "phClear"].forEach((p) => $(p).classList.toggle("active", p === name));
   window.scrollTo(0, 0);
 }
+function vib(p) { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
 
 // ---------------- ホーム描画 ----------------
-function lessonState(i) { // 0..5=L1..L6, 6=ボス
+function lessonState(i) {
   const id = i < 6 ? LESSONS[i].id : "l7";
   if (progress.done[id]) return "done";
   const prevDone = i === 0 ? true : (i < 6 ? !!progress.done[LESSONS[i - 1].id] : LESSONS.every((L) => progress.done[L.id]));
   return prevDone ? "now" : "lock";
 }
-
 function renderHome() {
   const wrap = $("nodes1");
   wrap.innerHTML = "";
@@ -502,7 +499,6 @@ function renderHome() {
   const count = ["l1","l2","l3","l4","l5","l6","l7"].filter((k) => progress.done[k]).length;
   $("progText").textContent = count + "/7";
   $("progFill").style.width = Math.round((count / 7) * 100) + "%";
-
   const next = [0,1,2,3,4,5].find((i) => lessonState(i) === "now");
   const btn = $("btnResume");
   if (count === 7) {
@@ -521,60 +517,176 @@ function renderHome() {
 }
 
 /* ================================================================
-   3Dステージ（Three.js 本物3D・共有レンダラ）
+   3Dリアル試験室（Three.js・影・実照明・共有ステージ）
 ================================================================ */
-let ST = null; // stage
+const FLOOR_Y = -1.18;
+let ST = null;
+
+function brushedTexOf() {
+  const cv = document.createElement("canvas");
+  cv.width = 512; cv.height = 512;
+  const ctx = cv.getContext("2d");
+  ctx.fillStyle = "#9a9a9a"; ctx.fillRect(0, 0, 512, 512);
+  for (let i = 0; i < 2600; i++) {
+    const y = Math.random() * 512, x = Math.random() * 512;
+    const len = 30 + Math.random() * 220;
+    ctx.strokeStyle = Math.random() < 0.5
+      ? "rgba(255,255,255," + (0.03 + Math.random() * 0.06) + ")"
+      : "rgba(0,0,0," + (0.03 + Math.random() * 0.06) + ")";
+    ctx.lineWidth = 0.5 + Math.random();
+    ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + len, y + (Math.random() - 0.5) * 2); ctx.stroke();
+  }
+  const tex = new THREE.CanvasTexture(cv);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  return tex;
+}
+function concreteTexOf() {
+  const cv = document.createElement("canvas");
+  cv.width = 256; cv.height = 256;
+  const ctx = cv.getContext("2d");
+  ctx.fillStyle = "#585d64"; ctx.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 5200; i++) {
+    const g = 70 + Math.random() * 50 | 0;
+    ctx.fillStyle = "rgba(" + g + "," + (g + 3) + "," + (g + 7) + "," + (0.12 + Math.random() * 0.2) + ")";
+    ctx.fillRect(Math.random() * 256, Math.random() * 256, 1 + Math.random() * 2, 1 + Math.random() * 2);
+  }
+  const tex = new THREE.CanvasTexture(cv);
+  tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+  tex.repeat.set(3, 3);
+  return tex;
+}
+
 function ensureStage() {
   if (ST) { ST.resize(); return; }
   const host = $("stage3d");
   if (typeof THREE === "undefined") {
     host.insertAdjacentHTML("beforeend", '<div style="color:#8fa6bd;font-size:12px;text-align:center;padding-top:100px">3D表示にはネット接続が必要です</div>');
-    ST = { fake: true, resize(){}, clear(){}, setUpdate(){}, setTick(){}, group: null };
+    ST = { fake: true, resize(){}, clearScene(){}, group: null };
     return;
   }
   const renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 3));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  host.insertBefore(renderer.domElement, host.firstChild);
+
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0a101c);
-  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 60);
-  camera.position.set(0, 0.8, 4.8);
-  camera.lookAt(0, -0.05, 0);
+  scene.background = new THREE.Color(0x14171d);
+  scene.fog = new THREE.Fog(0x14171d, 8, 16);
+  const camera = new THREE.PerspectiveCamera(33, 1, 0.1, 60);
+  camera.position.set(0, 0.9, 5.6);
+  camera.lookAt(0, -0.15, 0);
 
-  scene.add(new THREE.HemisphereLight(0x8fb8ff, 0x14100c, 0.55));
-  const key = new THREE.DirectionalLight(0xffffff, 0.95); key.position.set(2.5, 4, 2.5); scene.add(key);
-  const rimC = new THREE.PointLight(0x4fd1ff, 1.2, 14); rimC.position.set(-3.2, 1.5, -2.4); scene.add(rimC);
-  const rimP = new THREE.PointLight(0xa07bff, 1.0, 14); rimP.position.set(3.2, 0.7, -2.8); scene.add(rimP);
-  const fill = new THREE.DirectionalLight(0x88aaff, 0.25); fill.position.set(-2, -1, 3); scene.add(fill);
+  // 映り込み環境（無彩色スタジオ）
+  (function makeEnv() {
+    const es = new THREE.Scene();
+    const box = new THREE.BoxGeometry(1, 1, 1);
+    function panel(x, y, z, sx, sy, color) {
+      const m = new THREE.Mesh(box, new THREE.MeshBasicMaterial({ color }));
+      m.position.set(x, y, z); m.scale.set(sx, sy, 0.1); m.lookAt(0, 0, 0); es.add(m);
+    }
+    es.add(new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), new THREE.MeshBasicMaterial({ color: 0x14161a, side: THREE.BackSide })));
+    panel(0, 6, 1, 7, 3.5, 0xffffff);
+    panel(-6, 2, 2, 2, 4, 0x9fb4c8);
+    panel(6, 1.5, -1, 1.5, 4, 0xcdbfa8);
+    panel(0, 0.8, 6, 5, 2.2, 0x6f7a86);
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(es, 0.02).texture;
+  })();
 
-  const grid = new THREE.GridHelper(4.6, 12, 0x1e3050, 0x131f30);
-  grid.position.y = -1.05;
-  scene.add(grid);
+  scene.add(new THREE.HemisphereLight(0xbfd0e0, 0x2b2620, 0.4));
+  const key = new THREE.DirectionalLight(0xfff4e6, 1.1);
+  key.position.set(3, 5, 2.5);
+  key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024);
+  key.shadow.camera.left = -3.5; key.shadow.camera.right = 3.5;
+  key.shadow.camera.top = 3.5; key.shadow.camera.bottom = -3.5;
+  key.shadow.bias = -0.0004;
+  scene.add(key);
+  const rim = new THREE.PointLight(0x8fb8d8, 0.25, 16); rim.position.set(-3.4, 1.6, -2.6); scene.add(rim);
 
   const group = new THREE.Group();
   scene.add(group);
+  const floor = new THREE.Mesh(
+    new THREE.CircleGeometry(5.5, 64),
+    new THREE.MeshStandardMaterial({ map: concreteTexOf(), color: 0x8a8f96, metalness: 0.04, roughness: 0.93 })
+  );
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = FLOOR_Y;
+  floor.receiveShadow = true;
+  group.add(floor);
 
-  host.insertBefore(renderer.domElement, host.firstChild);
+  const brush = brushedTexOf();
 
-  let rotY = -0.5, rotX = 0.14, dragging = false, touched = false, px = 0, py = 0;
+  // ---- 操作（部品つかみ＋回転） ----
+  let rotY = -0.5, rotX = 0.12, dragging = false, touched = false, px = 0, py = 0;
+  let mode = "orbit", startX = 0, startY = 0, startLoad = 0, downTime = 0, movedPx = 0;
+  const ray = new THREE.Raycaster();
+  const ndc = new THREE.Vector2();
   const el = renderer.domElement;
+
+  function hitProxy(e) {
+    const sc = ST.sceneApi;
+    if (!sc || !sc.proxy) return false;
+    const r = el.getBoundingClientRect();
+    ndc.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    ndc.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    camera.updateMatrixWorld();
+    group.updateMatrixWorld(true);
+    ray.setFromCamera(ndc, camera);
+    const list = Array.isArray(sc.proxy) ? sc.proxy : [sc.proxy];
+    return ray.intersectObjects(list, false).length > 0;
+  }
   el.addEventListener("pointerdown", (e) => {
-    dragging = true; touched = true; px = e.clientX; py = e.clientY;
-    el.setPointerCapture(e.pointerId); el.style.cursor = "grabbing";
+    touched = true;
+    if (ST.broken) { rebuildScene(); return; }
+    dragging = true; px = e.clientX; py = e.clientY;
+    downTime = performance.now(); movedPx = 0;
+    ST.springing = false;
+    if (hitProxy(e)) {
+      mode = "pull";
+      startX = e.clientX; startY = e.clientY;
+      startLoad = +$("loadRange").value;
+      el.style.cursor = "grabbing";
+    } else mode = "orbit";
+    try { el.setPointerCapture(e.pointerId); } catch (err) {}
   });
   el.addEventListener("pointermove", (e) => {
     if (!dragging) return;
-    rotY += (e.clientX - px) * 0.011;
-    rotX += (e.clientY - py) * 0.008;
-    rotX = Math.max(-0.5, Math.min(0.95, rotX));
+    movedPx += Math.abs(e.clientX - px) + Math.abs(e.clientY - py);
+    const sc = ST.sceneApi;
+    if (mode === "pull" && sc) {
+      let dv = 0;
+      if (sc.grabAxis === "x") dv = Math.abs(e.clientX - startX) / Math.max(1, el.clientWidth) * 170;
+      else if (sc.grabAxis === "y") dv = (e.clientY - startY) / Math.max(1, el.clientHeight) * 220;
+      else dv = (Math.abs(e.clientX - startX) + Math.abs(e.clientY - startY)) / Math.max(1, el.clientWidth) * 150;
+      $("loadRange").value = Math.max(0, Math.min(100, startLoad + dv));
+      onLoadInput();
+    } else {
+      rotY += (e.clientX - px) * 0.011;
+      rotX = Math.max(-0.5, Math.min(0.95, rotX + (e.clientY - py) * 0.008));
+    }
     px = e.clientX; py = e.clientY;
   });
-  el.addEventListener("pointerup", () => { dragging = false; el.style.cursor = "grab"; });
+  el.addEventListener("pointerup", () => {
+    if (!dragging) return;
+    dragging = false;
+    el.style.cursor = "grab";
+    const sc = ST.sceneApi;
+    if (mode === "pull" && sc) {
+      if (performance.now() - downTime < 220 && movedPx < 10 && sc.poke) sc.poke();
+      if (!ST.broken && sc.springBack) ST.springing = true;
+      mode = "orbit";
+    }
+  });
   el.addEventListener("wheel", (e) => {
     e.preventDefault();
-    camera.position.z = Math.max(2.8, Math.min(7.5, camera.position.z + e.deltaY * 0.004));
+    camera.position.z = Math.max(3.0, Math.min(8.5, camera.position.z + e.deltaY * 0.004));
   }, { passive: false });
 
-  let updateFn = null, tickFn = null, t = 0;
   function resize() {
     const w = host.clientWidth, h = host.clientHeight;
     if (!w || !h) return;
@@ -585,48 +697,78 @@ function ensureStage() {
   window.addEventListener("resize", resize);
   resize();
 
-  (function loop() {
-    requestAnimationFrame(loop);
-    t += 0.016;
-    if (!touched) rotY += 0.003;
-    group.rotation.y += (rotY - group.rotation.y) * 0.12;
-    group.rotation.x += (rotX - group.rotation.x) * 0.12;
-    if (tickFn) tickFn(t);
-    renderer.render(scene, camera);
-  })();
-
   ST = {
-    group, camera,
+    group, camera, brush,
+    sceneApi: null, broken: false, springing: false, timeScale: 1, shake: 0,
     resize,
-    resetView() { rotY = -0.5; rotX = 0.14; touched = false; camera.position.z = 4.8; },
-    clear() {
-      while (group.children.length) {
-        const c = group.children.pop();
+    resetView() { rotY = -0.5; rotX = 0.12; touched = false; camera.position.z = 5.6; },
+    clearScene() {
+      while (group.children.length > 1) { // 床は残す
+        const c = group.children[group.children.length - 1];
+        if (c === floor) break;
+        group.remove(c);
         c.traverse && c.traverse((o) => {
           if (o.geometry) o.geometry.dispose();
-          if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m.dispose());
+          if (o.material && o.material !== null) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => { if (m.dispose) m.dispose(); });
         });
-        group.remove(c);
       }
-      updateFn = null; tickFn = null;
-      setBoom(false);
+      ST.sceneApi = null; ST.broken = false; ST.springing = false; ST.timeScale = 1; ST.shake = 0;
+      setBoom(false, "");
     },
-    setUpdate(fn) { updateFn = fn; },
-    setTick(fn) { tickFn = fn; },
-    update(l) { if (updateFn) updateFn(l); }
+    breakFX(label) {
+      ST.broken = true; ST.timeScale = 0.18; ST.shake = 0.07;
+      progress.broken = (progress.broken || 0) + 1;
+      saveProgress();
+      vib([90, 40, 140]);
+      const flash = $("flash");
+      flash.style.transition = "none"; flash.style.opacity = 0.7;
+      requestAnimationFrame(() => { flash.style.transition = "opacity 0.45s"; flash.style.opacity = 0; });
+      setBoom(true, label || "破断!!");
+    }
   };
+
+  let last = performance.now();
+  function loop(now) {
+    requestAnimationFrame(loop);
+    let dt = Math.min(0.05, (now - last) / 1000); last = now;
+    ST.timeScale += (1 - ST.timeScale) * 0.03;
+    dt *= ST.timeScale;
+    if (!touched) rotY += 0.002;
+    group.rotation.y += (rotY - group.rotation.y) * 0.12;
+    group.rotation.x += (rotX - group.rotation.x) * 0.12;
+
+    if (ST.springing && !ST.broken) {
+      const v = +$("loadRange").value;
+      const nv = v * 0.85 - 1.2;
+      if (nv <= 0) { $("loadRange").value = 0; ST.springing = false; } else $("loadRange").value = nv;
+      onLoadInput();
+    }
+    const sc = ST.sceneApi;
+    if (sc && sc.tick) sc.tick(dt, now);
+
+    ST.shake = Math.max(0, ST.shake - dt * 0.14);
+    group.position.x = (Math.random() - 0.5) * ST.shake;
+    group.position.y = (Math.random() - 0.5) * ST.shake;
+    renderer.render(scene, camera);
+  }
+  requestAnimationFrame(loop);
 }
 
-function setBoom(on) { $("boom").className = on ? "boom show" : "boom"; }
-
-// ---------- 3D共通ヘルパ ----------
-function metalMat(color, extra) {
-  return new THREE.MeshStandardMaterial(Object.assign({ color: color || 0x9aa7b5, metalness: 0.5, roughness: 0.35 }, extra || {}));
+function setBoom(on, label) {
+  $("boom").className = on ? "boom show" : "boom";
+  if (label) $("boomText").textContent = label;
 }
-const _rampC = { setHSL: null };
-function rampColor(s, c) { // 0..1 → 青→緑→黄→赤（CAEの虹色）
+
+// ---- 共通部品メーカー ----
+function steelMatOf(extra) {
+  return new THREE.MeshStandardMaterial(Object.assign({
+    color: 0xb8c2cc, metalness: 0.85, roughness: 0.36,
+    roughnessMap: ST.brush, bumpMap: ST.brush, bumpScale: 0.012, envMapIntensity: 1.2
+  }, extra || {}));
+}
+function rampColor(s, c) {
   s = Math.max(0, Math.min(1, s));
-  c.setHSL(0.62 * (1 - s), 0.85, 0.42 + 0.13 * s);
+  c.setHSL(0.58 * (1 - s), 0.9, 0.5 + 0.12 * s);
   return c;
 }
 function shapeFromPts(pts) {
@@ -635,26 +777,127 @@ function shapeFromPts(pts) {
   for (let i = 1; i < pts.length; i++) sh.lineTo(pts[i][0], pts[i][1]);
   return sh;
 }
-function mkArrow(color) {
-  return new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, 0), 0.6, color || 0xff9d4d, 0.2, 0.12);
+// 太い実体の力矢印（シャフト＋先端コーン）
+function forceArrow(color) {
+  const g = new THREE.Group();
+  const mat = new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 0.45, metalness: 0.2, roughness: 0.5, transparent: true, opacity: 0.92 });
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 1, 16), mat);
+  const head = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.2, 20), mat);
+  g.add(shaft); g.add(head);
+  g.setLen = (l) => {
+    shaft.scale.y = Math.max(0.05, l - 0.2);
+    shaft.position.y = -(l - 0.2) / 2 - 0.2;
+    head.position.y = -0.1;
+  };
+  g.aim = (from, dir) => { // dir: THREE.Vector3 正規化・矢印は先端がfrom
+    g.position.copy(from);
+    g.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), dir.clone().normalize());
+  };
+  g.setLen(0.5);
+  return g;
+}
+// 引張試験機のツカミ
+function makeGrip(side, s) {
+  s = s || 1;
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(
+    new THREE.BoxGeometry(0.55 * s, 1.05 * s, 0.55 * s),
+    new THREE.MeshStandardMaterial({ color: 0x4b525c, metalness: 0.75, roughness: 0.5, envMapIntensity: 0.9 })
+  );
+  body.castShadow = true;
+  g.add(body);
+  const jawMat = new THREE.MeshStandardMaterial({ color: 0x363c44, metalness: 0.7, roughness: 0.6 });
+  [0.14 * s, -0.14 * s].forEach((y) => {
+    const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.42 * s, 0.12 * s, 0.5 * s), jawMat);
+    jaw.position.set(-side * 0.42 * s, y, 0);
+    jaw.castShadow = true;
+    g.add(jaw);
+  });
+  const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.09 * s, 0.09 * s, 1.6 * s, 24),
+    new THREE.MeshStandardMaterial({ color: 0x5a626c, metalness: 0.85, roughness: 0.35, envMapIntensity: 1.1 }));
+  rod.rotation.z = Math.PI / 2;
+  rod.position.x = side * 1.05 * s;
+  rod.castShadow = true;
+  g.add(rod);
+  ST.group.add(g);
+  return g;
+}
+// 破片（重力＋床バウンド）
+function makeFragments(cx, cy, n) {
+  const fmat = new THREE.MeshStandardMaterial({ color: 0xa8b2bc, metalness: 0.85, roughness: 0.4 });
+  const frags = [];
+  for (let i = 0; i < (n || 8); i++) {
+    const size = 0.02 + Math.random() * 0.045;
+    const m = new THREE.Mesh(new THREE.TetrahedronGeometry(size, 0), fmat);
+    m.position.set(cx + (Math.random() - 0.5) * 0.1, cy + (Math.random() - 0.5) * 0.5, (Math.random() - 0.5) * 0.15);
+    m.castShadow = true;
+    ST.group.add(m);
+    frags.push({
+      m, size,
+      vx: (Math.random() - 0.5) * 2.4, vy: 0.6 + Math.random() * 1.8, vz: (Math.random() - 0.5) * 1.6,
+      rx: (Math.random() - 0.5) * 12, rz: (Math.random() - 0.5) * 12, rest: false
+    });
+  }
+  return frags;
+}
+function tickFragments(frags, dt) {
+  for (const f of frags) {
+    if (f.rest) continue;
+    f.vy -= 5.5 * dt;
+    f.m.position.x += f.vx * dt; f.m.position.y += f.vy * dt; f.m.position.z += f.vz * dt;
+    f.m.rotation.x += f.rx * dt; f.m.rotation.z += f.rz * dt;
+    const gy = FLOOR_Y + f.size;
+    if (f.m.position.y < gy) {
+      f.m.position.y = gy;
+      f.vy = -f.vy * 0.32; f.vx *= 0.7; f.vz *= 0.7; f.rx *= 0.6; f.rz *= 0.6;
+      if (Math.abs(f.vy) < 0.12) { f.rest = true; f.vy = 0; }
+    }
+  }
 }
 function setExtraHTML(html) { $("extraCtrls").innerHTML = html || ""; }
 
-/* ---------- L1：力（L字ブラケット＋矢印） ---------- */
+/* ================================================================
+   シーン builders（各レッスンのリアル3D）
+================================================================ */
+const tmpC2 = { c: null };
+function tc() { if (!tmpC2.c) tmpC2.c = new THREE.Color(); return tmpC2.c; }
+
+/* ---------- L1：力（ベンチ上のL字ブラケット・押し引き） ---------- */
 function buildL1() {
+  // ベンチ（鋼の台）
+  const bench = new THREE.Mesh(new THREE.BoxGeometry(2.8, 0.5, 1.5),
+    new THREE.MeshStandardMaterial({ color: 0x3c434c, metalness: 0.6, roughness: 0.6 }));
+  bench.position.y = -0.85;
+  bench.castShadow = true; bench.receiveShadow = true;
+  ST.group.add(bench);
+
   const sh = shapeFromPts([[-0.7,-0.5],[0.7,-0.5],[0.7,-0.34],[-0.54,-0.34],[-0.54,0.5],[-0.7,0.5]]);
-  const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.34, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 2, curveSegments: 24 });
+  const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.34, bevelEnabled: true, bevelThickness: 0.018, bevelSize: 0.018, bevelSegments: 4, curveSegments: 24 });
   geo.translate(0, 0, -0.17);
-  const brk = new THREE.Mesh(geo, metalMat(0x9fb0c4));
+  const brk = new THREE.Mesh(geo, steelMatOf());
+  brk.castShadow = true;
+  brk.position.y = -0.1; // 底(-0.5)がベンチ上面(-0.6)に乗る
   ST.group.add(brk);
-  const arrow = mkArrow(0xff9d4d);
+
+  // 固定ボルト2本（力の理由＝固定されてるから曲がる）
+  const boltMat = new THREE.MeshStandardMaterial({ color: 0x22262c, metalness: 0.8, roughness: 0.4 });
+  [0.15, 0.45].forEach((x) => {
+    const b = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.08, 6), boltMat);
+    b.position.set(x, -0.4, 0);
+    ST.group.add(b);
+  });
+
+  const arrow = forceArrow(0xff9d4d);
   ST.group.add(arrow);
+  const proxy = new THREE.Mesh(new THREE.BoxGeometry(1.7, 1.3, 0.7), new THREE.MeshBasicMaterial({ visible: false }));
+  proxy.position.y = -0.1;
+  ST.group.add(proxy);
 
   setExtraHTML('<div class="btnrow">' +
     '<button class="sbtn on" data-d="push">押す →</button>' +
     '<button class="sbtn" data-d="pull">← 引く</button>' +
     '<button class="sbtn" data-d="down">↓ 上から</button></div>');
-  let dir = "push", load = 0;
+  let dir = "push", load = 0, wob = 0;
   document.querySelectorAll("#extraCtrls .sbtn").forEach((b) => {
     b.addEventListener("click", () => {
       document.querySelectorAll("#extraCtrls .sbtn").forEach((x) => x.classList.remove("on"));
@@ -664,69 +907,130 @@ function buildL1() {
     });
   });
   function apply() {
-    const l = 0.45 + 0.6 * load;
-    if (dir === "push") {
-      arrow.setDirection(new THREE.Vector3(1, 0, 0));
-      arrow.position.set(-0.72 - l, 0.4, 0);
-    } else if (dir === "pull") {
-      arrow.setDirection(new THREE.Vector3(-1, 0, 0));
-      arrow.position.set(-0.52, 0.4, 0);
-    } else {
-      arrow.setDirection(new THREE.Vector3(0, -1, 0));
-      arrow.position.set(0.4, -0.32 + l, 0);
-    }
-    arrow.setLength(l, 0.2, 0.12);
-    brk.rotation.z = dir === "push" ? -0.08 * load : dir === "pull" ? 0.08 * load : 0;
-    brk.scale.y = dir === "down" ? 1 - 0.06 * load : 1;
+    const l = 0.5 + 0.6 * load;
+    if (dir === "push") { arrow.aim(new THREE.Vector3(-0.72, 0.3, 0), new THREE.Vector3(-1, 0, 0)); }
+    else if (dir === "pull") { arrow.aim(new THREE.Vector3(-0.52, 0.3, 0), new THREE.Vector3(1, 0, 0)); }
+    else { arrow.aim(new THREE.Vector3(0.3, -0.42, 0), new THREE.Vector3(0, -1, 0)); }
+    arrow.setLen(l);
+    brk.rotation.z = dir === "push" ? -0.09 * load : dir === "pull" ? 0.09 * load : 0;
+    brk.scale.y = dir === "down" ? 1 - 0.07 * load : 1;
   }
   apply();
-  ST.setUpdate((l) => { load = l; apply(); });
+  ST.sceneApi = {
+    proxy, grabAxis: "any", springBack: true,
+    update(l) { load = l; apply(); },
+    poke() { wob = 1; vib(15); },
+    tick(dt, now) {
+      if (wob > 0.01) { brk.rotation.x = 0.035 * wob * Math.sin(now * 0.045); wob *= 0.92; }
+      else brk.rotation.x = 0;
+    }
+  };
 }
 
-/* ---------- L2：応力（太い板 vs 細い板） ---------- */
+/* ---------- L2：応力（太い板 vs 細い板・細い方が破断） ---------- */
 function buildL2() {
-  const m1 = metalMat(), m2 = metalMat();
-  const b1 = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.3, 0.52), m1); b1.position.y = 0.42;
-  const b2 = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.3, 0.16), m2); b2.position.y = -0.42;
-  ST.group.add(b1, b2);
-  const arrows = [];
-  [[b1, 0.42], [b2, -0.42]].forEach(([b, y]) => {
-    const aL = mkArrow(0xffb45d), aR = mkArrow(0xffb45d);
-    aL.setDirection(new THREE.Vector3(-1, 0, 0)); aL.position.set(-1.02, y, 0);
-    aR.setDirection(new THREE.Vector3(1, 0, 0)); aR.position.set(1.02, y, 0);
-    ST.group.add(aL, aR); arrows.push(aL, aR);
+  const bars = [];
+  const BR_AT = 0.72;
+  [{ y: 0.5, d: 0.5, k: 0.5 }, { y: -0.5, d: 0.16, k: 1.05 }].forEach((cfg, bi) => {
+    const mat = steelMatOf();
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.26, cfg.d), mat);
+    bar.position.y = cfg.y;
+    bar.castShadow = true;
+    ST.group.add(bar);
+    const gL = makeGrip(-1, 0.62), gR = makeGrip(1, 0.62);
+    gL.position.set(-1.25, cfg.y, 0); gR.position.set(1.25, cfg.y, 0);
+    bars.push({ ...cfg, bar, mat, gL, gR, halves: null, off: 0, vel: 0 });
   });
-  const tmp = new THREE.Color();
-  ST.setUpdate((l) => {
-    const s1 = Math.min(1, l * 0.45), s2 = Math.min(1, l * 1.0);
-    m1.color.copy(rampColor(s1, tmp));
-    m2.color.copy(rampColor(s2, tmp));
-    b1.scale.x = 1 + 0.03 * s1;
-    b2.scale.x = 1 + 0.055 * s2;
-    const al = 0.35 + 0.5 * l;
-    arrows.forEach((a) => a.setLength(al, 0.2, 0.12));
-  });
-  ST.update(0);
+  // 細い板の破断半分（ギザギザ）
+  const crack = [[0.03,-0.13],[-0.02,-0.04],[0.04,0.05],[0.0,0.13]];
+  function mkHalf(side) {
+    const sh = new THREE.Shape();
+    if (side < 0) {
+      sh.moveTo(-1.0, -0.13); sh.lineTo(crack[0][0], -0.13);
+      for (let i = 0; i < crack.length; i++) sh.lineTo(crack[i][0], crack[i][1]);
+      sh.lineTo(-1.0, 0.13); sh.lineTo(-1.0, -0.13);
+    } else {
+      sh.moveTo(1.0, -0.13); sh.lineTo(1.0, 0.13);
+      sh.lineTo(crack[crack.length - 1][0], 0.13);
+      for (let i = crack.length - 1; i >= 0; i--) sh.lineTo(crack[i][0], crack[i][1]);
+      sh.lineTo(1.0, -0.13);
+    }
+    const g = new THREE.ExtrudeGeometry(sh, { depth: 0.16, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 3 });
+    g.translate(0, 0, -0.08);
+    const m = new THREE.Mesh(g, steelMatOf());
+    m.position.y = -0.5;
+    m.visible = false;
+    m.castShadow = true;
+    ST.group.add(m);
+    return m;
+  }
+  const thinHalves = [mkHalf(-1), mkHalf(1)];
+  let frags = [];
+
+  const proxy = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.7, 0.8), new THREE.MeshBasicMaterial({ visible: false }));
+  ST.group.add(proxy);
+  let load = 0;
+  ST.sceneApi = {
+    proxy, grabAxis: "x", springBack: true,
+    update(l) {
+      load = l;
+      bars.forEach((b, bi) => {
+        const s = Math.min(1, l * b.k * 1.4);
+        b.mat.color.copy(rampColor(s, tc()).clone().lerp(new THREE.Color(0xb8c2cc), 1 - s * 0.9));
+        if (!(bi === 1 && ST.broken)) b.bar.scale.x = 1 + 0.05 * l * b.k;
+        const gx = 1.25 + 0.05 * l * b.k + (bi === 1 && ST.broken ? b.off : 0);
+        b.gL.position.x = -gx; b.gR.position.x = gx;
+      });
+      if (!ST.broken && l >= BR_AT) {
+        ST.breakFX("バチンッ!! 細い方が破断");
+        const b = bars[1];
+        b.bar.visible = false;
+        thinHalves.forEach((h) => (h.visible = true));
+        b.off = 0; b.vel = 2.8;
+        frags = makeFragments(0, -0.5, 6);
+      }
+    },
+    tick(dt) {
+      if (ST.broken) {
+        const b = bars[1];
+        const acc = -(b.off - 0.24) * 60 - b.vel * 7;
+        b.vel += acc * dt; b.off += b.vel * dt;
+        thinHalves[0].position.x = -b.off;
+        thinHalves[1].position.x = b.off;
+        const gx = 1.25 + b.off;
+        b.gL.position.x = -gx; b.gR.position.x = gx;
+        tickFragments(frags, dt);
+      }
+    }
+  };
+  ST.sceneApi.update(0);
 }
 
-/* ---------- L3：ひずみ（材料くらべ） ---------- */
+/* ---------- L3：ひずみ（材料くらべ・見た目も変わる） ---------- */
 function buildL3() {
-  const bar = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.3, 0.4), metalMat(0x9fb0c4));
+  const mats = {
+    steel: steelMatOf(),
+    alu: steelMatOf({ color: 0xd8dde2, roughness: 0.3, metalness: 0.8 }),
+    rubber: new THREE.MeshStandardMaterial({ color: 0x2e3338, metalness: 0.0, roughness: 0.95 })
+  };
+  const bar = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.3, 0.4), mats.steel);
+  bar.castShadow = true;
   ST.group.add(bar);
   const ghost = new THREE.LineSegments(
     new THREE.EdgesGeometry(new THREE.BoxGeometry(2.0, 0.3, 0.4)),
-    new THREE.LineBasicMaterial({ color: 0x4fd1ff, transparent: true, opacity: 0.65 })
+    new THREE.LineBasicMaterial({ color: 0x4fd1ff, transparent: true, opacity: 0.7 })
   );
   ST.group.add(ghost);
-  const aL = mkArrow(0xffb45d), aR = mkArrow(0xffb45d);
-  aL.setDirection(new THREE.Vector3(-1, 0, 0)); aL.position.set(-1.02, 0, 0);
-  aR.setDirection(new THREE.Vector3(1, 0, 0)); aR.position.set(1.02, 0, 0);
-  ST.group.add(aL, aR);
+  const gL = makeGrip(-1, 0.8), gR = makeGrip(1, 0.8);
+  gL.position.x = -1.3; gR.position.x = 1.3;
+
+  const proxy = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1.0, 0.8), new THREE.MeshBasicMaterial({ visible: false }));
+  ST.group.add(proxy);
 
   setExtraHTML('<div class="btnrow">' +
-    '<button class="sbtn on" data-k="1" data-r="0.01">鉄</button>' +
-    '<button class="sbtn" data-k="3" data-r="0.03">アルミ</button>' +
-    '<button class="sbtn" data-k="40" data-r="40">ゴム</button></div>' +
+    '<button class="sbtn on" data-m="steel" data-k="1" data-r="0.01">鉄</button>' +
+    '<button class="sbtn" data-m="alu" data-k="3" data-r="0.03">アルミ</button>' +
+    '<button class="sbtn" data-m="rubber" data-k="40" data-r="40">ゴム</button></div>' +
     '<div class="readout" id="l3read"></div>');
   let k = 1, realMm = 0.01, load = 0;
   document.querySelectorAll("#extraCtrls .sbtn").forEach((b) => {
@@ -734,23 +1038,24 @@ function buildL3() {
       document.querySelectorAll("#extraCtrls .sbtn").forEach((x) => x.classList.remove("on"));
       b.classList.add("on");
       k = +b.dataset.k; realMm = +b.dataset.r;
+      bar.material = mats[b.dataset.m];
       apply();
     });
   });
   function apply() {
     const stretch = Math.min(0.55, 0.02 * k * load);
     bar.scale.x = 1 + stretch;
-    const al = 0.35 + 0.5 * load;
-    aL.setLength(al, 0.2, 0.12); aR.setLength(al, 0.2, 0.12);
-    aL.position.x = -1.02 - stretch; aR.position.x = 1.02 + stretch;
+    const gx = 1.3 + stretch;
+    gL.position.x = -gx; gR.position.x = gx;
     const mm = realMm * load;
-    $("l3read").textContent = "のび（実物なら）: " + (mm < 1 ? mm.toFixed(3) : mm.toFixed(0)) + " mm";
+    const l3 = $("l3read");
+    if (l3) l3.textContent = "のび（実物なら）: " + (mm < 1 ? mm.toFixed(3) : mm.toFixed(0)) + " mm";
   }
   apply();
-  ST.setUpdate((l) => { load = l; apply(); });
+  ST.sceneApi = { proxy, grabAxis: "x", springBack: true, update(l) { load = l; apply(); } };
 }
 
-/* ---------- L4：曲げ（両端支持の梁） ---------- */
+/* ---------- L4：曲げ（プレスで押す・塑性のクセが残る） ---------- */
 function buildL4() {
   const L = 3.0, halfH = 0.21;
   const geo = new THREE.BoxGeometry(L, halfH * 2, 0.55, 64, 6, 6);
@@ -758,127 +1063,353 @@ function buildL4() {
   const base = pos.array.slice();
   const colAttr = new THREE.BufferAttribute(new Float32Array(pos.count * 3), 3);
   geo.setAttribute("color", colAttr);
-  const beam = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, metalness: 0.5, roughness: 0.32 }));
+  const beam = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
+    vertexColors: true, metalness: 0.8, roughness: 0.38,
+    roughnessMap: ST.brush, bumpMap: ST.brush, bumpScale: 0.012, envMapIntensity: 1.1
+  }));
+  beam.castShadow = true;
   ST.group.add(beam);
 
-  const supGeo = new THREE.ConeGeometry(0.2, 0.42, 4);
-  const supMat = metalMat(0x36435a, { metalness: 0.65, roughness: 0.4 });
-  [-1.34, 1.34].forEach((x) => {
-    const s = new THREE.Mesh(supGeo.clone(), supMat.clone());
-    s.position.set(x, -halfH - 0.21, 0);
-    ST.group.add(s);
+  // 支持台（鋼のアンビル2つ・床から生えてる）
+  const supMat = new THREE.MeshStandardMaterial({ color: 0x454c56, metalness: 0.7, roughness: 0.55 });
+  [-1.3, 1.3].forEach((x) => {
+    const post = new THREE.Mesh(new THREE.BoxGeometry(0.34, (-halfH - 0.05) - FLOOR_Y, 0.6), supMat);
+    post.position.set(x, ((-halfH - 0.05) + FLOOR_Y) / 2, 0);
+    post.castShadow = true;
+    ST.group.add(post);
+    const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 0.6, 24), supMat);
+    tip.rotation.x = Math.PI / 2;
+    tip.position.set(x, -halfH - 0.05, 0);
+    tip.castShadow = true;
+    ST.group.add(tip);
   });
-  const arrow = new THREE.ArrowHelper(new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.4, 0), 0.8, 0xff5d4d, 0.22, 0.13);
-  ST.group.add(arrow);
 
-  const maxD = 0.4;
-  ST.setUpdate((load) => {
+  // プレスのラム（上から押す棒）
+  const ram = new THREE.Group();
+  const ramMat = new THREE.MeshStandardMaterial({ color: 0x5a626c, metalness: 0.85, roughness: 0.35, envMapIntensity: 1.1 });
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.13, 0.13, 1.4, 24), ramMat);
+  shaft.position.y = 0.82;
+  shaft.castShadow = true;
+  const tip = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.11, 0.62, 24), ramMat);
+  tip.rotation.x = Math.PI / 2;
+  tip.castShadow = true;
+  ram.add(shaft); ram.add(tip);
+  ST.group.add(ram);
+
+  const proxy = new THREE.Mesh(new THREE.BoxGeometry(3.2, 0.9, 0.8), new THREE.MeshBasicMaterial({ visible: false }));
+  ST.group.add(proxy);
+
+  const maxD = 0.4, YIELD = 0.6;
+  let load = 0, maxSeen = 0;
+  function apply() {
+    maxSeen = Math.max(maxSeen, load);
+    const plastic = Math.max(0, maxSeen - YIELD) * 0.55; // クセ（永久曲がり）
+    const bend = maxD * load + plastic * 0.5;
     const a = pos.array, c = colAttr.array;
     for (let i = 0; i < pos.count; i++) {
       const i3 = i * 3;
       const x = base[i3], y = base[i3 + 1];
       const shp = Math.cos(Math.PI * x / L);
-      a[i3 + 1] = y - maxD * load * shp;
-      let s = -(y / halfH) * shp * load * 1.45;
+      a[i3 + 1] = y - bend * shp;
+      let s = -(y / halfH) * shp * (load + plastic * 0.6) * 1.45;
       s = Math.max(-1, Math.min(1, s));
-      let r = 0.58, g = 0.63, b = 0.7; // 鋼ベース
-      if (s > 0) { r += (0.96 - r) * s; g += (0.17 - g) * s; b += (0.12 - b) * s; }
-      else if (s < 0) { const t2 = -s; r += (0.13 - r) * t2; g += (0.48 - g) * t2; b += (1.0 - b) * t2; }
+      let r = 0.72, g = 0.74, b = 0.78;
+      if (s > 0) { r += (0.96 - r) * s; g += (0.2 - g) * s; b += (0.15 - b) * s; }
+      else if (s < 0) { const t2 = -s; r += (0.2 - r) * t2; g += (0.5 - g) * t2; b += (1.0 - b) * t2; }
       c[i3] = r; c[i3 + 1] = g; c[i3 + 2] = b;
     }
     pos.needsUpdate = true;
     colAttr.needsUpdate = true;
     geo.computeVertexNormals();
-    const topC = halfH - maxD * load;
-    const len = 0.55 + 0.55 * load;
-    arrow.position.set(0, topC + len + 0.04, 0);
-    arrow.setLength(len, 0.22, 0.13);
-  });
-  ST.update(0);
+    ram.position.y = halfH + 0.11 - bend; // ラムが板に付いて降りる
+  }
+  apply();
+  ST.sceneApi = {
+    proxy, grabAxis: "y", springBack: true,
+    update(l) { load = l; apply(); }
+  };
 }
 
-/* ---------- L5：応力集中（穴あき板・破壊つき） ---------- */
+/* ---------- L5：応力集中（穴あき板・ヒビ→ギザギザ破断） ---------- */
 function buildL5() {
-  const holeR = 0.22;
-  const sh = shapeFromPts([[-1.25,-0.6],[1.25,-0.6],[1.25,0.6],[-1.25,0.6]]);
+  const R = 0.22, HW = 1.25, HH = 0.6;
+  const extrudeOpt = { depth: 0.14, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 5, curveSegments: 64 };
+  const sh = shapeFromPts([[-HW,-HH],[HW,-HH],[HW,HH],[-HW,HH],[-HW,-HH]]);
   const hole = new THREE.Path();
-  hole.absarc(0, 0, holeR, 0, Math.PI * 2, true);
+  hole.absarc(0, 0, R, 0, Math.PI * 2, true);
   sh.holes.push(hole);
-  const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.12, bevelEnabled: true, bevelThickness: 0.018, bevelSize: 0.018, bevelSegments: 3, curveSegments: 48 });
+  const geo = new THREE.ExtrudeGeometry(sh, extrudeOpt);
   geo.center();
   const pos = geo.attributes.position;
+  const base = pos.array.slice();
   const colAttr = new THREE.BufferAttribute(new Float32Array(pos.count * 3), 3);
   geo.setAttribute("color", colAttr);
-  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, metalness: 0.45, roughness: 0.35, emissive: 0xff2211, emissiveIntensity: 0 });
+  const mat = new THREE.MeshStandardMaterial({
+    vertexColors: true, metalness: 0.85, roughness: 0.36,
+    roughnessMap: ST.brush, bumpMap: ST.brush, bumpScale: 0.012, envMapIntensity: 1.2
+  });
   const plate = new THREE.Mesh(geo, mat);
+  plate.castShadow = true;
   ST.group.add(plate);
+  const gL = makeGrip(-1, 1), gR = makeGrip(1, 1);
+  gL.position.x = -(HW + 0.17); gR.position.x = HW + 0.17;
 
-  const aL = mkArrow(0xff9d4d), aR = mkArrow(0xff9d4d);
-  aL.setDirection(new THREE.Vector3(-1, 0, 0)); aL.position.set(-1.3, 0, 0);
-  aR.setDirection(new THREE.Vector3(1, 0, 0)); aR.position.set(1.3, 0, 0);
-  ST.group.add(aL, aR);
+  const proxy = new THREE.Mesh(new THREE.BoxGeometry(2.8, 1.5, 0.7), new THREE.MeshBasicMaterial({ visible: false }));
+  ST.group.add(proxy);
 
-  const tmp = new THREE.Color();
-  let broken = false, boomT = 99, wasBroken = false;
-  ST.setUpdate((load) => {
-    const c = colAttr.array;
+  // 亀裂パス＋見た目
+  const crackTop = [[0.02, R], [0.06, R + 0.10], [-0.02, R + 0.20], [0.05, R + 0.30], [0.02, HH]];
+  const crackBot = [[-0.02, -R], [0.05, -R - 0.11], [-0.04, -R - 0.22], [0.03, -HH]];
+  const crackMat = new THREE.MeshStandardMaterial({ color: 0x0c0c0c, metalness: 0.2, roughness: 0.9 });
+  const crackSegs = [];
+  function addSeg(p1, p2) {
+    const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
+    const len = Math.sqrt(dx * dx + dy * dy);
+    [0.082, -0.082].forEach((z) => {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(0.015, len, 0.008), crackMat);
+      m.position.set((p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2, z);
+      m.rotation.z = Math.atan2(dy, dx) - Math.PI / 2;
+      m.visible = false;
+      plate.add(m);
+      crackSegs.push(m);
+    });
+  }
+  for (let i = 0; i < crackTop.length - 1; i++) addSeg(crackTop[i], crackTop[i + 1]);
+  for (let i = 0; i < crackBot.length - 1; i++) addSeg(crackBot[i], crackBot[i + 1]);
+  const PAIRS = crackSegs.length / 2;
+
+  // 破断半分（ギザギザ断面）
+  function halfShape(side) {
+    const s2 = new THREE.Shape();
+    if (side < 0) {
+      s2.moveTo(-HW, -HH);
+      s2.lineTo(crackBot[crackBot.length - 1][0], -HH);
+      for (let i = crackBot.length - 2; i >= 0; i--) s2.lineTo(crackBot[i][0], crackBot[i][1]);
+      s2.absarc(0, 0, R, -Math.PI / 2, Math.PI / 2, true);
+      for (let i = 0; i < crackTop.length; i++) s2.lineTo(crackTop[i][0], crackTop[i][1]);
+      s2.lineTo(-HW, HH); s2.lineTo(-HW, -HH);
+    } else {
+      s2.moveTo(HW, -HH); s2.lineTo(HW, HH);
+      s2.lineTo(crackTop[crackTop.length - 1][0], HH);
+      for (let i = crackTop.length - 2; i >= 0; i--) s2.lineTo(crackTop[i][0], crackTop[i][1]);
+      s2.absarc(0, 0, R, Math.PI / 2, -Math.PI / 2, true);
+      for (let i = 0; i < crackBot.length; i++) s2.lineTo(crackBot[i][0], crackBot[i][1]);
+      s2.lineTo(HW, -HH);
+    }
+    return s2;
+  }
+  const halves = [-1, 1].map((side) => {
+    const g = new THREE.ExtrudeGeometry(halfShape(side), extrudeOpt);
+    g.translate(0, 0, -0.09);
+    const m = new THREE.Mesh(g, steelMatOf());
+    m.visible = false;
+    m.castShadow = true;
+    ST.group.add(m);
+    return m;
+  });
+
+  // 力の流れ粒
+  function streamY(y0, x) {
+    const r2 = x * x + y0 * y0;
+    let y = y0 * (1 + (R * R) / (r2 + 0.015));
+    const lim = Math.sqrt(Math.max(0, R * R * 1.25 - x * x));
+    if (Math.abs(y) < lim) y = (y0 >= 0 ? 1 : -1) * lim;
+    return Math.max(-0.56, Math.min(0.56, y));
+  }
+  function stressAt(x, y) {
+    let d = Math.sqrt(x * x + y * y);
+    if (d < R) d = R;
+    return 0.3 + 0.7 * Math.pow(R / d, 1.7);
+  }
+  const lines = [];
+  [-0.5, -0.38, -0.27, -0.17, -0.08, 0.08, 0.17, 0.27, 0.38, 0.5].forEach((y0) => {
+    const pts = [];
+    for (let x = -1.42; x <= 1.42; x += 0.045) pts.push([x, streamY(y0, x)]);
+    lines.push(pts);
+  });
+  const PPL = 7, pCount = lines.length * PPL * 2;
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(pCount * 3), 3));
+  pGeo.setAttribute("color", new THREE.BufferAttribute(new Float32Array(pCount * 3), 3));
+  const pMat = new THREE.PointsMaterial({ size: 0.045, vertexColors: true, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false });
+  const points = new THREE.Points(pGeo, pMat);
+  ST.group.add(points);
+  const pState = [];
+  for (let li = 0; li < lines.length; li++)
+    for (let kk = 0; kk < PPL; kk++)
+      for (let z = 0; z < 2; z++)
+        pState.push({ li, t: Math.random(), z: z === 0 ? 0.12 : -0.12 });
+
+  const YIELD = 0.55, BREAK = 0.8;
+  let load = 0, maxSeen = 0, lastN = 0, sideOff = 0, sideVel = 0;
+  let frags = [];
+  function deform() {
+    const plastic = Math.max(0, maxSeen - YIELD) * 0.55;
+    const a = pos.array, c = colAttr.array;
     for (let i = 0; i < pos.count; i++) {
       const i3 = i * 3;
-      const x = pos.array[i3], y = pos.array[i3 + 1];
-      let d = Math.sqrt(x * x + y * y);
-      if (d < holeR) d = holeR;
-      const k = 0.3 + 0.7 * Math.pow(holeR / d, 1.7);
-      rampColor(load * k, tmp);
-      c[i3] = tmp.r; c[i3 + 1] = tmp.g; c[i3 + 2] = tmp.b;
+      const x0 = base[i3], y0 = base[i3 + 1];
+      let d = Math.sqrt(x0 * x0 + y0 * y0);
+      if (d < R) d = R;
+      const local = Math.exp(-Math.pow((d - R) / 0.45, 2));
+      a[i3] = x0 * (1 + plastic * 0.35 * local);
+      a[i3 + 1] = y0 * (1 - plastic * 0.18 * local);
+      const s = Math.min(1, load * stressAt(x0, y0) * 1.1 + plastic * 0.5 * local);
+      rampColor(s, tc());
+      const w = s * 0.85;
+      c[i3] = 0.72 * (1 - w) + tc().r * w;
+      c[i3 + 1] = 0.74 * (1 - w) + tc().g * w;
+      c[i3 + 2] = 0.78 * (1 - w) + tc().b * w;
     }
+    pos.needsUpdate = true;
     colAttr.needsUpdate = true;
-    plate.scale.x = 1 + 0.07 * load;
-    const len = 0.35 + 0.55 * load;
-    aL.setLength(len, 0.2, 0.12); aR.setLength(len, 0.2, 0.12);
-    broken = load >= 0.8;
-    if (broken && !wasBroken) { boomT = 0; progress.broken = (progress.broken || 0) + 1; saveProgress(); }
-    wasBroken = broken;
-    setBoom(broken);
-  });
-  ST.setTick((t) => {
-    if (broken) {
-      mat.emissiveIntensity = 0.25 + 0.25 * Math.sin(t * 9);
-      boomT += 0.016;
-      const shake = Math.max(0, 0.05 * (1 - boomT * 1.8));
-      plate.position.x = (Math.random() - 0.5) * shake;
-      plate.position.y = (Math.random() - 0.5) * shake;
-    } else {
-      mat.emissiveIntensity = 0;
-      plate.position.x = 0; plate.position.y = 0;
+    geo.computeVertexNormals();
+  }
+  deform();
+
+  ST.sceneApi = {
+    proxy, grabAxis: "x", springBack: true,
+    update(l) {
+      load = l;
+      if (ST.broken) return;
+      maxSeen = Math.max(maxSeen, l);
+      deform();
+      const kg = Math.round(l * 100);
+      const frac = Math.max(0, Math.min(1, (kg - 65) / 15));
+      const n = Math.floor(frac * PAIRS);
+      for (let i = 0; i < PAIRS; i++) {
+        crackSegs[i * 2].visible = i < n;
+        crackSegs[i * 2 + 1].visible = i < n;
+      }
+      if (n > lastN) vib(12);
+      lastN = n;
+      const elong = 0.05 * l + Math.max(0, maxSeen - YIELD) * 0.07;
+      plate.scale.x = 1 + elong;
+      const gx = HW * (1 + elong) + 0.17;
+      gL.position.x = -gx; gR.position.x = gx;
+      pMat.opacity = 0.12 + 0.6 * l;
+      if (l >= BREAK) {
+        ST.breakFX("破断!!");
+        plate.visible = false; points.visible = false;
+        halves.forEach((h) => (h.visible = true));
+        sideOff = 0; sideVel = 3.2;
+        frags = makeFragments(0, 0, 8);
+      }
+    },
+    tick(dt) {
+      if (!ST.broken) {
+        const arr = pGeo.attributes.position.array, carr = pGeo.attributes.color.array;
+        const elong = plate.scale.x - 1;
+        for (let i = 0; i < pState.length; i++) {
+          const s = pState[i], pts = lines[s.li];
+          const idx = Math.min(pts.length - 1, Math.floor(s.t * (pts.length - 1)));
+          const [x, y] = pts[idx];
+          const st = stressAt(x, y);
+          s.t += dt * (0.05 + 0.5 * load) * (0.45 + st);
+          if (s.t >= 1) s.t = 0;
+          arr[i * 3] = x * (1 + elong); arr[i * 3 + 1] = y; arr[i * 3 + 2] = s.z;
+          rampColor(Math.min(1, st * load * 1.3), tc());
+          carr[i * 3] = tc().r; carr[i * 3 + 1] = tc().g; carr[i * 3 + 2] = tc().b;
+        }
+        pGeo.attributes.position.needsUpdate = true;
+        pGeo.attributes.color.needsUpdate = true;
+        // 限界前のプルプル
+        if (load >= 0.62) {
+          const amp = (load - 0.62) / 0.18 * 0.011;
+          plate.position.x = (Math.random() - 0.5) * amp;
+          plate.position.y = (Math.random() - 0.5) * amp;
+        } else { plate.position.x = 0; plate.position.y = 0; }
+      } else {
+        const acc = -(sideOff - 0.28) * 60 - sideVel * 7;
+        sideVel += acc * dt; sideOff += sideVel * dt;
+        halves[0].position.x = -sideOff;
+        halves[1].position.x = sideOff;
+        const gx = HW + 0.17 + sideOff;
+        gL.position.x = -gx; gR.position.x = gx;
+        tickFragments(frags, dt);
+      }
     }
-  });
-  ST.update(0);
+  };
+  ST.sceneApi.update(0);
 }
 
-/* ---------- L6：安全率（壁の棚ブラケット・破壊つき） ---------- */
+/* ---------- L6：安全率（壁ブラケット＋重り・角からもげる） ---------- */
 function buildL6() {
   // 壁
-  const wall = new THREE.Mesh(new THREE.BoxGeometry(0.14, 1.6, 1.1), metalMat(0x141c28, { metalness: 0.2, roughness: 0.8 }));
-  wall.position.set(-0.79, 0, 0);
+  const wall = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.9, 1.3),
+    new THREE.MeshStandardMaterial({ color: 0x3a4048, metalness: 0.3, roughness: 0.8 }));
+  wall.position.set(-0.85, -0.2, 0);
+  wall.castShadow = true; wall.receiveShadow = true;
   ST.group.add(wall);
 
-  // ブラケット（縦脚＋上アーム）内角 (-0.54, 0.34)
-  const sh = shapeFromPts([[-0.7,-0.5],[-0.54,-0.5],[-0.54,0.34],[0.7,0.34],[0.7,0.5],[-0.7,0.5]]);
-  const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.4, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 2, curveSegments: 24 });
+  // ブラケット（縦脚＋上アーム）内角(-0.54,0.34)
+  const cx = -0.54, cy = 0.34;
+  const shAll = shapeFromPts([[-0.7,-0.5],[-0.54,-0.5],[-0.54,0.34],[0.7,0.34],[0.7,0.5],[-0.7,0.5]]);
+  const opt = { depth: 0.4, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 3, curveSegments: 24 };
+  const geo = new THREE.ExtrudeGeometry(shAll, opt);
   geo.translate(0, 0, -0.2);
   const pos = geo.attributes.position;
   const base = pos.array.slice();
   const colAttr = new THREE.BufferAttribute(new Float32Array(pos.count * 3), 3);
   geo.setAttribute("color", colAttr);
-  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, metalness: 0.45, roughness: 0.35, emissive: 0xff2211, emissiveIntensity: 0 });
+  const mat = new THREE.MeshStandardMaterial({
+    vertexColors: true, metalness: 0.85, roughness: 0.36,
+    roughnessMap: ST.brush, bumpMap: ST.brush, bumpScale: 0.012, envMapIntensity: 1.2
+  });
   const brk = new THREE.Mesh(geo, mat);
+  brk.castShadow = true;
   ST.group.add(brk);
 
-  // ぶら下がる重り＋矢印
-  const weight = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.3), metalMat(0x8a6a3a, { metalness: 0.6, roughness: 0.4 }));
+  // 固定ボルト
+  const boltMat = new THREE.MeshStandardMaterial({ color: 0x22262c, metalness: 0.8, roughness: 0.4 });
+  [0.28, -0.1, -0.42].forEach((y) => {
+    const b = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 0.06, 6), boltMat);
+    b.rotation.z = Math.PI / 2;
+    b.position.set(-0.52, y, 0.1);
+    ST.group.add(b);
+  });
+
+  // 吊りロッド＋重り
+  const rodMat = new THREE.MeshStandardMaterial({ color: 0x5a626c, metalness: 0.85, roughness: 0.35 });
+  const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.5, 12), rodMat);
+  rod.castShadow = true;
+  ST.group.add(rod);
+  const weight = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.42, 0.42),
+    new THREE.MeshStandardMaterial({ color: 0x6a5a42, metalness: 0.55, roughness: 0.5 }));
+  weight.castShadow = true;
   ST.group.add(weight);
-  const arrow = new THREE.ArrowHelper(new THREE.Vector3(0, -1, 0), new THREE.Vector3(0.55, 0, 0), 0.5, 0xff5d4d, 0.18, 0.11);
-  ST.group.add(arrow);
+
+  const proxy = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.6, 0.8), new THREE.MeshBasicMaterial({ visible: false }));
+  proxy.position.set(0.55, -0.5, 0);
+  ST.group.add(proxy);
+
+  // 角の亀裂
+  const crackMat = new THREE.MeshStandardMaterial({ color: 0x0c0c0c, metalness: 0.2, roughness: 0.9 });
+  const cracks = [];
+  [[[-0.54,0.34],[-0.51,0.39]],[[-0.51,0.39],[-0.535,0.45]]].forEach(([p1, p2]) => {
+    const dx = p2[0]-p1[0], dy = p2[1]-p1[1];
+    const len = Math.sqrt(dx*dx+dy*dy);
+    [0.21, -0.21].forEach((z) => {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(0.014, len, 0.008), crackMat);
+      m.position.set((p1[0]+p2[0])/2, (p1[1]+p2[1])/2, z);
+      m.rotation.z = Math.atan2(dy, dx) - Math.PI/2;
+      m.visible = false;
+      brk.add(m);
+      cracks.push(m);
+    });
+  });
+
+  // 破断ピース（脚だけ残る／アームがもげて落ちる）
+  const jag = [[-0.5,0.36],[-0.53,0.42],[-0.5,0.5]];
+  const legShape = shapeFromPts([[-0.7,-0.5],[-0.54,-0.5],[-0.54,0.34],[-0.5,0.36],[-0.53,0.42],[-0.5,0.5],[-0.7,0.5]]);
+  const armShape = shapeFromPts([[-0.5,0.36],[-0.53,0.42],[-0.5,0.5],[0.7,0.5],[0.7,0.34],[-0.54,0.34],[-0.5,0.36]]);
+  const legPiece = new THREE.Mesh((() => { const g = new THREE.ExtrudeGeometry(legShape, opt); g.translate(0,0,-0.2); return g; })(), steelMatOf());
+  const armPiece = new THREE.Mesh((() => { const g = new THREE.ExtrudeGeometry(armShape, opt); g.translate(0,0,-0.2); return g; })(), steelMatOf());
+  legPiece.visible = armPiece.visible = false;
+  legPiece.castShadow = armPiece.castShadow = true;
+  ST.group.add(legPiece); ST.group.add(armPiece);
+  const fallGroup = new THREE.Group();
+  ST.group.add(fallGroup);
 
   setExtraHTML(
     '<div class="gauge"><div class="gfill" id="l6fill"></div><div class="gmark"></div></div>' +
@@ -886,55 +1417,80 @@ function buildL6() {
     '<div class="readout" id="l6read"></div>'
   );
 
-  const cx = -0.54, cy = 0.34;
-  const tmp = new THREE.Color();
-  let broken = false, boomT = 99, wasBroken = false;
-  ST.setUpdate((load) => {
+  const BREAK = 0.8;
+  let load = 0, lastN = 0, frags = [], fallVy = 0, fallOn = false;
+  function apply() {
     const a = pos.array, c = colAttr.array;
     for (let i = 0; i < pos.count; i++) {
       const i3 = i * 3;
       const x = base[i3], y = base[i3 + 1];
-      // アームのたわみ（先端ほど下がる）
       if (x > cx && y > 0.2) {
         const r = (x - cx) / 1.24;
         a[i3 + 1] = y - 0.16 * load * r * r;
       }
       const d = Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
-      rampColor(load * (0.18 + 0.82 * Math.exp(-2.6 * d)), tmp);
-      c[i3] = tmp.r; c[i3 + 1] = tmp.g; c[i3 + 2] = tmp.b;
+      const s = Math.min(1, load * (0.18 + 0.82 * Math.exp(-2.6 * d)) * 1.3);
+      rampColor(s, tc());
+      const w = s * 0.85;
+      c[i3] = 0.72 * (1 - w) + tc().r * w;
+      c[i3 + 1] = 0.74 * (1 - w) + tc().g * w;
+      c[i3 + 2] = 0.78 * (1 - w) + tc().b * w;
     }
     pos.needsUpdate = true;
     colAttr.needsUpdate = true;
     geo.computeVertexNormals();
-
     const tipSag = 0.16 * load;
-    weight.position.set(0.55, 0.34 - tipSag - 0.32, 0);
-    const len = 0.3 + 0.4 * load;
-    arrow.position.set(0.55, weight.position.y - 0.16, 0);
-    arrow.setLength(len, 0.18, 0.11);
+    const tipY = 0.34 - tipSag;
+    rod.position.set(0.55, tipY - 0.25, 0);
+    weight.position.set(0.55, tipY - 0.5 - 0.21, 0);
+    proxy.position.set(0.55, tipY - 0.55, 0);
 
     const kg = Math.round(load * 100);
-    $("l6fill").style.width = kg + "%";
-    $("l6read").textContent = kg === 0 ? "安全率：─（まだ吊ってない）" : "安全率 ＝ 80 ÷ " + kg + " ＝ " + (80 / kg).toFixed(1) + (80 / kg >= 2 ? " 👍" : " ⚠️");
+    const f = $("l6fill"), rd = $("l6read");
+    if (f) f.style.width = kg + "%";
+    if (rd) rd.textContent = kg === 0 ? "安全率：─（まだ吊ってない）" : "安全率 ＝ 80 ÷ " + kg + " ＝ " + (80 / kg).toFixed(1) + (80 / kg >= 2 ? " 👍" : " ⚠️");
 
-    broken = load >= 0.8;
-    if (broken && !wasBroken) { boomT = 0; progress.broken = (progress.broken || 0) + 1; saveProgress(); }
-    wasBroken = broken;
-    setBoom(broken);
-  });
-  ST.setTick((t) => {
-    if (broken) {
-      mat.emissiveIntensity = 0.25 + 0.25 * Math.sin(t * 9);
-      boomT += 0.016;
-      const shake = Math.max(0, 0.05 * (1 - boomT * 1.8));
-      brk.position.x = (Math.random() - 0.5) * shake;
-      brk.position.y = (Math.random() - 0.5) * shake;
-    } else {
-      mat.emissiveIntensity = 0;
-      brk.position.x = 0; brk.position.y = 0;
+    const n = kg >= 74 ? 2 : kg >= 68 ? 1 : 0;
+    cracks.forEach((m, i) => (m.visible = Math.floor(i / 2) < n));
+    if (n > lastN) vib(12);
+    lastN = n;
+  }
+  apply();
+  ST.sceneApi = {
+    proxy, grabAxis: "y", springBack: false,
+    update(l) {
+      if (ST.broken) return;
+      load = l;
+      apply();
+      if (l >= BREAK) {
+        ST.breakFX("バキッ!! 角からもげた");
+        brk.visible = false;
+        legPiece.visible = true;
+        // アーム＋ロッド＋重りが落下グループへ
+        armPiece.visible = true;
+        fallGroup.add(armPiece); fallGroup.add(rod); fallGroup.add(weight);
+        fallVy = 0.2; fallOn = true;
+        frags = makeFragments(-0.5, 0.4, 5);
+      }
+    },
+    tick(dt) {
+      if (ST.broken) {
+        if (fallOn) {
+          fallVy -= 5.5 * dt;
+          fallGroup.position.y += fallVy * dt;
+          fallGroup.position.x += 0.25 * dt;
+          fallGroup.rotation.z -= 0.5 * dt;
+          // 重りの底が床に着いたら止める
+          const wy = weight.position.y + fallGroup.position.y;
+          if (wy - 0.21 <= FLOOR_Y) {
+            if (Math.abs(fallVy) > 0.4) { fallVy = -fallVy * 0.3; vib(20); }
+            else { fallOn = false; }
+          }
+        }
+        tickFragments(frags, dt);
+      }
     }
-  });
-  ST.update(0);
+  };
 }
 
 const BUILDERS = { l1: buildL1, l2: buildL2, l3: buildL3, l4: buildL4, l5: buildL5, l6: buildL6 };
@@ -951,7 +1507,6 @@ function openLesson(i) {
   showView("viewLesson");
   $("lsTag").textContent = cur.tag;
   $("lsTitle").textContent = cur.title;
-  // ミッション
   $("msNo").innerHTML = cur.mission.no;
   $("msQ").innerHTML = cur.mission.q;
   const wrap = $("msOpts");
@@ -966,6 +1521,15 @@ function openLesson(i) {
   setPhase("phMission");
 }
 
+function rebuildScene() {
+  if (!ST || ST.fake) return;
+  ST.clearScene();
+  $("loadRange").value = 0;
+  $("loadVal").textContent = "0kg";
+  setExtraHTML("");
+  BUILDERS[cur.id]();
+}
+
 function startExp() {
   setPhase("phExp");
   $("guessLine").textContent = "きみの予想：「" + cur.mission.opts[missionPick] + "」── 実験で確かめよう";
@@ -973,26 +1537,26 @@ function startExp() {
   $("expLegend").innerHTML = cur.legend.map((x) => "<span>" + x + "</span>").join("");
   $("expNote").innerHTML = cur.note;
   setExtraHTML("");
-  const range = $("loadRange");
-  range.value = 0;
+  $("loadRange").value = 0;
   $("loadVal").textContent = "0kg";
   const btn = $("btnToReveal");
   btn.disabled = true;
 
   ensureStage();
   if (ST.fake) { btn.disabled = false; return; }
-  ST.clear();
+  ST.clearScene();
   ST.resetView();
   BUILDERS[cur.id]();
   ST.resize();
 }
 
-$("loadRange").addEventListener("input", () => {
+function onLoadInput() {
   const v = +$("loadRange").value;
-  $("loadVal").textContent = v + "kg";
-  if (ST && !ST.fake) ST.update(v / 100);
+  $("loadVal").textContent = Math.round(v) + "kg";
+  if (ST && !ST.fake && ST.sceneApi) ST.sceneApi.update(v / 100);
   $("btnToReveal").disabled = false;
-});
+}
+$("loadRange").addEventListener("input", onLoadInput);
 
 $("btnToReveal").addEventListener("click", () => {
   const m = cur.mission;

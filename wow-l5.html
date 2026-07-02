@@ -1,0 +1,656 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>FORCE FORGE ── WOW版 L5（リアル引張試験室）</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    background: #101318; color: #e8edf3; overflow: hidden;
+    font-family: "Yu Gothic UI", "Hiragino Sans", "Meiryo", system-ui, sans-serif;
+  }
+  #wrap { position: relative; max-width: 520px; height: 100%; margin: 0 auto; display: flex; flex-direction: column; }
+  #stage { position: relative; flex: 1; min-height: 0; }
+  #stage canvas { display: block; touch-action: none; cursor: grab; }
+
+  #missionBar {
+    position: absolute; top: 12px; left: 12px; right: 12px; z-index: 5;
+    display: flex; align-items: center; gap: 10px; pointer-events: none;
+  }
+  .mtag {
+    padding: 5px 12px; border-radius: 8px; font-size: 12px; font-weight: 900; letter-spacing: 2px;
+    color: #ffb45d; border: 1.5px solid rgba(255,157,77,0.7); background: rgba(10,12,16,0.75);
+  }
+  .mtxt { font-size: 13px; font-weight: 800; color: #f2f6fa; text-shadow: 0 1px 6px #000; }
+  #hint {
+    position: absolute; top: 52px; right: 12px; z-index: 5; font-size: 10.5px; color: #cfe0f0;
+    background: rgba(10,12,16,0.72); padding: 4px 10px; border-radius: 999px;
+    border: 1px solid rgba(200,220,240,0.25); pointer-events: none;
+  }
+
+  #stampIn { position: absolute; inset: 0; z-index: 8; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+  #stampIn div {
+    padding: 18px 34px; border: 4px solid #ffb45d; border-radius: 14px; transform: rotate(-7deg);
+    font-size: 34px; font-weight: 900; letter-spacing: 4px; color: #ffb45d;
+    text-shadow: 0 0 24px rgba(255,157,77,0.9); background: rgba(10,12,16,0.55);
+    animation: slam 0.55s cubic-bezier(0.15, 1.6, 0.3, 1) both, fadeout 0.6s 1.6s forwards;
+  }
+  @keyframes slam { 0% { transform: rotate(-7deg) scale(3.2); opacity: 0; } 100% { transform: rotate(-7deg) scale(1); opacity: 1; } }
+  @keyframes fadeout { to { opacity: 0; } }
+
+  #flash { position: absolute; inset: 0; z-index: 9; background: #fff; opacity: 0; pointer-events: none; }
+  #destroyed {
+    position: absolute; inset: 0; z-index: 10; display: none; align-items: center; justify-content: center;
+    flex-direction: column; gap: 10px; pointer-events: none;
+  }
+  #destroyed .big {
+    font-size: 42px; font-weight: 900; letter-spacing: 3px; color: #ffe2da; transform: rotate(-6deg);
+    text-shadow: 0 0 30px rgba(255,80,50,0.9);
+    animation: slam 0.4s cubic-bezier(0.15, 1.6, 0.3, 1) both;
+  }
+  #destroyed .xp {
+    font-size: 18px; font-weight: 900; color: #3ef0a0; text-shadow: 0 0 16px rgba(62,240,160,0.8);
+    animation: rise 1.4s 0.25s both;
+  }
+  @keyframes rise { 0% { transform: translateY(18px); opacity: 0; } 30% { opacity: 1; } 100% { transform: translateY(-14px); opacity: 1; } }
+
+  #hud { padding: 12px 14px calc(16px + env(safe-area-inset-bottom)); background: linear-gradient(180deg, transparent, rgba(12,14,18,0.92) 30%); }
+  #warn { text-align: center; font-size: 13px; font-weight: 900; height: 20px; color: #ffb45d; }
+  #warn.danger { color: #ff5d4d; animation: blink 0.5s infinite; }
+  @keyframes blink { 50% { opacity: 0.25; } }
+  .gauge { position: relative; height: 16px; border-radius: 9px; background: #1a1e24; overflow: hidden; margin-top: 6px; }
+  .gauge .fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4fd1ff, #ffb45d 70%, #ff5d4d); transition: width 0.08s; }
+  .gauge .mark { position: absolute; top: -2px; bottom: -2px; left: 80%; width: 3px; background: #ff5d4d; box-shadow: 0 0 10px rgba(255,93,77,1); }
+  .gcap { display: flex; justify-content: space-between; font-size: 10px; color: #78838f; margin-top: 4px; }
+  .row { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+  .row input[type=range] { flex: 1; accent-color: #ff9d4d; height: 34px; min-width: 0; }
+  #kg { min-width: 96px; text-align: right; font-size: 30px; font-weight: 900; color: #f2f6fa; font-variant-numeric: tabular-nums; }
+  #kg small { font-size: 13px; color: #9fc0da; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage">
+    <div id="missionBar">
+      <span class="mtag">MISSION 05</span>
+      <span class="mtxt">穴あき鋼板 ── 引張試験で限界を探れ</span>
+    </div>
+    <div id="hint">🖐 板をつかんで引っぱれ／背景ドラッグ＝回転</div>
+    <div id="stampIn"><div>MISSION 05</div></div>
+    <div id="flash"></div>
+    <div id="destroyed">
+      <div class="big">破断!!</div>
+      <div class="xp">+50 XP ── 破壊データ回収</div>
+      <div class="xp" style="color:#9fc0da">🔧 画面タップで新しい試験片をセット</div>
+    </div>
+  </div>
+  <div id="hud">
+    <div id="warn"></div>
+    <div class="gauge"><div class="fill" id="gFill"></div><div class="mark"></div></div>
+    <div class="gcap"><span>0</span><span style="color:#ff8f85">破断 80kg</span><span>100</span></div>
+    <div class="row">
+      <input type="range" id="load" min="0" max="100" value="0">
+      <div id="kg">0<small> kg</small></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+(function () {
+  const stageEl = document.getElementById("stage");
+
+  // ===== レンダラ（影＋フィルム調＝現実の見え方） =====
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 3));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.05;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  stageEl.insertBefore(renderer.domElement, stageEl.firstChild);
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x14171d);
+  scene.fog = new THREE.Fog(0x14171d, 8, 16);
+
+  const camera = new THREE.PerspectiveCamera(33, 1, 0.1, 60);
+  camera.position.set(0, 0.9, 5.6);
+  camera.lookAt(0, -0.15, 0);
+
+  // ===== 映り込み環境（無彩色スタジオ＝本物の金属の照り） =====
+  (function makeEnv() {
+    const es = new THREE.Scene();
+    const box = new THREE.BoxGeometry(1, 1, 1);
+    function panel(x, y, z, sx, sy, color) {
+      const m = new THREE.Mesh(box, new THREE.MeshBasicMaterial({ color }));
+      m.position.set(x, y, z);
+      m.scale.set(sx, sy, 0.1);
+      m.lookAt(0, 0, 0);
+      es.add(m);
+    }
+    es.add(new THREE.Mesh(new THREE.SphereGeometry(20, 8, 8), new THREE.MeshBasicMaterial({ color: 0x14161a, side: THREE.BackSide })));
+    panel(0, 6, 1, 7, 3.5, 0xffffff);      // 天井ソフトボックス
+    panel(-6, 2, 2, 2, 4, 0x9fb4c8);       // 左：窓明かり（うすい青灰）
+    panel(6, 1.5, -1, 1.5, 4, 0xcdbfa8);   // 右：作業灯（うすい暖色）
+    panel(0, 0.8, 6, 5, 2.2, 0x6f7a86);    // 正面の淡い反射
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(es, 0.02).texture;
+  })();
+
+  // ===== ライト（キー＋やわらかい影） =====
+  scene.add(new THREE.HemisphereLight(0xbfd0e0, 0x2b2620, 0.4));
+  const key = new THREE.DirectionalLight(0xfff4e6, 1.1);
+  key.position.set(3, 5, 2.5);
+  key.castShadow = true;
+  key.shadow.mapSize.set(2048, 2048);
+  key.shadow.camera.left = -3.5; key.shadow.camera.right = 3.5;
+  key.shadow.camera.top = 3.5; key.shadow.camera.bottom = -3.5;
+  key.shadow.bias = -0.0004;
+  scene.add(key);
+  const rim = new THREE.PointLight(0x8fb8d8, 0.25, 16); rim.position.set(-3.4, 1.6, -2.6); scene.add(rim);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  // ===== 床（コンクリート＋影を受ける） =====
+  function concreteTex() {
+    const cv = document.createElement("canvas");
+    cv.width = 256; cv.height = 256;
+    const ctx = cv.getContext("2d");
+    ctx.fillStyle = "#585d64"; ctx.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 5200; i++) {
+      const g = 70 + Math.random() * 50 | 0;
+      ctx.fillStyle = "rgba(" + g + "," + (g + 3) + "," + (g + 7) + "," + (0.12 + Math.random() * 0.2) + ")";
+      ctx.fillRect(Math.random() * 256, Math.random() * 256, 1 + Math.random() * 2, 1 + Math.random() * 2);
+    }
+    const tex = new THREE.CanvasTexture(cv);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    tex.repeat.set(3, 3);
+    return tex;
+  }
+  const FLOOR_Y = -1.18;
+  const floor = new THREE.Mesh(
+    new THREE.CircleGeometry(5.5, 64),
+    new THREE.MeshStandardMaterial({ map: concreteTex(), color: 0x8a8f96, metalness: 0.04, roughness: 0.93 })
+  );
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.y = FLOOR_Y;
+  floor.receiveShadow = true;
+  group.add(floor);
+
+  // ===== ブラシ金属テクスチャ =====
+  function brushedTex() {
+    const cv = document.createElement("canvas");
+    cv.width = 512; cv.height = 512;
+    const ctx = cv.getContext("2d");
+    ctx.fillStyle = "#9a9a9a"; ctx.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 2600; i++) {
+      const y = Math.random() * 512, x = Math.random() * 512;
+      const len = 30 + Math.random() * 220;
+      ctx.strokeStyle = Math.random() < 0.5
+        ? "rgba(255,255,255," + (0.03 + Math.random() * 0.06) + ")"
+        : "rgba(0,0,0," + (0.03 + Math.random() * 0.06) + ")";
+      ctx.lineWidth = 0.5 + Math.random();
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + len, y + (Math.random() - 0.5) * 2); ctx.stroke();
+    }
+    const tex = new THREE.CanvasTexture(cv);
+    tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+    return tex;
+  }
+  const brush = brushedTex();
+
+  // ===== 試験片（穴あき鋼板） =====
+  const R = 0.22, HW = 1.25, HH = 0.6;
+  const extrudeOpt = { depth: 0.14, bevelEnabled: true, bevelThickness: 0.02, bevelSize: 0.02, bevelSegments: 5, curveSegments: 64 };
+  function plateShape() {
+    const sh = new THREE.Shape();
+    sh.moveTo(-HW, -HH); sh.lineTo(HW, -HH); sh.lineTo(HW, HH); sh.lineTo(-HW, HH); sh.lineTo(-HW, -HH);
+    const hole = new THREE.Path();
+    hole.absarc(0, 0, R, 0, Math.PI * 2, true);
+    sh.holes.push(hole);
+    return sh;
+  }
+  const geo = new THREE.ExtrudeGeometry(plateShape(), extrudeOpt);
+  geo.center();
+  const pos = geo.attributes.position;
+  const base = pos.array.slice();
+  const colAttr = new THREE.BufferAttribute(new Float32Array(pos.count * 3), 3);
+  geo.setAttribute("color", colAttr);
+  const steelMat = new THREE.MeshStandardMaterial({
+    vertexColors: true, metalness: 0.85, roughness: 0.36,
+    roughnessMap: brush, bumpMap: brush, bumpScale: 0.012, envMapIntensity: 1.2
+  });
+  const plate = new THREE.Mesh(geo, steelMat);
+  plate.castShadow = true;
+  group.add(plate);
+
+  // つかみ用の見えない当たり判定（穴の上でもつかめる）
+  const hitProxy = new THREE.Mesh(new THREE.BoxGeometry(2.8, 1.5, 0.7), new THREE.MeshBasicMaterial({ visible: false }));
+  group.add(hitProxy);
+
+  // ===== 引張試験機のツカミ（左右のグリップ） =====
+  function makeGrip(side) {
+    const g = new THREE.Group();
+    const body = new THREE.Mesh(
+      new THREE.BoxGeometry(0.55, 1.05, 0.55),
+      new THREE.MeshStandardMaterial({ color: 0x4b525c, metalness: 0.75, roughness: 0.5, envMapIntensity: 0.9 })
+    );
+    body.castShadow = true;
+    g.add(body);
+    // ツカミ歯（上下から板を挟む）
+    const jawMat = new THREE.MeshStandardMaterial({ color: 0x363c44, metalness: 0.7, roughness: 0.6 });
+    [0.14, -0.14].forEach((y) => {
+      const jaw = new THREE.Mesh(new THREE.BoxGeometry(0.42, 0.12, 0.5), jawMat);
+      jaw.position.set(-side * 0.42, y, 0);
+      jaw.castShadow = true;
+      g.add(jaw);
+    });
+    // ボルト飾り
+    const boltMat = new THREE.MeshStandardMaterial({ color: 0x22262c, metalness: 0.8, roughness: 0.4 });
+    [[0.12, 0.32], [0.12, -0.32], [-0.12, 0.32], [-0.12, -0.32]].forEach(([x, y]) => {
+      const b = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.06, 6), boltMat);
+      b.rotation.x = Math.PI / 2;
+      b.position.set(x, y, 0.28);
+      g.add(b);
+    });
+    // 引張ロッド（外へ伸びる）
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 1.6, 24),
+      new THREE.MeshStandardMaterial({ color: 0x5a626c, metalness: 0.85, roughness: 0.35, envMapIntensity: 1.1 }));
+    rod.rotation.z = Math.PI / 2;
+    rod.position.x = side * 1.05;
+    rod.castShadow = true;
+    g.add(rod);
+    group.add(g);
+    return g;
+  }
+  const gripL = makeGrip(-1), gripR = makeGrip(1);
+
+  // ===== ギザギザの亀裂パス（穴の上下から縁へ） =====
+  const crackTop = [[0.02, R], [0.06, R + 0.10], [-0.02, R + 0.20], [0.05, R + 0.30], [0.02, HH]];
+  const crackBot = [[-0.02, -R], [0.05, -R - 0.11], [-0.04, -R - 0.22], [0.03, -HH]];
+
+  // 亀裂の見た目（進行度で1本ずつ現れる細い黒スジ・表裏）
+  const crackMat = new THREE.MeshStandardMaterial({ color: 0x0c0c0c, metalness: 0.2, roughness: 0.9 });
+  const crackSegs = [];
+  function addCrackSeg(p1, p2) {
+    const dx = p2[0] - p1[0], dy = p2[1] - p1[1];
+    const len = Math.sqrt(dx * dx + dy * dy);
+    [0.082, -0.082].forEach((z) => {
+      const m = new THREE.Mesh(new THREE.BoxGeometry(0.015, len, 0.008), crackMat);
+      m.position.set((p1[0] + p2[0]) / 2, (p1[1] + p2[1]) / 2, z);
+      m.rotation.z = Math.atan2(dy, dx) - Math.PI / 2;
+      m.visible = false;
+      plate.add(m);
+      crackSegs.push(m);
+    });
+  }
+  for (let i = 0; i < crackTop.length - 1; i++) addCrackSeg(crackTop[i], crackTop[i + 1]);
+  for (let i = 0; i < crackBot.length - 1; i++) addCrackSeg(crackBot[i], crackBot[i + 1]);
+  const CRACK_PAIRS = crackSegs.length / 2;
+
+  // ===== 破断後の左右半分（亀裂パスどおりのギザギザ断面） =====
+  function halfShape(side) {
+    const sh = new THREE.Shape();
+    if (side < 0) {
+      sh.moveTo(-HW, -HH);
+      sh.lineTo(crackBot[crackBot.length - 1][0], -HH);
+      for (let i = crackBot.length - 2; i >= 0; i--) sh.lineTo(crackBot[i][0], crackBot[i][1]);
+      sh.absarc(0, 0, R, -Math.PI / 2, Math.PI / 2, true); // 穴の左まわり
+      for (let i = 0; i < crackTop.length; i++) sh.lineTo(crackTop[i][0], crackTop[i][1]);
+      sh.lineTo(-HW, HH);
+      sh.lineTo(-HW, -HH);
+    } else {
+      sh.moveTo(HW, -HH); sh.lineTo(HW, HH);
+      sh.lineTo(crackTop[crackTop.length - 1][0], HH);
+      for (let i = crackTop.length - 2; i >= 0; i--) sh.lineTo(crackTop[i][0], crackTop[i][1]);
+      sh.absarc(0, 0, R, Math.PI / 2, -Math.PI / 2, true); // 穴の右まわり
+      for (let i = 0; i < crackBot.length; i++) sh.lineTo(crackBot[i][0], crackBot[i][1]);
+      sh.lineTo(HW, -HH);
+    }
+    return sh;
+  }
+  const halfMat = new THREE.MeshStandardMaterial({
+    color: 0xb8c2cc, metalness: 0.85, roughness: 0.36,
+    roughnessMap: brush, bumpMap: brush, bumpScale: 0.012, envMapIntensity: 1.2
+  });
+  const halves = [-1, 1].map((side) => {
+    const g = new THREE.ExtrudeGeometry(halfShape(side), extrudeOpt);
+    g.translate(0, 0, -0.09);
+    const m = new THREE.Mesh(g, halfMat);
+    m.visible = false;
+    m.castShadow = true;
+    group.add(m);
+    return m;
+  });
+
+  // ===== 力の流れ（教材用の光の粒・控えめ） =====
+  function streamY(y0, x) {
+    const r2 = x * x + y0 * y0;
+    let y = y0 * (1 + (R * R) / (r2 + 0.015));
+    const lim = Math.sqrt(Math.max(0, R * R * 1.25 - x * x));
+    if (Math.abs(y) < lim) y = (y0 >= 0 ? 1 : -1) * lim;
+    return Math.max(-0.56, Math.min(0.56, y));
+  }
+  function stressAt(x, y) {
+    let d = Math.sqrt(x * x + y * y);
+    if (d < R) d = R;
+    return 0.3 + 0.7 * Math.pow(R / d, 1.7);
+  }
+  const lines = [];
+  [-0.5, -0.38, -0.27, -0.17, -0.08, 0.08, 0.17, 0.27, 0.38, 0.5].forEach((y0) => {
+    const pts = [];
+    for (let x = -1.42; x <= 1.42; x += 0.045) pts.push([x, streamY(y0, x)]);
+    lines.push(pts);
+  });
+  const PPL = 7;
+  const pCount = lines.length * PPL * 2;
+  const pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute("position", new THREE.BufferAttribute(new Float32Array(pCount * 3), 3));
+  pGeo.setAttribute("color", new THREE.BufferAttribute(new Float32Array(pCount * 3), 3));
+  const pMat = new THREE.PointsMaterial({ size: 0.045, vertexColors: true, transparent: true, opacity: 0.12, blending: THREE.AdditiveBlending, depthWrite: false });
+  const points = new THREE.Points(pGeo, pMat);
+  group.add(points);
+  const pState = [];
+  for (let li = 0; li < lines.length; li++)
+    for (let k = 0; k < PPL; k++)
+      for (let z = 0; z < 2; z++)
+        pState.push({ li, t: Math.random(), z: z === 0 ? 0.12 : -0.12 });
+
+  const tmpC = new THREE.Color();
+  function rampColor(s, c) {
+    s = Math.max(0, Math.min(1, s));
+    c.setHSL(0.58 * (1 - s), 0.9, 0.5 + 0.12 * s);
+    return c;
+  }
+
+  // ===== 物理状態 =====
+  const YIELD = 0.55, BREAK = 0.8;      // 降伏55kg・破断80kg
+  let load = 0, maxSeen = 0, broken = false;
+  let shakeAmp = 0, timeScale = 1;
+  let sideOff = 0, sideVel = 0;         // 破断後のグリップ反動（ばね振動）
+  let fragments = [];
+
+  // 応力の色＋塑性変形（穴が楕円に伸びて戻らない）
+  function deform() {
+    const plastic = Math.max(0, maxSeen - YIELD) * 0.55;
+    const a = pos.array, c = colAttr.array;
+    for (let i = 0; i < pos.count; i++) {
+      const i3 = i * 3;
+      const x0 = base[i3], y0 = base[i3 + 1];
+      let d = Math.sqrt(x0 * x0 + y0 * y0);
+      if (d < R) d = R;
+      // 塑性：穴のまわりだけX方向に永久に伸びる
+      const local = Math.exp(-Math.pow((d - R) / 0.45, 2));
+      a[i3] = x0 * (1 + plastic * 0.35 * local);
+      a[i3 + 1] = y0 * (1 - plastic * 0.18 * local);
+      // 応力色（塑性で傷んだ所はうっすら残る）
+      const s = Math.min(1, load * stressAt(x0, y0) * 1.1 + plastic * 0.5 * local);
+      rampColor(s, tmpC);
+      const w = s * 0.85;
+      c[i3] = 0.72 * (1 - w) + tmpC.r * w;
+      c[i3 + 1] = 0.74 * (1 - w) + tmpC.g * w;
+      c[i3 + 2] = 0.78 * (1 - w) + tmpC.b * w;
+    }
+    pos.needsUpdate = true;
+    colAttr.needsUpdate = true;
+    geo.computeVertexNormals();
+  }
+  deform();
+
+  // 亀裂の進行＋バイブ
+  let lastCrackN = 0;
+  function updateCracks(kg) {
+    const frac = Math.max(0, Math.min(1, (kg - 65) / 15));
+    const n = Math.floor(frac * CRACK_PAIRS);
+    for (let i = 0; i < CRACK_PAIRS; i++) {
+      crackSegs[i * 2].visible = i < n;
+      crackSegs[i * 2 + 1].visible = i < n;
+    }
+    if (n > lastCrackN && navigator.vibrate) navigator.vibrate(12);
+    lastCrackN = n;
+  }
+
+  // 破片（重力で落ちて床で跳ねる）
+  function spawnFragments() {
+    const fmat = new THREE.MeshStandardMaterial({ color: 0xa8b2bc, metalness: 0.85, roughness: 0.4 });
+    for (let i = 0; i < 8; i++) {
+      const size = 0.02 + Math.random() * 0.045;
+      const m = new THREE.Mesh(new THREE.TetrahedronGeometry(size, 0), fmat);
+      m.position.set((Math.random() - 0.5) * 0.1, (Math.random() - 0.5) * 0.8, (Math.random() - 0.5) * 0.15);
+      m.castShadow = true;
+      group.add(m);
+      fragments.push({
+        m,
+        vx: (Math.random() - 0.5) * 2.4,
+        vy: 0.6 + Math.random() * 1.8,
+        vz: (Math.random() - 0.5) * 1.6,
+        rx: (Math.random() - 0.5) * 12, rz: (Math.random() - 0.5) * 12,
+        rest: false, size
+      });
+    }
+  }
+
+  // ===== HUD・破断 =====
+  const loadEl = document.getElementById("load");
+  const kgEl = document.getElementById("kg");
+  const warnEl = document.getElementById("warn");
+  const gFill = document.getElementById("gFill");
+
+  function doBreak() {
+    broken = true; timeScale = 0.18; shakeAmp = 0.07;
+    plate.visible = false; points.visible = false; hitProxy.visible = false;
+    halves[0].visible = true; halves[1].visible = true;
+    sideOff = 0; sideVel = 3.2; // 反動（ばねが戻るように振動して止まる）
+    spawnFragments();
+    if (navigator.vibrate) navigator.vibrate([90, 40, 140]);
+    const flash = document.getElementById("flash");
+    flash.style.transition = "none"; flash.style.opacity = 0.7;
+    requestAnimationFrame(() => { flash.style.transition = "opacity 0.45s"; flash.style.opacity = 0; });
+    document.getElementById("destroyed").style.display = "flex";
+  }
+  function resetSpecimen() {
+    broken = false; timeScale = 1; shakeAmp = 0;
+    maxSeen = 0; lastCrackN = 0;
+    plate.visible = true; points.visible = true; hitProxy.visible = true;
+    halves[0].visible = false; halves[1].visible = false;
+    sideOff = 0; sideVel = 0;
+    fragments.forEach((f) => { group.remove(f.m); f.m.geometry.dispose(); });
+    fragments = [];
+    loadEl.value = 0;
+    document.getElementById("destroyed").style.display = "none";
+    onLoad();
+  }
+  function onLoad() {
+    const kg = +loadEl.value;
+    load = kg / 100;
+    kgEl.innerHTML = kg + "<small> kg</small>";
+    gFill.style.width = kg + "%";
+    if (!broken) {
+      maxSeen = Math.max(maxSeen, load);
+      deform();
+      updateCracks(kg);
+      if (kg >= 80) { doBreak(); warnEl.className = ""; warnEl.textContent = ""; }
+      else if (kg >= 65) { warnEl.className = "danger"; warnEl.textContent = "⚠ ピシッ…ヒビが走り始めた！"; }
+      else if (kg >= 55) { warnEl.className = ""; warnEl.textContent = "穴が伸び始めた（もう元に戻らない＝塑性）"; }
+      else if (kg >= 35) { warnEl.className = ""; warnEl.textContent = "穴のふちに力が集まってきた"; }
+      else { warnEl.className = ""; warnEl.textContent = ""; }
+    }
+    pMat.opacity = 0.12 + 0.6 * load;
+  }
+  loadEl.addEventListener("input", onLoad);
+
+  // ===== 操作（部品をつかんで引っぱる／背景＝回転） =====
+  let rotY = -0.5, rotX = 0.12, dragging = false, touched = false, px = 0, py = 0;
+  let mode = "orbit", pullStartX = 0, pullStartLoad = 0, downTime = 0, movedPx = 0;
+  let springBack = false, wobble = 0;
+  const ray = new THREE.Raycaster();
+  const ndc = new THREE.Vector2();
+  const el = renderer.domElement;
+
+  function hitPlate(e) {
+    const r = el.getBoundingClientRect();
+    ndc.x = ((e.clientX - r.left) / r.width) * 2 - 1;
+    ndc.y = -((e.clientY - r.top) / r.height) * 2 + 1;
+    camera.updateMatrixWorld();
+    group.updateMatrixWorld(true);
+    ray.setFromCamera(ndc, camera);
+    return ray.intersectObject(hitProxy, false).length > 0;
+  }
+
+  el.addEventListener("pointerdown", (e) => {
+    touched = true;
+    if (broken) { resetSpecimen(); return; }
+    dragging = true; px = e.clientX; py = e.clientY;
+    downTime = performance.now(); movedPx = 0;
+    springBack = false;
+    if (hitPlate(e)) {
+      mode = "pull";
+      pullStartX = e.clientX;
+      pullStartLoad = +loadEl.value;
+      el.style.cursor = "grabbing";
+    } else {
+      mode = "orbit";
+    }
+    try { el.setPointerCapture(e.pointerId); } catch (err) {}
+  });
+  el.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    movedPx += Math.abs(e.clientX - px) + Math.abs(e.clientY - py);
+    if (mode === "pull") {
+      const dv = Math.abs(e.clientX - pullStartX) / Math.max(1, el.clientWidth) * 170;
+      loadEl.value = Math.max(0, Math.min(100, pullStartLoad + dv));
+      onLoad();
+    } else {
+      rotY += (e.clientX - px) * 0.011;
+      rotX = Math.max(-0.5, Math.min(0.95, rotX + (e.clientY - py) * 0.008));
+    }
+    px = e.clientX; py = e.clientY;
+  });
+  el.addEventListener("pointerup", () => {
+    if (!dragging) return;
+    dragging = false;
+    el.style.cursor = "grab";
+    if (mode === "pull") {
+      if (performance.now() - downTime < 220 && movedPx < 10) wobble = 1; // 突く
+      if (!broken) springBack = true; // 弾性でスッと戻る（塑性分は戻らない）
+      mode = "orbit";
+    }
+  });
+  el.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    camera.position.z = Math.max(3.0, Math.min(8.5, camera.position.z + e.deltaY * 0.004));
+  }, { passive: false });
+
+  // ===== リサイズ＋メインループ =====
+  function resize() {
+    const w = stageEl.clientWidth, h = stageEl.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener("resize", resize);
+  resize();
+  onLoad();
+
+  let last = performance.now();
+  (function loop(now) {
+    requestAnimationFrame(loop);
+    let dt = Math.min(0.05, (now - last) / 1000); last = now;
+    timeScale += (1 - timeScale) * 0.03;
+    dt *= timeScale;
+
+    if (!touched) rotY += 0.002;
+    group.rotation.y += (rotY - group.rotation.y) * 0.12;
+    group.rotation.x += (rotX - group.rotation.x) * 0.12;
+
+    // 弾性のスプリングバック
+    if (springBack && !broken) {
+      const v = +loadEl.value;
+      const nv = v * 0.85 - 1.2;
+      if (nv <= 0) { loadEl.value = 0; springBack = false; } else loadEl.value = nv;
+      onLoad();
+    }
+    // 突いたときの震え
+    if (wobble > 0.01) {
+      plate.rotation.z = 0.04 * wobble * Math.sin(now * 0.045);
+      wobble *= 0.92;
+    } else if (!broken) plate.rotation.z = 0;
+
+    // 限界が近いほどプルプル震える（微小亀裂）
+    if (!broken && load >= 0.62) {
+      const amp = (load - 0.62) / 0.18 * 0.011;
+      plate.position.x = (Math.random() - 0.5) * amp;
+      plate.position.y = (Math.random() - 0.5) * amp;
+    } else if (!broken) {
+      plate.position.x = 0; plate.position.y = 0;
+    }
+
+    // 伸び：板＋グリップが物理的につながって動く
+    const plastic = Math.max(0, maxSeen - YIELD) * 0.55;
+    const elong = 0.05 * load + plastic * 0.12;
+    if (!broken) plate.scale.x = 1 + elong;
+    const gripX = HW * (1 + elong) + 0.17 + (broken ? sideOff : 0);
+    gripL.position.x = -gripX;
+    gripR.position.x = gripX;
+
+    // 力の流れ粒
+    if (!broken) {
+      const arr = pGeo.attributes.position.array, carr = pGeo.attributes.color.array;
+      for (let i = 0; i < pState.length; i++) {
+        const s = pState[i], pts = lines[s.li];
+        const idx = Math.min(pts.length - 1, Math.floor(s.t * (pts.length - 1)));
+        const [x, y] = pts[idx];
+        const st = stressAt(x, y);
+        s.t += dt * (0.05 + 0.5 * load) * (0.45 + st);
+        if (s.t >= 1) s.t = 0;
+        arr[i * 3] = x * (1 + elong); arr[i * 3 + 1] = y; arr[i * 3 + 2] = s.z;
+        rampColor(Math.min(1, st * load * 1.3), tmpC);
+        carr[i * 3] = tmpC.r; carr[i * 3 + 1] = tmpC.g; carr[i * 3 + 2] = tmpC.b;
+      }
+      pGeo.attributes.position.needsUpdate = true;
+      pGeo.attributes.color.needsUpdate = true;
+    }
+
+    // 破断後：グリップの反動（ばね振動）＋半分は掴まれたまま
+    if (broken) {
+      const restOff = 0.28;
+      const acc = -(sideOff - restOff) * 60 - sideVel * 7;
+      sideVel += acc * dt;
+      sideOff += sideVel * dt;
+      halves[0].position.x = -(broken ? sideOff : 0);
+      halves[1].position.x = (broken ? sideOff : 0);
+      // 破片の重力・床バウンド
+      for (const f of fragments) {
+        if (f.rest) continue;
+        f.vy -= 5.5 * dt;
+        f.m.position.x += f.vx * dt;
+        f.m.position.y += f.vy * dt;
+        f.m.position.z += f.vz * dt;
+        f.m.rotation.x += f.rx * dt;
+        f.m.rotation.z += f.rz * dt;
+        const gy = FLOOR_Y + f.size;
+        if (f.m.position.y < gy) {
+          f.m.position.y = gy;
+          f.vy = -f.vy * 0.32;
+          f.vx *= 0.7; f.vz *= 0.7; f.rx *= 0.6; f.rz *= 0.6;
+          if (Math.abs(f.vy) < 0.12) { f.rest = true; f.vy = 0; }
+        }
+      }
+    }
+
+    // カメラシェイク（破断の瞬間だけ）
+    shakeAmp = Math.max(0, shakeAmp - dt * 0.14);
+    group.position.x = (Math.random() - 0.5) * shakeAmp;
+    group.position.y = (Math.random() - 0.5) * shakeAmp;
+
+    renderer.render(scene, camera);
+  })(last);
+})();
+</script>
+</body>
+</html>
