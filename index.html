@@ -1,0 +1,1129 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>FORCE FORGE ── CAE×力学 朝15分道場</title>
+<meta name="theme-color" content="#070a10">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body {
+    background:
+      radial-gradient(ellipse 70% 40% at 20% 0%, rgba(79,209,255,0.07), transparent),
+      radial-gradient(ellipse 60% 40% at 85% 100%, rgba(160,123,255,0.06), transparent),
+      #04070c;
+    color: #dfe9f5;
+    font-family: "Yu Gothic UI", "Hiragino Sans", "Meiryo", system-ui, sans-serif;
+    overscroll-behavior-y: contain;
+  }
+  #app { max-width: 470px; margin: 0 auto; padding: 18px 16px 40px; min-height: 100%; }
+  .view { display: none; }
+  .view.active { display: block; }
+  .phase { display: none; }
+  .phase.active { display: block; }
+
+  /* ===== ボタン共通 ===== */
+  .cta {
+    display: block; width: 100%; margin-top: 14px; padding: 14px; border: none; border-radius: 13px;
+    font: inherit; font-weight: 900; font-size: 15px; color: #071019; cursor: pointer;
+    background: linear-gradient(135deg, #4fd1ff, #67e8ff);
+    box-shadow: 0 0 18px rgba(79,209,255,0.35);
+  }
+  .cta:disabled { opacity: 0.35; box-shadow: none; }
+  .opt {
+    display: block; width: 100%; margin-top: 10px; padding: 14px 15px; border-radius: 13px;
+    border: 1.5px solid #24344a; background: #0b1220; color: #cfe0f2;
+    font: inherit; font-size: 14.5px; font-weight: 700; text-align: left; cursor: pointer;
+  }
+  .opt.correct { border-color: #3ef0a0; color: #d9ffee; background: rgba(62,240,160,0.10); box-shadow: 0 0 14px rgba(62,240,160,0.25); }
+  .opt.wrong { border-color: #ff5d4d; color: #ffd9d0; background: rgba(255,93,77,0.08); }
+  .opt.dim { opacity: 0.45; }
+
+  /* ===== ホーム ===== */
+  .home-logo {
+    text-align: center; font-size: 30px; font-weight: 900; letter-spacing: 5px; color: #eaf6ff;
+    margin-top: 12px; text-shadow: 0 0 16px rgba(79,209,255,0.8), 0 0 44px rgba(79,209,255,0.3);
+  }
+  .home-sub { text-align: center; font-size: 12px; color: #8fa6bd; margin: 6px 0 18px; }
+  .resume {
+    display: block; width: 100%; padding: 15px; border: 1px solid rgba(79,209,255,0.65); border-radius: 14px;
+    background: linear-gradient(135deg, rgba(79,209,255,0.22), rgba(160,123,255,0.20));
+    color: #eaf6ff; font: inherit; font-weight: 900; font-size: 16px; cursor: pointer;
+    box-shadow: 0 0 20px rgba(79,209,255,0.25); text-align: center;
+  }
+  .resume small { display: block; font-weight: 600; font-size: 11.5px; color: #9fdcff; margin-top: 3px; }
+  .prog-row { display: flex; align-items: center; gap: 10px; margin: 16px 0 6px; font-size: 12px; color: #8fa6bd; }
+  .prog-bar { flex: 1; height: 9px; border-radius: 5px; background: #101825; overflow: hidden; }
+  .prog-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4fd1ff, #a07bff); border-radius: 5px; transition: width 0.6s; }
+  .chap-title { font-size: 13.5px; font-weight: 800; color: #bcd2e8; margin: 16px 0 10px; }
+  .chap-title span { color: #5d7690; font-weight: 600; font-size: 11px; }
+  .nodes { display: flex; flex-wrap: wrap; gap: 12px 14px; }
+  .node { width: 56px; text-align: center; cursor: pointer; border: none; background: none; font: inherit; padding: 0; }
+  .node .dot {
+    width: 44px; height: 44px; margin: 0 auto; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 800; border: 2px solid #24344a; color: #4d637d; background: #0b1220;
+  }
+  .node .lbl { font-size: 10px; color: #5d7690; margin-top: 4px; }
+  .node.done .dot { border-color: #4fd1ff; color: #071019; background: #4fd1ff; box-shadow: 0 0 12px rgba(79,209,255,0.5); }
+  .node.done .lbl { color: #7fdcff; }
+  .node.now .dot { border-color: #a07bff; color: #d9c8ff; background: rgba(160,123,255,0.15); animation: pulse 1.6s infinite; }
+  .node.now .lbl { color: #c9b4ff; font-weight: 800; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(160,123,255,0.55); } 55% { box-shadow: 0 0 0 10px rgba(160,123,255,0); } }
+  .node.lock { opacity: 0.35; cursor: default; }
+  .chap2 {
+    margin-top: 18px; padding: 13px 14px; border-radius: 13px;
+    border: 1px dashed #24344a; color: #5d7690; font-size: 12px; line-height: 1.7;
+  }
+  .streak { margin-top: 16px; text-align: center; font-size: 12.5px; color: #ffb45d; }
+  .installhint { margin-top: 20px; text-align: center; font-size: 10.5px; color: #3d5169; }
+  .verline { margin-top: 6px; text-align: center; font-size: 10px; color: #2c3d52; }
+
+  /* ===== レッスン共通 ===== */
+  .lesson-top { display: flex; align-items: center; gap: 9px; margin-bottom: 14px; font-size: 15px; font-weight: 800; color: #eaf6ff; }
+  .backbtn {
+    border: 1.5px solid #24344a; background: #0b1220; color: #7fdcff; font: inherit; font-size: 16px;
+    width: 38px; height: 38px; border-radius: 11px; cursor: pointer; flex: none;
+  }
+  .tag {
+    background: rgba(79,209,255,0.14); border: 1px solid rgba(79,209,255,0.5);
+    color: #7fdcff; padding: 3px 9px; border-radius: 7px; font-size: 12px; white-space: nowrap;
+  }
+
+  /* ミッション */
+  .mission-card {
+    border: 1.5px solid rgba(255,157,77,0.7); border-radius: 16px; padding: 18px 16px;
+    background: linear-gradient(160deg, rgba(255,157,77,0.10), rgba(7,10,16,0.2));
+    box-shadow: 0 0 22px rgba(255,157,77,0.15);
+  }
+  .mno { font-size: 11px; color: #ffb45d; font-weight: 800; letter-spacing: 2px; }
+  .mq { font-size: 18px; font-weight: 900; color: #fff2e3; line-height: 1.6; margin-top: 9px; }
+  .mhint { margin-top: 12px; font-size: 12px; color: #b08a63; }
+
+  /* 実験 */
+  .stage3d {
+    position: relative; border-radius: 15px; overflow: hidden;
+    border: 1px solid #182436; background: #0a101c; height: 46vh; max-height: 330px; min-height: 240px;
+  }
+  .stage3d canvas { display: block; touch-action: none; cursor: grab; }
+  .hint3d {
+    position: absolute; top: 9px; right: 9px; font-size: 10.5px; color: #7fdcff;
+    background: rgba(7,10,16,0.72); padding: 4px 10px; border-radius: 999px;
+    border: 1px solid rgba(79,209,255,0.4); pointer-events: none;
+  }
+  .guessline { font-size: 11.5px; color: #ff8f85; margin-bottom: 8px; }
+  .boom {
+    position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+    background: rgba(120,20,10,0.25); pointer-events: none;
+  }
+  .boom.show { display: flex; }
+  .boom span { font-size: 30px; font-weight: 900; color: #ffd9d0; text-shadow: 0 0 22px rgba(255,60,40,0.95); transform: rotate(-8deg); }
+  .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px 12px; margin-top: 10px; font-size: 11px; color: #9fb4cb; }
+  .sliderrow { display: flex; align-items: center; gap: 10px; margin-top: 12px; font-size: 13px; color: #bcd2e8; }
+  .sliderrow input[type=range] { flex: 1; accent-color: #4fd1ff; min-width: 0; height: 28px; }
+  .sliderrow .val { min-width: 56px; text-align: right; font-weight: 800; color: #7fdcff; font-size: 14px; }
+  .extra { margin-top: 10px; }
+  .extra .btnrow { display: flex; gap: 8px; }
+  .extra .sbtn {
+    flex: 1; padding: 10px 4px; border-radius: 11px; border: 1.5px solid #24344a; background: #0b1220;
+    color: #9fb4cb; font: inherit; font-size: 12.5px; font-weight: 800; cursor: pointer;
+  }
+  .extra .sbtn.on { border-color: #4fd1ff; color: #7fdcff; background: rgba(79,209,255,0.10); }
+  .readout { margin-top: 9px; text-align: center; font-size: 12.5px; color: #ffb45d; font-weight: 700; }
+  .gauge { position: relative; margin-top: 10px; height: 14px; border-radius: 8px; background: #101825; overflow: hidden; }
+  .gauge .gfill { height: 100%; width: 0%; background: linear-gradient(90deg, #4fd1ff, #ffb45d, #ff5d4d); }
+  .gauge .gmark { position: absolute; top: -2px; bottom: -2px; left: 80%; width: 2px; background: #ff5d4d; box-shadow: 0 0 8px rgba(255,93,77,0.9); }
+  .gcap { display: flex; justify-content: space-between; font-size: 10px; color: #5d7690; margin-top: 3px; }
+  .trynote { margin-top: 10px; text-align: center; font-size: 11.5px; color: #5d7690; line-height: 1.6; }
+
+  /* 種明かし */
+  .result-banner {
+    border: 1.5px solid rgba(62,240,160,0.6); border-radius: 14px; padding: 13px;
+    background: rgba(62,240,160,0.07); text-align: center;
+    font-size: 15.5px; font-weight: 900; color: #d9ffee;
+  }
+  .result-banner small { display: block; font-weight: 600; font-size: 11.5px; color: #8fd8b4; margin-top: 4px; }
+  .minicard {
+    border: 1px solid #1d2c42; border-radius: 15px; padding: 22px 18px; margin-top: 14px;
+    background: linear-gradient(165deg, #0d1524, #0a0f1a);
+    font-size: 17px; color: #cfe0f2; line-height: 1.8; min-height: 150px;
+    display: flex; align-items: center; justify-content: center; text-align: center;
+  }
+  .minicard b { color: #7fdcff; }
+  .minicard em { font-style: normal; color: #ff8f85; }
+  .dots { text-align: center; margin-top: 12px; letter-spacing: 6px; color: #24344a; font-size: 13px; }
+  .dots span { color: #4fd1ff; }
+
+  /* クイズ */
+  .qhead { font-size: 12px; font-weight: 800; color: #a07bff; letter-spacing: 1px; margin-bottom: 8px; }
+  .q { font-size: 16.5px; font-weight: 800; color: #eaf6ff; line-height: 1.65; }
+  .expl {
+    margin-top: 13px; padding: 12px 13px; border-left: 3px solid #3ef0a0; border-radius: 7px;
+    background: rgba(62,240,160,0.06); font-size: 13px; color: #b8d8c8; line-height: 1.7;
+  }
+
+  /* クリア */
+  .center { text-align: center; }
+  .stamp {
+    display: inline-block; margin-top: 34px; padding: 25px 22px; border: 3.5px solid #4fd1ff; border-radius: 50%;
+    color: #4fd1ff; font-weight: 900; font-size: 21px; transform: rotate(-11deg);
+    text-shadow: 0 0 14px rgba(79,209,255,0.8);
+    box-shadow: 0 0 26px rgba(79,209,255,0.35), inset 0 0 16px rgba(79,209,255,0.15);
+    animation: stampin 0.45s cubic-bezier(0.2, 2.2, 0.4, 1);
+  }
+  @keyframes stampin { 0% { transform: rotate(-11deg) scale(2.2); opacity: 0; } 100% { transform: rotate(-11deg) scale(1); opacity: 1; } }
+  .stamp small { display: block; font-size: 11px; font-weight: 700; }
+  .clearmsg { margin-top: 18px; font-size: 13.5px; color: #9fb4cb; line-height: 1.8; }
+  .bossscore { margin-top: 30px; font-size: 42px; font-weight: 900; color: #eaf6ff; text-shadow: 0 0 18px rgba(79,209,255,0.7); }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ ホーム ============ -->
+  <section id="viewHome" class="view active">
+    <div class="home-logo">FORCE FORGE</div>
+    <div class="home-sub">CAE×力学 ── 朝15分・触って壊して覚える道場</div>
+    <button class="resume" id="btnResume"></button>
+    <div class="prog-row"><span id="progText"></span><div class="prog-bar"><div class="prog-fill" id="progFill"></div></div><span>クリア</span></div>
+    <div class="chap-title">第1章 力を見る <span>（力学のきそ・全7回）</span></div>
+    <div class="nodes" id="nodes1"></div>
+    <div class="chap2" id="chap2box">🔒 第2章 未来よち（CAE）L8〜L14<br>第1章クリアで解放（次のアップデートで配信）</div>
+    <div class="streak" id="streakLine"></div>
+    <div class="installhint">スマホ：ブラウザの共有メニュー →「ホーム画面に追加」でアプリになる</div>
+    <div class="verline">FORCE FORGE v1.0 ─ 第1章</div>
+  </section>
+
+  <!-- ============ レッスン ============ -->
+  <section id="viewLesson" class="view">
+    <div class="lesson-top">
+      <button class="backbtn" id="btnBack">←</button>
+      <span class="tag" id="lsTag"></span><span id="lsTitle"></span>
+    </div>
+
+    <div id="phMission" class="phase">
+      <div class="mission-card">
+        <div class="mno" id="msNo"></div>
+        <div class="mq" id="msQ"></div>
+      </div>
+      <div id="msOpts"></div>
+      <div class="mhint">↑ 予想してタップ（外れてもOK。実験で確かめる）</div>
+    </div>
+
+    <div id="phExp" class="phase">
+      <div class="guessline" id="guessLine"></div>
+      <div class="stage3d" id="stage3d">
+        <div class="hint3d">🔄 指でまわせる</div>
+        <div class="boom" id="boom"><span>💥 バキッ！</span></div>
+      </div>
+      <div class="legend" id="expLegend"></div>
+      <div class="sliderrow"><span id="sliderLabel"></span><input type="range" id="loadRange" min="0" max="100" value="0"><span class="val" id="loadVal">0kg</span></div>
+      <div class="extra" id="extraCtrls"></div>
+      <div class="trynote" id="expNote"></div>
+      <button class="cta" id="btnToReveal" disabled>答え合わせ →</button>
+    </div>
+
+    <div id="phReveal" class="phase">
+      <div class="result-banner" id="rvBanner"></div>
+      <div class="minicard" id="rvCard"></div>
+      <div class="dots" id="rvDots"></div>
+      <button class="cta" id="btnCardNext">つぎ →</button>
+    </div>
+
+    <div id="phQuiz" class="phase">
+      <div class="qhead">ミニクイズ ── 1問だけ</div>
+      <div class="q" id="qzQ"></div>
+      <div id="qzOpts"></div>
+      <div class="expl" id="qzExp" style="display:none"></div>
+      <button class="cta" id="btnQuizDone" style="display:none">クリア！ →</button>
+    </div>
+
+    <div id="phClear" class="phase center">
+      <div class="stamp" id="clearStamp"></div>
+      <div class="clearmsg" id="clearMsg"></div>
+      <button class="cta" id="btnGoHome">マップへもどる</button>
+    </div>
+  </section>
+
+  <!-- ============ ボス戦 ============ -->
+  <section id="viewBoss" class="view">
+    <div class="lesson-top">
+      <button class="backbtn" id="btnBackB">←</button>
+      <span class="tag">L7</span><span>章ボス戦 ── 7問</span>
+    </div>
+    <div id="bossPlay">
+      <div class="qhead" id="bsProgress"></div>
+      <div class="q" id="bsQ"></div>
+      <div id="bsOpts"></div>
+      <div class="expl" id="bsExp" style="display:none"></div>
+      <button class="cta" id="btnBossNext" style="display:none">つぎ →</button>
+    </div>
+    <div id="bossResult" class="center" style="display:none">
+      <div class="bossscore" id="bsScore"></div>
+      <div class="clearmsg" id="bsMsg"></div>
+      <button class="cta" id="btnBossHome">マップへもどる</button>
+    </div>
+  </section>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+
+/* ================================================================
+   FORCE FORGE v1.0 ── 第1章「力を見る」
+   型：合体（マップ型ホーム × ミッション型レッスン）
+   予想 → 3D実験 → 種明かし → ミニクイズ → スタンプ
+================================================================ */
+
+// ---------------- レッスンデータ ----------------
+const LESSONS = [
+  {
+    id: "l1", tag: "L1", label: "力", title: "力ってなに？",
+    mission: {
+      no: "MISSION 01 ── L字ブラケット（板金）",
+      q: "手で押してへこませた。<br>押すのを<b>やめたら</b>へこみは？",
+      opts: ["へこんだまま", "元にもどる"], ans: 1,
+      ansLine: "元にもどる（壊れるほど押さなければ）"
+    },
+    sliderLabel: "力", note: "ボタンで力の向きも変えてみて。<br>スライダーを0に戻すと…元通り！",
+    legend: ['<span style="color:#ffb45d">■ 矢印＝力（長さ＝大きさ・向き＝方向）</span>'],
+    cards: [
+      "力（ちから）＝押す・引く。<br><em>目には見えない</em>。",
+      "だから<b>矢印</b>で描く。<br>長さ＝大きさ、向き＝方向。",
+      "やめれば元にもどる<br>（＝弾性〈だんせい〉）。<br>もどらない＝壊れ始め。"
+    ],
+    quiz: {
+      q: "力の矢印の「長さ」が表すのは？",
+      opts: ["力の大きさ", "力の速さ", "部品の重さ"], ans: 0,
+      exp: "矢印＝「大きさ＋向き」のセット。CAE（パソコンで強度を計算する道具）の画面も矢印だらけ。"
+    }
+  },
+  {
+    id: "l2", tag: "L2", label: "応力", title: "応力＝ぎゅうぎゅう度",
+    mission: {
+      no: "MISSION 02 ── 太い帯板 vs 細い帯板",
+      q: "同じ50kgで引っぱる。<br>先に悲鳴を上げるのは？",
+      opts: ["太い板", "細い板", "同時"], ans: 1,
+      ansLine: "細い板（同じ力でも中はぎゅうぎゅう）"
+    },
+    sliderLabel: "引く力", note: "上＝太い板（切り口ひろい）／下＝細い板。<br>色＝中のぎゅうぎゅう度。",
+    legend: ['<span style="color:#6db4ff">■ 青＝ひま</span>', '<span style="color:#58e08c">■ 緑＝ふつう</span>', '<span style="color:#ff7a6e">■ 赤＝限界</span>'],
+    cards: [
+      "応力（おうりょく）＝<br>材料の中の<em>ぎゅうぎゅう度</em>。",
+      "同じ力でも、<br><b>細いほど</b>ぎゅうぎゅう。",
+      "式は1個だけ：<br>応力＝力 ÷ 断面積<br>（だんめんせき＝切り口の広さ）"
+    ],
+    quiz: {
+      q: "切り口（断面積）を半分にしたら、応力は？",
+      opts: ["半分になる", "変わらない", "2倍になる"], ans: 2,
+      exp: "力÷断面積。分母が半分→答えは2倍。板金の穴や切欠き（きりかき）が怖い理由。"
+    }
+  },
+  {
+    id: "l3", tag: "L3", label: "ひずみ", title: "ひずみ＝のびた割合",
+    mission: {
+      no: "MISSION 03 ── 同じ帯板・材料ちがい",
+      q: "同じ力で引っぱるなら、<br>鉄とアルミ、のびるのは？",
+      opts: ["鉄", "アルミ", "同じ"], ans: 1,
+      ansLine: "アルミ（鉄より約3倍のびる）"
+    },
+    sliderLabel: "引く力", note: "材料ボタンを切りかえて比べて。<br>※実物の金属のびは小さすぎるので、3Dはおおげさに動かしてる。",
+    legend: ['<span style="color:#4fd1ff">─ 青いワク＝元の長さ</span>'],
+    cards: [
+      "ひずみ＝<em>のびた割合</em>。<br>のび ÷ 元の長さ。",
+      "材料の「のびにくさ」＝<br><b>ヤング率</b>（かたさの数字）。",
+      "鉄はアルミの約3倍のびにくい。<br>ゴムとは<em>ケタちがい</em>。"
+    ],
+    quiz: {
+      q: "ひずみの単位は？",
+      opts: ["mm", "kg", "単位なし"], ans: 2,
+      exp: "「割合」だから単位が消える。％やμ（マイクロ）で書くことが多い。"
+    }
+  },
+  {
+    id: "l4", tag: "L4", label: "曲げ", title: "曲げ＝上下でつなひき",
+    mission: {
+      no: "MISSION 04 ── 両端で支えた帯板",
+      q: "真ん中に重り。<br>いちばん<b>ラクしてる</b>場所は？",
+      opts: ["上の面", "板の真ん中", "下の面"], ans: 1,
+      ansLine: "板の真ん中（＝中立軸。のびもちぢみもしない）"
+    },
+    sliderLabel: "荷重", note: "回して横からも見て。<br>上下の色、真ん中の色に注目。",
+    legend: ['<span style="color:#6db4ff">■ 上＝ちぢむ</span>', '<span style="color:#ff7a6e">■ 下＝のびる</span>', '<span style="color:#cfd8e3">■ まん中＝セーフ</span>'],
+    cards: [
+      "曲げ＝<em>上下のつなひき</em>。<br>上ちぢむ・下のびる。",
+      "真ん中はどっちでもない<br>＝<b>中立軸</b>（ちゅうりつじく）。<br>いちばんラク。",
+      "働くのは上下の面。<br>だから板は<em>高さが命</em>。<br>縦に使うと強い。"
+    ],
+    quiz: {
+      q: "同じ板を「曲げに強く」するなら？",
+      opts: ["幅を2倍にする", "高さを2倍にする", "長さを2倍にする"], ans: 1,
+      exp: "高さは2乗〜3乗で効く。アングル材やリブ（補強の折り曲げ）が強い理由。"
+    }
+  },
+  {
+    id: "l5", tag: "L5", label: "集中", title: "応力集中＝穴のふちのワナ",
+    mission: {
+      no: "MISSION 05 ── 穴あきブラケット",
+      q: "板に穴をあけた。<br>強さはどれだけ落ちる？",
+      opts: ["穴の分だけ", "穴の分より ずっと落ちる"], ans: 1,
+      ansLine: "ずっと落ちる（ふちに力が集中、約3倍！）"
+    },
+    sliderLabel: "引く力", note: "穴のふちが先に赤くなる。<br>80kgで…💥",
+    legend: ['<span style="color:#6db4ff">■ 青＝ひま</span>', '<span style="color:#58e08c">■ 緑＝ふつう</span>', '<span style="color:#ff7a6e">■ 赤＝限界</span>'],
+    cards: [
+      "力は穴を<em>よけて</em>流れる。",
+      "よけた力が ふちに<b>集中</b>。<br>約3倍！<br>（＝応力集中〈おうりょくしゅうちゅう〉）",
+      "対策：角に<b>R</b>（丸み）、<br>穴は力の通り道からずらす。"
+    ],
+    quiz: {
+      q: "角ばった切欠きと丸い穴、怖いのは？",
+      opts: ["丸い穴", "角ばった切欠き", "同じ"], ans: 1,
+      exp: "とがるほど集中が強くなる。図面のR指示は飾りじゃない。"
+    }
+  },
+  {
+    id: "l6", tag: "L6", label: "安全率", title: "安全率＝壊れるまでの余裕",
+    mission: {
+      no: "MISSION 06 ── 壁の棚ブラケット",
+      q: "壊れるのは80kg。<br>50kgで使うと安全率2ある？",
+      opts: ["ある", "ない"], ans: 1,
+      ansLine: "ない（80÷50＝1.6。2に足りない）"
+    },
+    sliderLabel: "ぶら下げ", note: "ゲージの赤線＝壊れる80kg。<br>角の色にも注目（L5の復習）。",
+    legend: ['<span style="color:#6db4ff">■ 青＝ひま</span>', '<span style="color:#ff7a6e">■ 赤＝限界</span>', '<span style="color:#ffb45d">安全率＝壊れる力÷使う力</span>'],
+    cards: [
+      "安全率＝<br><b>壊れる力 ÷ 使う力</b>。",
+      "80÷50＝1.6。<br>想定外がきたら<em>危ない</em>。",
+      "機械はだいたい<b>2〜3</b>欲しい。<br>用途と規格で決まってる。"
+    ],
+    quiz: {
+      q: "「安全率3で使う」の意味は？",
+      opts: ["壊れる力の3倍で使う", "壊れる力の1/3で使う", "3回壊れるまで使える"], ans: 1,
+      exp: "使う力を、壊れる力の1/3までに抑えるということ。"
+    }
+  }
+];
+
+// ---------------- ボス戦データ ----------------
+const BOSS = [
+  { q: "力の矢印が表すものは？", opts: ["大きさと向き", "重さと色", "速さと温度"], ans: 0,
+    exp: "力＝大きさ＋向き。だから矢印で描く。" },
+  { q: "同じ50kgで引っぱる。細い棒の中身は？", opts: ["太い棒よりラク", "太い棒と同じ", "太い棒よりぎゅうぎゅう"], ans: 2,
+    exp: "応力＝力÷断面積。細い＝分母が小さい＝ぎゅうぎゅう。" },
+  { q: "ひずみとは？", opts: ["のび ÷ 元の長さ", "力 ÷ 断面積", "重さ × 速さ"], ans: 0,
+    exp: "のびた割合。単位なし。（力÷断面積は応力）" },
+  { q: "曲げた板で いちばんラクしてる場所は？", opts: ["上の面", "真ん中（中立軸）", "下の面"], ans: 1,
+    exp: "上ちぢむ・下のびる・真ん中セーフ＝中立軸。" },
+  { q: "穴のふちの応力は？", opts: ["へる", "変わらない", "集中して大きくなる（約3倍）"], ans: 2,
+    exp: "力は穴をよける→ふちに集中。応力集中。" },
+  { q: "「安全率2」とは？", opts: ["壊れる力の2倍で使う", "壊れる力の半分で使う", "2年間は壊れない"], ans: 1,
+    exp: "安全率＝壊れる力÷使う力。2なら半分で使う。" },
+  { q: "板を曲げに強くする一番の近道は？", opts: ["幅を増やす", "高さを増やす（縦に使う）", "長くする"], ans: 1,
+    exp: "高さは2乗〜3乗で効く。リブやアングルの原理。" }
+];
+
+// ---------------- 進捗（localStorage） ----------------
+const STORE_KEY = "force-forge-v1";
+let progress = { done: {}, streak: { week: "", n: 0 }, broken: 0 };
+try {
+  const raw = localStorage.getItem(STORE_KEY);
+  if (raw) progress = Object.assign(progress, JSON.parse(raw));
+} catch (e) {}
+
+function saveProgress() {
+  try { localStorage.setItem(STORE_KEY, JSON.stringify(progress)); } catch (e) {}
+}
+
+function isoWeek(d) {
+  const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+  const day = (t.getUTCDay() + 6) % 7;
+  t.setUTCDate(t.getUTCDate() - day + 3);
+  const firstThu = new Date(Date.UTC(t.getUTCFullYear(), 0, 4));
+  const fday = (firstThu.getUTCDay() + 6) % 7;
+  firstThu.setUTCDate(firstThu.getUTCDate() - fday + 3);
+  const wk = 1 + Math.round((t - firstThu) / (7 * 24 * 3600 * 1000));
+  return t.getUTCFullYear() + "-W" + String(wk).padStart(2, "0");
+}
+
+function bumpStreak() {
+  const wk = isoWeek(new Date());
+  const s = progress.streak;
+  if (s.week === wk) return;
+  const prev = s.week;
+  s.n = (prev && nextWeekOf(prev) === wk) ? s.n + 1 : 1;
+  s.week = wk;
+}
+function nextWeekOf(wkStr) {
+  const m = wkStr.match(/(\d+)-W(\d+)/);
+  if (!m) return "";
+  const d = new Date(Date.UTC(+m[1], 0, 4));
+  d.setUTCDate(d.getUTCDate() + (+m[2]) * 7);
+  return isoWeek(d);
+}
+
+// ---------------- 画面切りかえ ----------------
+const $ = (id) => document.getElementById(id);
+function showView(name) {
+  ["viewHome", "viewLesson", "viewBoss"].forEach((v) => $(v).classList.toggle("active", v === name));
+  window.scrollTo(0, 0);
+}
+function setPhase(name) {
+  ["phMission", "phExp", "phReveal", "phQuiz", "phClear"].forEach((p) => $(p).classList.toggle("active", p === name));
+  window.scrollTo(0, 0);
+}
+
+// ---------------- ホーム描画 ----------------
+function lessonState(i) { // 0..5=L1..L6, 6=ボス
+  const id = i < 6 ? LESSONS[i].id : "l7";
+  if (progress.done[id]) return "done";
+  const prevDone = i === 0 ? true : (i < 6 ? !!progress.done[LESSONS[i - 1].id] : LESSONS.every((L) => progress.done[L.id]));
+  return prevDone ? "now" : "lock";
+}
+
+function renderHome() {
+  const wrap = $("nodes1");
+  wrap.innerHTML = "";
+  const labels = LESSONS.map((L) => L.label).concat(["ボス"]);
+  for (let i = 0; i < 7; i++) {
+    const st = lessonState(i);
+    const b = document.createElement("button");
+    b.className = "node " + st;
+    b.innerHTML = '<div class="dot">' + (st === "done" ? "✓" : (i + 1)) + '</div><div class="lbl">' + labels[i] + "</div>";
+    if (st !== "lock") b.addEventListener("click", () => (i < 6 ? openLesson(i) : openBoss()));
+    wrap.appendChild(b);
+  }
+  const count = ["l1","l2","l3","l4","l5","l6","l7"].filter((k) => progress.done[k]).length;
+  $("progText").textContent = count + "/7";
+  $("progFill").style.width = Math.round((count / 7) * 100) + "%";
+
+  const next = [0,1,2,3,4,5].find((i) => lessonState(i) === "now");
+  const btn = $("btnResume");
+  if (count === 7) {
+    btn.innerHTML = "🏆 第1章 全クリ！<small>ボス戦にもう一度挑める／第2章は次のアップデート</small>";
+    btn.onclick = openBoss;
+  } else if (next === undefined) {
+    btn.innerHTML = "▶ ボス戦へ<small>L7 章ボス戦（7問）</small>";
+    btn.onclick = openBoss;
+  } else {
+    const L = LESSONS[next];
+    btn.innerHTML = (count === 0 ? "▶ はじめる" : "▶ つづきから") + "<small>" + L.tag + " " + L.title + "</small>";
+    btn.onclick = () => openLesson(next);
+  }
+  const s = progress.streak;
+  $("streakLine").textContent = (s.n > 0 ? "🔥 " + s.n + "週れんぞく" : "🔥 今週から積み上げ開始") + "／壊した部品 " + (progress.broken || 0) + "個";
+}
+
+/* ================================================================
+   3Dステージ（Three.js 本物3D・共有レンダラ）
+================================================================ */
+let ST = null; // stage
+function ensureStage() {
+  if (ST) { ST.resize(); return; }
+  const host = $("stage3d");
+  if (typeof THREE === "undefined") {
+    host.insertAdjacentHTML("beforeend", '<div style="color:#8fa6bd;font-size:12px;text-align:center;padding-top:100px">3D表示にはネット接続が必要です</div>');
+    ST = { fake: true, resize(){}, clear(){}, setUpdate(){}, setTick(){}, group: null };
+    return;
+  }
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0a101c);
+  const camera = new THREE.PerspectiveCamera(38, 1, 0.1, 60);
+  camera.position.set(0, 0.8, 4.8);
+  camera.lookAt(0, -0.05, 0);
+
+  scene.add(new THREE.HemisphereLight(0x8fb8ff, 0x14100c, 0.55));
+  const key = new THREE.DirectionalLight(0xffffff, 0.95); key.position.set(2.5, 4, 2.5); scene.add(key);
+  const rimC = new THREE.PointLight(0x4fd1ff, 1.2, 14); rimC.position.set(-3.2, 1.5, -2.4); scene.add(rimC);
+  const rimP = new THREE.PointLight(0xa07bff, 1.0, 14); rimP.position.set(3.2, 0.7, -2.8); scene.add(rimP);
+  const fill = new THREE.DirectionalLight(0x88aaff, 0.25); fill.position.set(-2, -1, 3); scene.add(fill);
+
+  const grid = new THREE.GridHelper(4.6, 12, 0x1e3050, 0x131f30);
+  grid.position.y = -1.05;
+  scene.add(grid);
+
+  const group = new THREE.Group();
+  scene.add(group);
+
+  host.insertBefore(renderer.domElement, host.firstChild);
+
+  let rotY = -0.5, rotX = 0.14, dragging = false, touched = false, px = 0, py = 0;
+  const el = renderer.domElement;
+  el.addEventListener("pointerdown", (e) => {
+    dragging = true; touched = true; px = e.clientX; py = e.clientY;
+    el.setPointerCapture(e.pointerId); el.style.cursor = "grabbing";
+  });
+  el.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    rotY += (e.clientX - px) * 0.011;
+    rotX += (e.clientY - py) * 0.008;
+    rotX = Math.max(-0.5, Math.min(0.95, rotX));
+    px = e.clientX; py = e.clientY;
+  });
+  el.addEventListener("pointerup", () => { dragging = false; el.style.cursor = "grab"; });
+  el.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    camera.position.z = Math.max(2.8, Math.min(7.5, camera.position.z + e.deltaY * 0.004));
+  }, { passive: false });
+
+  let updateFn = null, tickFn = null, t = 0;
+  function resize() {
+    const w = host.clientWidth, h = host.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener("resize", resize);
+  resize();
+
+  (function loop() {
+    requestAnimationFrame(loop);
+    t += 0.016;
+    if (!touched) rotY += 0.003;
+    group.rotation.y += (rotY - group.rotation.y) * 0.12;
+    group.rotation.x += (rotX - group.rotation.x) * 0.12;
+    if (tickFn) tickFn(t);
+    renderer.render(scene, camera);
+  })();
+
+  ST = {
+    group, camera,
+    resize,
+    resetView() { rotY = -0.5; rotX = 0.14; touched = false; camera.position.z = 4.8; },
+    clear() {
+      while (group.children.length) {
+        const c = group.children.pop();
+        c.traverse && c.traverse((o) => {
+          if (o.geometry) o.geometry.dispose();
+          if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach((m) => m.dispose());
+        });
+        group.remove(c);
+      }
+      updateFn = null; tickFn = null;
+      setBoom(false);
+    },
+    setUpdate(fn) { updateFn = fn; },
+    setTick(fn) { tickFn = fn; },
+    update(l) { if (updateFn) updateFn(l); }
+  };
+}
+
+function setBoom(on) { $("boom").className = on ? "boom show" : "boom"; }
+
+// ---------- 3D共通ヘルパ ----------
+function metalMat(color, extra) {
+  return new THREE.MeshStandardMaterial(Object.assign({ color: color || 0x9aa7b5, metalness: 0.5, roughness: 0.35 }, extra || {}));
+}
+const _rampC = { setHSL: null };
+function rampColor(s, c) { // 0..1 → 青→緑→黄→赤（CAEの虹色）
+  s = Math.max(0, Math.min(1, s));
+  c.setHSL(0.62 * (1 - s), 0.85, 0.42 + 0.13 * s);
+  return c;
+}
+function shapeFromPts(pts) {
+  const sh = new THREE.Shape();
+  sh.moveTo(pts[0][0], pts[0][1]);
+  for (let i = 1; i < pts.length; i++) sh.lineTo(pts[i][0], pts[i][1]);
+  return sh;
+}
+function mkArrow(color) {
+  return new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0, 0), 0.6, color || 0xff9d4d, 0.2, 0.12);
+}
+function setExtraHTML(html) { $("extraCtrls").innerHTML = html || ""; }
+
+/* ---------- L1：力（L字ブラケット＋矢印） ---------- */
+function buildL1() {
+  const sh = shapeFromPts([[-0.7,-0.5],[0.7,-0.5],[0.7,-0.34],[-0.54,-0.34],[-0.54,0.5],[-0.7,0.5]]);
+  const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.34, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 2, curveSegments: 24 });
+  geo.translate(0, 0, -0.17);
+  const brk = new THREE.Mesh(geo, metalMat(0x9fb0c4));
+  ST.group.add(brk);
+  const arrow = mkArrow(0xff9d4d);
+  ST.group.add(arrow);
+
+  setExtraHTML('<div class="btnrow">' +
+    '<button class="sbtn on" data-d="push">押す →</button>' +
+    '<button class="sbtn" data-d="pull">← 引く</button>' +
+    '<button class="sbtn" data-d="down">↓ 上から</button></div>');
+  let dir = "push", load = 0;
+  document.querySelectorAll("#extraCtrls .sbtn").forEach((b) => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll("#extraCtrls .sbtn").forEach((x) => x.classList.remove("on"));
+      b.classList.add("on");
+      dir = b.dataset.d;
+      apply();
+    });
+  });
+  function apply() {
+    const l = 0.45 + 0.6 * load;
+    if (dir === "push") {
+      arrow.setDirection(new THREE.Vector3(1, 0, 0));
+      arrow.position.set(-0.72 - l, 0.4, 0);
+    } else if (dir === "pull") {
+      arrow.setDirection(new THREE.Vector3(-1, 0, 0));
+      arrow.position.set(-0.52, 0.4, 0);
+    } else {
+      arrow.setDirection(new THREE.Vector3(0, -1, 0));
+      arrow.position.set(0.4, -0.32 + l, 0);
+    }
+    arrow.setLength(l, 0.2, 0.12);
+    brk.rotation.z = dir === "push" ? -0.08 * load : dir === "pull" ? 0.08 * load : 0;
+    brk.scale.y = dir === "down" ? 1 - 0.06 * load : 1;
+  }
+  apply();
+  ST.setUpdate((l) => { load = l; apply(); });
+}
+
+/* ---------- L2：応力（太い板 vs 細い板） ---------- */
+function buildL2() {
+  const m1 = metalMat(), m2 = metalMat();
+  const b1 = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.3, 0.52), m1); b1.position.y = 0.42;
+  const b2 = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.3, 0.16), m2); b2.position.y = -0.42;
+  ST.group.add(b1, b2);
+  const arrows = [];
+  [[b1, 0.42], [b2, -0.42]].forEach(([b, y]) => {
+    const aL = mkArrow(0xffb45d), aR = mkArrow(0xffb45d);
+    aL.setDirection(new THREE.Vector3(-1, 0, 0)); aL.position.set(-1.02, y, 0);
+    aR.setDirection(new THREE.Vector3(1, 0, 0)); aR.position.set(1.02, y, 0);
+    ST.group.add(aL, aR); arrows.push(aL, aR);
+  });
+  const tmp = new THREE.Color();
+  ST.setUpdate((l) => {
+    const s1 = Math.min(1, l * 0.45), s2 = Math.min(1, l * 1.0);
+    m1.color.copy(rampColor(s1, tmp));
+    m2.color.copy(rampColor(s2, tmp));
+    b1.scale.x = 1 + 0.03 * s1;
+    b2.scale.x = 1 + 0.055 * s2;
+    const al = 0.35 + 0.5 * l;
+    arrows.forEach((a) => a.setLength(al, 0.2, 0.12));
+  });
+  ST.update(0);
+}
+
+/* ---------- L3：ひずみ（材料くらべ） ---------- */
+function buildL3() {
+  const bar = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.3, 0.4), metalMat(0x9fb0c4));
+  ST.group.add(bar);
+  const ghost = new THREE.LineSegments(
+    new THREE.EdgesGeometry(new THREE.BoxGeometry(2.0, 0.3, 0.4)),
+    new THREE.LineBasicMaterial({ color: 0x4fd1ff, transparent: true, opacity: 0.65 })
+  );
+  ST.group.add(ghost);
+  const aL = mkArrow(0xffb45d), aR = mkArrow(0xffb45d);
+  aL.setDirection(new THREE.Vector3(-1, 0, 0)); aL.position.set(-1.02, 0, 0);
+  aR.setDirection(new THREE.Vector3(1, 0, 0)); aR.position.set(1.02, 0, 0);
+  ST.group.add(aL, aR);
+
+  setExtraHTML('<div class="btnrow">' +
+    '<button class="sbtn on" data-k="1" data-r="0.01">鉄</button>' +
+    '<button class="sbtn" data-k="3" data-r="0.03">アルミ</button>' +
+    '<button class="sbtn" data-k="40" data-r="40">ゴム</button></div>' +
+    '<div class="readout" id="l3read"></div>');
+  let k = 1, realMm = 0.01, load = 0;
+  document.querySelectorAll("#extraCtrls .sbtn").forEach((b) => {
+    b.addEventListener("click", () => {
+      document.querySelectorAll("#extraCtrls .sbtn").forEach((x) => x.classList.remove("on"));
+      b.classList.add("on");
+      k = +b.dataset.k; realMm = +b.dataset.r;
+      apply();
+    });
+  });
+  function apply() {
+    const stretch = Math.min(0.55, 0.02 * k * load);
+    bar.scale.x = 1 + stretch;
+    const al = 0.35 + 0.5 * load;
+    aL.setLength(al, 0.2, 0.12); aR.setLength(al, 0.2, 0.12);
+    aL.position.x = -1.02 - stretch; aR.position.x = 1.02 + stretch;
+    const mm = realMm * load;
+    $("l3read").textContent = "のび（実物なら）: " + (mm < 1 ? mm.toFixed(3) : mm.toFixed(0)) + " mm";
+  }
+  apply();
+  ST.setUpdate((l) => { load = l; apply(); });
+}
+
+/* ---------- L4：曲げ（両端支持の梁） ---------- */
+function buildL4() {
+  const L = 3.0, halfH = 0.21;
+  const geo = new THREE.BoxGeometry(L, halfH * 2, 0.55, 64, 6, 6);
+  const pos = geo.attributes.position;
+  const base = pos.array.slice();
+  const colAttr = new THREE.BufferAttribute(new Float32Array(pos.count * 3), 3);
+  geo.setAttribute("color", colAttr);
+  const beam = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ vertexColors: true, metalness: 0.5, roughness: 0.32 }));
+  ST.group.add(beam);
+
+  const supGeo = new THREE.ConeGeometry(0.2, 0.42, 4);
+  const supMat = metalMat(0x36435a, { metalness: 0.65, roughness: 0.4 });
+  [-1.34, 1.34].forEach((x) => {
+    const s = new THREE.Mesh(supGeo.clone(), supMat.clone());
+    s.position.set(x, -halfH - 0.21, 0);
+    ST.group.add(s);
+  });
+  const arrow = new THREE.ArrowHelper(new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 1.4, 0), 0.8, 0xff5d4d, 0.22, 0.13);
+  ST.group.add(arrow);
+
+  const maxD = 0.4;
+  ST.setUpdate((load) => {
+    const a = pos.array, c = colAttr.array;
+    for (let i = 0; i < pos.count; i++) {
+      const i3 = i * 3;
+      const x = base[i3], y = base[i3 + 1];
+      const shp = Math.cos(Math.PI * x / L);
+      a[i3 + 1] = y - maxD * load * shp;
+      let s = -(y / halfH) * shp * load * 1.45;
+      s = Math.max(-1, Math.min(1, s));
+      let r = 0.58, g = 0.63, b = 0.7; // 鋼ベース
+      if (s > 0) { r += (0.96 - r) * s; g += (0.17 - g) * s; b += (0.12 - b) * s; }
+      else if (s < 0) { const t2 = -s; r += (0.13 - r) * t2; g += (0.48 - g) * t2; b += (1.0 - b) * t2; }
+      c[i3] = r; c[i3 + 1] = g; c[i3 + 2] = b;
+    }
+    pos.needsUpdate = true;
+    colAttr.needsUpdate = true;
+    geo.computeVertexNormals();
+    const topC = halfH - maxD * load;
+    const len = 0.55 + 0.55 * load;
+    arrow.position.set(0, topC + len + 0.04, 0);
+    arrow.setLength(len, 0.22, 0.13);
+  });
+  ST.update(0);
+}
+
+/* ---------- L5：応力集中（穴あき板・破壊つき） ---------- */
+function buildL5() {
+  const holeR = 0.22;
+  const sh = shapeFromPts([[-1.25,-0.6],[1.25,-0.6],[1.25,0.6],[-1.25,0.6]]);
+  const hole = new THREE.Path();
+  hole.absarc(0, 0, holeR, 0, Math.PI * 2, true);
+  sh.holes.push(hole);
+  const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.12, bevelEnabled: true, bevelThickness: 0.018, bevelSize: 0.018, bevelSegments: 3, curveSegments: 48 });
+  geo.center();
+  const pos = geo.attributes.position;
+  const colAttr = new THREE.BufferAttribute(new Float32Array(pos.count * 3), 3);
+  geo.setAttribute("color", colAttr);
+  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, metalness: 0.45, roughness: 0.35, emissive: 0xff2211, emissiveIntensity: 0 });
+  const plate = new THREE.Mesh(geo, mat);
+  ST.group.add(plate);
+
+  const aL = mkArrow(0xff9d4d), aR = mkArrow(0xff9d4d);
+  aL.setDirection(new THREE.Vector3(-1, 0, 0)); aL.position.set(-1.3, 0, 0);
+  aR.setDirection(new THREE.Vector3(1, 0, 0)); aR.position.set(1.3, 0, 0);
+  ST.group.add(aL, aR);
+
+  const tmp = new THREE.Color();
+  let broken = false, boomT = 99, wasBroken = false;
+  ST.setUpdate((load) => {
+    const c = colAttr.array;
+    for (let i = 0; i < pos.count; i++) {
+      const i3 = i * 3;
+      const x = pos.array[i3], y = pos.array[i3 + 1];
+      let d = Math.sqrt(x * x + y * y);
+      if (d < holeR) d = holeR;
+      const k = 0.3 + 0.7 * Math.pow(holeR / d, 1.7);
+      rampColor(load * k, tmp);
+      c[i3] = tmp.r; c[i3 + 1] = tmp.g; c[i3 + 2] = tmp.b;
+    }
+    colAttr.needsUpdate = true;
+    plate.scale.x = 1 + 0.07 * load;
+    const len = 0.35 + 0.55 * load;
+    aL.setLength(len, 0.2, 0.12); aR.setLength(len, 0.2, 0.12);
+    broken = load >= 0.8;
+    if (broken && !wasBroken) { boomT = 0; progress.broken = (progress.broken || 0) + 1; saveProgress(); }
+    wasBroken = broken;
+    setBoom(broken);
+  });
+  ST.setTick((t) => {
+    if (broken) {
+      mat.emissiveIntensity = 0.25 + 0.25 * Math.sin(t * 9);
+      boomT += 0.016;
+      const shake = Math.max(0, 0.05 * (1 - boomT * 1.8));
+      plate.position.x = (Math.random() - 0.5) * shake;
+      plate.position.y = (Math.random() - 0.5) * shake;
+    } else {
+      mat.emissiveIntensity = 0;
+      plate.position.x = 0; plate.position.y = 0;
+    }
+  });
+  ST.update(0);
+}
+
+/* ---------- L6：安全率（壁の棚ブラケット・破壊つき） ---------- */
+function buildL6() {
+  // 壁
+  const wall = new THREE.Mesh(new THREE.BoxGeometry(0.14, 1.6, 1.1), metalMat(0x141c28, { metalness: 0.2, roughness: 0.8 }));
+  wall.position.set(-0.79, 0, 0);
+  ST.group.add(wall);
+
+  // ブラケット（縦脚＋上アーム）内角 (-0.54, 0.34)
+  const sh = shapeFromPts([[-0.7,-0.5],[-0.54,-0.5],[-0.54,0.34],[0.7,0.34],[0.7,0.5],[-0.7,0.5]]);
+  const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.4, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 2, curveSegments: 24 });
+  geo.translate(0, 0, -0.2);
+  const pos = geo.attributes.position;
+  const base = pos.array.slice();
+  const colAttr = new THREE.BufferAttribute(new Float32Array(pos.count * 3), 3);
+  geo.setAttribute("color", colAttr);
+  const mat = new THREE.MeshStandardMaterial({ vertexColors: true, metalness: 0.45, roughness: 0.35, emissive: 0xff2211, emissiveIntensity: 0 });
+  const brk = new THREE.Mesh(geo, mat);
+  ST.group.add(brk);
+
+  // ぶら下がる重り＋矢印
+  const weight = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.3, 0.3), metalMat(0x8a6a3a, { metalness: 0.6, roughness: 0.4 }));
+  ST.group.add(weight);
+  const arrow = new THREE.ArrowHelper(new THREE.Vector3(0, -1, 0), new THREE.Vector3(0.55, 0, 0), 0.5, 0xff5d4d, 0.18, 0.11);
+  ST.group.add(arrow);
+
+  setExtraHTML(
+    '<div class="gauge"><div class="gfill" id="l6fill"></div><div class="gmark"></div></div>' +
+    '<div class="gcap"><span>0kg</span><span style="color:#ff8f85">壊れる80kg↑</span><span>100kg</span></div>' +
+    '<div class="readout" id="l6read"></div>'
+  );
+
+  const cx = -0.54, cy = 0.34;
+  const tmp = new THREE.Color();
+  let broken = false, boomT = 99, wasBroken = false;
+  ST.setUpdate((load) => {
+    const a = pos.array, c = colAttr.array;
+    for (let i = 0; i < pos.count; i++) {
+      const i3 = i * 3;
+      const x = base[i3], y = base[i3 + 1];
+      // アームのたわみ（先端ほど下がる）
+      if (x > cx && y > 0.2) {
+        const r = (x - cx) / 1.24;
+        a[i3 + 1] = y - 0.16 * load * r * r;
+      }
+      const d = Math.sqrt((x - cx) * (x - cx) + (y - cy) * (y - cy));
+      rampColor(load * (0.18 + 0.82 * Math.exp(-2.6 * d)), tmp);
+      c[i3] = tmp.r; c[i3 + 1] = tmp.g; c[i3 + 2] = tmp.b;
+    }
+    pos.needsUpdate = true;
+    colAttr.needsUpdate = true;
+    geo.computeVertexNormals();
+
+    const tipSag = 0.16 * load;
+    weight.position.set(0.55, 0.34 - tipSag - 0.32, 0);
+    const len = 0.3 + 0.4 * load;
+    arrow.position.set(0.55, weight.position.y - 0.16, 0);
+    arrow.setLength(len, 0.18, 0.11);
+
+    const kg = Math.round(load * 100);
+    $("l6fill").style.width = kg + "%";
+    $("l6read").textContent = kg === 0 ? "安全率：─（まだ吊ってない）" : "安全率 ＝ 80 ÷ " + kg + " ＝ " + (80 / kg).toFixed(1) + (80 / kg >= 2 ? " 👍" : " ⚠️");
+
+    broken = load >= 0.8;
+    if (broken && !wasBroken) { boomT = 0; progress.broken = (progress.broken || 0) + 1; saveProgress(); }
+    wasBroken = broken;
+    setBoom(broken);
+  });
+  ST.setTick((t) => {
+    if (broken) {
+      mat.emissiveIntensity = 0.25 + 0.25 * Math.sin(t * 9);
+      boomT += 0.016;
+      const shake = Math.max(0, 0.05 * (1 - boomT * 1.8));
+      brk.position.x = (Math.random() - 0.5) * shake;
+      brk.position.y = (Math.random() - 0.5) * shake;
+    } else {
+      mat.emissiveIntensity = 0;
+      brk.position.x = 0; brk.position.y = 0;
+    }
+  });
+  ST.update(0);
+}
+
+const BUILDERS = { l1: buildL1, l2: buildL2, l3: buildL3, l4: buildL4, l5: buildL5, l6: buildL6 };
+
+/* ================================================================
+   レッスンの流れ：予想 → 実験 → 種明かし → クイズ → クリア
+================================================================ */
+let curIdx = 0, cur = null, missionPick = -1, cardIdx = 0;
+
+function openLesson(i) {
+  curIdx = i;
+  cur = LESSONS[i];
+  missionPick = -1;
+  showView("viewLesson");
+  $("lsTag").textContent = cur.tag;
+  $("lsTitle").textContent = cur.title;
+  // ミッション
+  $("msNo").innerHTML = cur.mission.no;
+  $("msQ").innerHTML = cur.mission.q;
+  const wrap = $("msOpts");
+  wrap.innerHTML = "";
+  cur.mission.opts.forEach((o, idx) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = (idx + 1) + ". " + o;
+    b.addEventListener("click", () => { missionPick = idx; startExp(); });
+    wrap.appendChild(b);
+  });
+  setPhase("phMission");
+}
+
+function startExp() {
+  setPhase("phExp");
+  $("guessLine").textContent = "きみの予想：「" + cur.mission.opts[missionPick] + "」── 実験で確かめよう";
+  $("sliderLabel").textContent = cur.sliderLabel;
+  $("expLegend").innerHTML = cur.legend.map((x) => "<span>" + x + "</span>").join("");
+  $("expNote").innerHTML = cur.note;
+  setExtraHTML("");
+  const range = $("loadRange");
+  range.value = 0;
+  $("loadVal").textContent = "0kg";
+  const btn = $("btnToReveal");
+  btn.disabled = true;
+
+  ensureStage();
+  if (ST.fake) { btn.disabled = false; return; }
+  ST.clear();
+  ST.resetView();
+  BUILDERS[cur.id]();
+  ST.resize();
+}
+
+$("loadRange").addEventListener("input", () => {
+  const v = +$("loadRange").value;
+  $("loadVal").textContent = v + "kg";
+  if (ST && !ST.fake) ST.update(v / 100);
+  $("btnToReveal").disabled = false;
+});
+
+$("btnToReveal").addEventListener("click", () => {
+  const m = cur.mission;
+  const hit = missionPick === m.ans;
+  $("rvBanner").innerHTML = (hit ? "🎯 予想的中！" : "💡 実験で見えたね！") + "<small>こたえ：" + m.ansLine + "</small>";
+  cardIdx = 0;
+  renderCard();
+  setPhase("phReveal");
+});
+
+function renderCard() {
+  $("rvCard").innerHTML = "<div>" + cur.cards[cardIdx] + "</div>";
+  $("rvDots").innerHTML = cur.cards.map((_, i) => (i <= cardIdx ? "<span>●</span>" : "○")).join("");
+  $("btnCardNext").textContent = cardIdx < cur.cards.length - 1 ? "つぎ →" : "ミニクイズへ →";
+}
+$("btnCardNext").addEventListener("click", () => {
+  if (cardIdx < cur.cards.length - 1) { cardIdx++; renderCard(); }
+  else startQuiz();
+});
+
+function startQuiz() {
+  setPhase("phQuiz");
+  const qz = cur.quiz;
+  $("qzQ").textContent = qz.q;
+  $("qzExp").style.display = "none";
+  $("btnQuizDone").style.display = "none";
+  const wrap = $("qzOpts");
+  wrap.innerHTML = "";
+  let answered = false;
+  qz.opts.forEach((o, idx) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = (idx + 1) + ". " + o;
+    b.addEventListener("click", () => {
+      if (answered) return;
+      answered = true;
+      wrap.querySelectorAll(".opt").forEach((x, xi) => {
+        if (xi === qz.ans) x.classList.add("correct");
+        else if (xi === idx) x.classList.add("wrong");
+        else x.classList.add("dim");
+      });
+      $("qzExp").innerHTML = qz.exp;
+      $("qzExp").style.display = "block";
+      $("btnQuizDone").style.display = "block";
+    });
+    wrap.appendChild(b);
+  });
+}
+
+$("btnQuizDone").addEventListener("click", () => {
+  progress.done[cur.id] = true;
+  bumpStreak();
+  saveProgress();
+  $("clearStamp").innerHTML = cur.tag + " CLEAR!<small>今朝の15分 完了</small>";
+  const s = progress.streak;
+  $("clearMsg").innerHTML = "🔥 " + s.n + "週れんぞく<br>" + (curIdx < 5 ? "次回：" + LESSONS[curIdx + 1].tag + " " + LESSONS[curIdx + 1].title : "次回：L7 章ボス戦！");
+  setPhase("phClear");
+});
+
+$("btnGoHome").addEventListener("click", () => { renderHome(); showView("viewHome"); });
+$("btnBack").addEventListener("click", () => { renderHome(); showView("viewHome"); });
+
+/* ================================================================
+   ボス戦（7問）
+================================================================ */
+let bIdx = 0, bScore = 0;
+function openBoss() {
+  bIdx = 0; bScore = 0;
+  showView("viewBoss");
+  $("bossPlay").style.display = "block";
+  $("bossResult").style.display = "none";
+  renderBossQ();
+}
+function renderBossQ() {
+  const q = BOSS[bIdx];
+  $("bsProgress").textContent = "第" + (bIdx + 1) + "問 ／ 7問中 ── 正解 " + bScore;
+  $("bsQ").textContent = q.q;
+  $("bsExp").style.display = "none";
+  $("btnBossNext").style.display = "none";
+  const wrap = $("bsOpts");
+  wrap.innerHTML = "";
+  let answered = false;
+  q.opts.forEach((o, idx) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = (idx + 1) + ". " + o;
+    b.addEventListener("click", () => {
+      if (answered) return;
+      answered = true;
+      if (idx === q.ans) bScore++;
+      wrap.querySelectorAll(".opt").forEach((x, xi) => {
+        if (xi === q.ans) x.classList.add("correct");
+        else if (xi === idx) x.classList.add("wrong");
+        else x.classList.add("dim");
+      });
+      $("bsExp").innerHTML = q.exp;
+      $("bsExp").style.display = "block";
+      $("btnBossNext").style.display = "block";
+      $("btnBossNext").textContent = bIdx < BOSS.length - 1 ? "つぎ →" : "結果を見る →";
+    });
+    wrap.appendChild(b);
+  });
+}
+$("btnBossNext").addEventListener("click", () => {
+  if (bIdx < BOSS.length - 1) { bIdx++; renderBossQ(); }
+  else {
+    $("bossPlay").style.display = "none";
+    $("bossResult").style.display = "block";
+    $("bsScore").textContent = bScore + " / 7";
+    if (bScore >= 5) {
+      progress.done["l7"] = true;
+      bumpStreak();
+      saveProgress();
+      $("bsMsg").innerHTML = "🏆 第1章 制覇！<br>第2章「未来よち（CAE）」は次のアップデートで配信。<br>それまで週1でボス戦の復習もアリ。";
+    } else {
+      $("bsMsg").innerHTML = "あと少し！ 5問正解でクリア。<br>まちがえたレッスンを触り直してから再挑戦。";
+    }
+  }
+});
+$("btnBossHome").addEventListener("click", () => { renderHome(); showView("viewHome"); });
+$("btnBackB").addEventListener("click", () => { renderHome(); showView("viewHome"); });
+
+/* ================================================================
+   起動
+================================================================ */
+renderHome();
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
