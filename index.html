@@ -20,7 +20,34 @@
     font-family: "Yu Gothic UI", "Hiragino Sans", "Meiryo", system-ui, sans-serif;
     overscroll-behavior-y: contain;
   }
-  #app { max-width: 470px; margin: 0 auto; padding: 18px 16px 40px; min-height: 100%; }
+  #bgfx { position: fixed; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+  #app { position: relative; z-index: 1; max-width: 470px; margin: 0 auto; padding: 18px 16px 40px; min-height: 100%; }
+
+  .goalbanner {
+    margin-top: 14px; padding: 10px 13px; border-radius: 12px; text-align: center;
+    border: 1px solid rgba(79,209,255,0.5); background: rgba(79,209,255,0.06);
+    font-size: 12.5px; font-weight: 800; color: #9fdcff;
+  }
+  .invmeter {
+    margin-top: 12px; padding: 12px 14px; border-radius: 14px;
+    border: 1px solid #1d2c42; background: linear-gradient(165deg, #0c1420, #0a0f18);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .invmeter svg { flex: none; filter: drop-shadow(0 0 8px rgba(79,209,255,0.35)); }
+  .invmeter .txt { font-size: 12.5px; color: #9fb4cb; line-height: 1.7; }
+  .invmeter .txt b { color: #9fdcff; font-size: 14px; }
+  .invmeter .bar { margin-top: 6px; height: 8px; border-radius: 5px; background: #101825; overflow: hidden; }
+  .invmeter .bar div { height: 100%; width: 0%; background: linear-gradient(90deg, #4fd1ff, #a07bff); transition: width 0.8s; }
+
+  #stageWrap { display: none; }
+  #stageWrap.mini .stage3d { height: 30vh; max-height: 230px; min-height: 180px; }
+
+  .teaser {
+    margin-top: 16px; padding: 13px 15px; border-radius: 13px; text-align: left;
+    border: 1px solid rgba(79,209,255,0.45); background: rgba(79,209,255,0.06);
+    font-size: 14px; color: #cfe8f8; line-height: 1.75;
+  }
+  .teaser b { color: #7fe0ff; }
   .view { display: none; }
   .view.active { display: block; }
   .phase { display: none; }
@@ -194,6 +221,7 @@
 </style>
 </head>
 <body>
+<canvas id="bgfx"></canvas>
 <div id="app">
 
   <!-- ============ ホーム ============ -->
@@ -201,13 +229,43 @@
     <div class="home-logo">FORCE FORGE</div>
     <div class="home-sub">CAE×力学 ── 朝15分・触って壊して覚える道場</div>
     <button class="resume" id="btnResume"></button>
+    <div class="goalbanner">🎯 ゴール：壊れない機械を数字で語れる設計者</div>
+    <div class="invmeter">
+      <svg width="64" height="84" viewBox="0 0 64 84">
+        <defs>
+          <linearGradient id="chg" x1="0" y1="1" x2="0" y2="0">
+            <stop offset="0" stop-color="#4fd1ff"/><stop offset="1" stop-color="#a07bff"/>
+          </linearGradient>
+          <clipPath id="fillclip"><rect id="fillRect" x="0" y="84" width="64" height="0"/></clipPath>
+          <g id="robo">
+            <rect x="18" y="6" width="28" height="22" rx="6"/>
+            <circle cx="27" cy="17" r="3.5"/><circle cx="37" cy="17" r="3.5"/>
+            <line x1="32" y1="6" x2="32" y2="0" stroke-width="3"/>
+            <circle cx="32" cy="0" r="2.5"/>
+            <rect x="14" y="32" width="36" height="30" rx="7"/>
+            <rect x="4" y="34" width="8" height="20" rx="4"/>
+            <rect x="52" y="34" width="8" height="20" rx="4"/>
+            <rect x="18" y="66" width="10" height="16" rx="4"/>
+            <rect x="36" y="66" width="10" height="16" rx="4"/>
+            <path d="M30 38 L36 46 h-5 l3 8 -8 -10 h5 z"/>
+          </g>
+        </defs>
+        <use href="#robo" fill="#1c2836" stroke="#2a3c56" stroke-width="1"/>
+        <g clip-path="url(#fillclip)"><use href="#robo" fill="url(#chg)"/></g>
+      </svg>
+      <div class="txt">
+        <b id="invTitle">発明チャージ 0%</b><br>
+        <span id="invLine">学ぶほどロボットの骨組みが強くなる</span>
+        <div class="bar"><div id="invBar"></div></div>
+      </div>
+    </div>
     <div class="prog-row"><span id="progText"></span><div class="prog-bar"><div class="prog-fill" id="progFill"></div></div><span>クリア</span></div>
     <div class="chap-title">第1章 力を見る <span>（力学のきそ・全7回＋番外EX）</span></div>
     <div class="nodes" id="nodes1"></div>
     <div class="chap2">🔒 第2章 未来よち（CAE）L8〜L14<br>第1章クリアで解放（次のアップデートで配信）</div>
     <div class="streak" id="streakLine"></div>
     <div class="installhint">スマホ：ブラウザの共有メニュー →「ホーム画面に追加」でアプリになる</div>
-    <div class="verline">FORCE FORGE v1.4 ─ 第1章＋番外EX「動けない場所が踏んばる」</div>
+    <div class="verline">FORCE FORGE v1.5 ─ 力の流線背景＋発明メーター＋説明カード全21枚に専用3Dアニメ</div>
   </section>
 
   <!-- ============ レッスン ============ -->
@@ -215,6 +273,15 @@
     <div class="lesson-top">
       <button class="backbtn" id="btnBack">←</button>
       <span class="tag" id="lsTag"></span><span id="lsTitle"></span>
+    </div>
+
+    <div id="stageWrap">
+      <div class="stage3d" id="stage3d">
+        <div id="stageChips"></div>
+        <div class="hint3d" id="hint3d">🖐 部品をつかんで動かせ／背景ドラッグ＝回転</div>
+        <div class="flash" id="flash"></div>
+        <div class="boom" id="boom"><span class="b1" id="boomText">破断!!</span><span class="b2">🔧 画面タップで新しい試験片をセット</span></div>
+      </div>
     </div>
 
     <div id="phMission" class="phase">
@@ -228,12 +295,6 @@
 
     <div id="phExp" class="phase">
       <div class="guessline" id="guessLine"></div>
-      <div class="stage3d" id="stage3d">
-        <div id="stageChips"></div>
-        <div class="hint3d" id="hint3d">🖐 部品をつかんで動かせ／背景ドラッグ＝回転</div>
-        <div class="flash" id="flash"></div>
-        <div class="boom" id="boom"><span class="b1" id="boomText">破断!!</span><span class="b2">🔧 画面タップで新しい試験片をセット</span></div>
-      </div>
       <div class="legend" id="expLegend"></div>
       <div class="sliderrow"><span id="sliderLabel"></span><input type="range" id="loadRange" min="0" max="100" value="0"><span class="val" id="loadVal">0kg</span></div>
       <div class="extra" id="extraCtrls"></div>
@@ -259,6 +320,7 @@
 
     <div id="phClear" class="phase center">
       <div class="stamp" id="clearStamp"></div>
+      <div class="teaser" id="teaserBox"></div>
       <div class="clearmsg" id="clearMsg"></div>
       <button class="cta" id="btnGoHome">マップへもどる</button>
     </div>
@@ -292,6 +354,99 @@
 "use strict";
 
 /* ================================================================
+   背景：力の流線（穴をよけて流れる応力の川）＋光パルス
+================================================================ */
+(function bgFX() {
+  const cv = document.getElementById("bgfx");
+  if (!cv) return;
+  const ctx = cv.getContext("2d");
+  let W = 0, H = 0, lines = [], holes = [];
+  function build() {
+    W = cv.width = Math.floor(innerWidth * Math.min(1.5, devicePixelRatio || 1));
+    H = cv.height = Math.floor(innerHeight * Math.min(1.5, devicePixelRatio || 1));
+    holes = [];
+    const hn = Math.max(2, Math.floor(H / 420));
+    for (let i = 0; i < hn; i++) {
+      holes.push({ x: W * (0.25 + Math.random() * 0.5), y: (i + 0.5) * (H / hn), r: 34 + Math.random() * 30 });
+    }
+    lines = [];
+    const n = Math.max(9, Math.floor(H / 60));
+    for (let i = 0; i < n; i++) {
+      const y0 = (i + 0.5) * (H / n);
+      const pts = [];
+      for (let x = -10; x <= W + 36; x += 26) {
+        let y = y0;
+        for (const h of holes) {
+          const dx = x - h.x, dy = y0 - h.y;
+          const d2 = dx * dx + dy * dy;
+          const push = (h.r * h.r * 1.8) / (d2 + h.r * h.r * 0.25);
+          y += (dy >= 0 ? 1 : -1) * push * h.r * 0.5 * Math.exp(-Math.abs(dx) / (h.r * 2.2)) * 0.04 * h.r;
+        }
+        pts.push([x, y]);
+      }
+      while (pts.length < 2) pts.push([pts[0][0] + 26, pts[0][1]]); // 極小ウィンドウ対策
+      let len = 0;
+      const segs = [];
+      for (let k = 1; k < pts.length; k++) {
+        const dx = pts[k][0] - pts[k - 1][0], dy = pts[k][1] - pts[k - 1][1];
+        const l = Math.hypot(dx, dy);
+        segs.push({ x1: pts[k - 1][0], y1: pts[k - 1][1], dx, dy, l, acc: len });
+        len += l;
+      }
+      lines.push({ pts, segs, len, pulses: [{ t: Math.random(), sp: 0.04 + Math.random() * 0.07, col: Math.random() < 0.22 ? "255,120,90" : "110,220,255" }] });
+    }
+  }
+  build();
+  window.addEventListener("resize", build);
+  function pointAt(tr, d) {
+    if (!tr.segs.length) return [0, 0];
+    for (let i = 0; i < tr.segs.length; i++) {
+      const s = tr.segs[i];
+      if (d <= s.acc + s.l) {
+        const f = (d - s.acc) / s.l;
+        return [s.x1 + s.dx * f, s.y1 + s.dy * f];
+      }
+    }
+    const s = tr.segs[tr.segs.length - 1];
+    return [s.x1 + s.dx, s.y1 + s.dy];
+  }
+  let last = performance.now();
+  (function draw(now) {
+    requestAnimationFrame(draw);
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    ctx.clearRect(0, 0, W, H);
+    ctx.lineWidth = 1.4;
+    ctx.strokeStyle = "rgba(120,170,210,0.10)";
+    if (!lines.length) return;
+    for (const tr of lines) {
+      ctx.beginPath();
+      ctx.moveTo(tr.pts[0][0], tr.pts[0][1]);
+      for (let k = 1; k < tr.pts.length; k++) ctx.lineTo(tr.pts[k][0], tr.pts[k][1]);
+      ctx.stroke();
+    }
+    ctx.strokeStyle = "rgba(255,120,90,0.14)";
+    for (const h of holes) {
+      ctx.beginPath();
+      ctx.arc(h.x, h.y, h.r, 0, 6.29);
+      ctx.stroke();
+    }
+    for (const tr of lines) for (const p of tr.pulses) {
+      p.t += dt * p.sp;
+      if (p.t > 1) p.t = 0;
+      const xy = pointAt(tr, p.t * tr.len);
+      const g = ctx.createRadialGradient(xy[0], xy[1], 0, xy[0], xy[1], 20);
+      g.addColorStop(0, "rgba(" + p.col + ",0.6)");
+      g.addColorStop(1, "rgba(" + p.col + ",0)");
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(xy[0], xy[1], 20, 0, 6.29); ctx.fill();
+      ctx.fillStyle = "rgba(235,250,255,0.9)";
+      ctx.beginPath(); ctx.arc(xy[0], xy[1], 2.2, 0, 6.29); ctx.fill();
+    }
+  })(last);
+})();
+
+/* ================================================================
    FORCE FORGE v1.1 ── 第1章「力を見る」リアル試験室仕様
    確定レシピ：影＋実照明／試験機ツカミ／塑性→ヒビ→破断／
    重力破片／指で直接つかんで壊す／タップで再生成
@@ -319,7 +474,8 @@ const LESSONS = [
       q: "力の矢印の「長さ」が表すのは？",
       opts: ["力の大きさ", "力の速さ", "部品の重さ"], ans: 0,
       exp: "矢印＝「大きさ＋向き」のセット。CAE（パソコンで強度を計算する道具）の画面も矢印だらけ。"
-    }
+    },
+    teaser: "CAEの<b>矢印だらけの画面が読める</b>ようになる第一歩"
   },
   {
     id: "l2", tag: "L2", label: "応力", title: "応力＝ぎゅうぎゅう度",
@@ -341,7 +497,8 @@ const LESSONS = [
       q: "切り口（断面積）を半分にしたら、応力は？",
       opts: ["半分になる", "変わらない", "2倍になる"], ans: 2,
       exp: "力÷断面積。分母が半分→答えは2倍。板金の穴や切欠き（きりかき）が怖い理由。"
-    }
+    },
+    teaser: "部品の「どこが危ない」を<b>数字で語れる</b>ようになる"
   },
   {
     id: "l3", tag: "L3", label: "ひずみ", title: "ひずみ＝のびた割合",
@@ -363,7 +520,8 @@ const LESSONS = [
       q: "ひずみの単位は？",
       opts: ["mm", "kg", "単位なし"], ans: 2,
       exp: "「割合」だから単位が消える。％やμ（マイクロ）で書くことが多い。"
-    }
+    },
+    teaser: "鉄かアルミか、<b>材料選びに根拠</b>が持てる（軽量化の入口）"
   },
   {
     id: "l4", tag: "L4", label: "曲げ", title: "曲げ＝上下でつなひき",
@@ -385,7 +543,8 @@ const LESSONS = [
       q: "同じ板を「曲げに強く」するなら？",
       opts: ["幅を2倍にする", "高さを2倍にする", "長さを2倍にする"], ans: 1,
       exp: "高さは2乗〜3乗で効く。アングル材やリブ（補強の折り曲げ）が強い理由。"
-    }
+    },
+    teaser: "リブ・アングルの<b>効く向き</b>がわかる→強い板金レイアウト"
   },
   {
     id: "l5", tag: "L5", label: "集中", title: "応力集中＝穴のふちのワナ",
@@ -407,7 +566,8 @@ const LESSONS = [
       q: "角ばった切欠きと丸い穴、怖いのは？",
       opts: ["丸い穴", "角ばった切欠き", "同じ"], ans: 1,
       exp: "とがるほど集中が強くなる。図面のR指示は飾りじゃない。"
-    }
+    },
+    teaser: "R指示・穴位置に根拠→<b>壊れない図面</b>が描ける"
   },
   {
     id: "l6", tag: "L6", label: "安全率", title: "安全率＝壊れるまでの余裕",
@@ -429,7 +589,8 @@ const LESSONS = [
       q: "「安全率3で使う」の意味は？",
       opts: ["壊れる力の3倍で使う", "壊れる力の1/3で使う", "3回壊れるまで使える"], ans: 1,
       exp: "使う力を、壊れる力の1/3までに抑えるということ。"
-    }
+    },
+    teaser: "「何kgまでOK」と<b>言い切れる</b>＝安全設計の背骨"
   },
   {
     id: "lex", tag: "EX", label: "固定", title: "番外：動けない場所が踏んばる",
@@ -452,7 +613,8 @@ const LESSONS = [
       q: "根元だけ固定の棚（片持ち）。補強を入れるならどこ？",
       opts: ["先っぽ", "真ん中", "根元（固定の近く）"], ans: 2,
       exp: "応力は固定の近くに集中する。リブや三角の補強は根元に入れるのが一番効く。"
-    }
+    },
+    teaser: "CAEの<b>固定条件が正しく張れる</b>→SolidWorks Simulationデビュー"
   }
 ];
 
@@ -515,6 +677,11 @@ function showView(name) {
 }
 function setPhase(name) {
   ["phMission", "phExp", "phReveal", "phQuiz", "phClear"].forEach((p) => $(p).classList.toggle("active", p === name));
+  const sw = $("stageWrap");
+  if (name === "phExp") { sw.style.display = "block"; sw.classList.remove("mini"); }
+  else if (name === "phReveal") { sw.style.display = "block"; sw.classList.add("mini"); }
+  else sw.style.display = "none";
+  if (ST && !ST.fake) requestAnimationFrame(() => ST.resize());
   window.scrollTo(0, 0);
 }
 function vib(p) { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
@@ -545,6 +712,12 @@ function renderHome() {
   const count = PROG_KEYS.filter((k) => progress.done[k]).length;
   $("progText").textContent = count + "/" + PROG_KEYS.length;
   $("progFill").style.width = Math.round((count / PROG_KEYS.length) * 100) + "%";
+  const pct = Math.round((count / PROG_KEYS.length) * 100);
+  const fr = $("fillRect");
+  if (fr) { fr.setAttribute("y", 84 - 84 * count / PROG_KEYS.length); fr.setAttribute("height", 84 * count / PROG_KEYS.length); }
+  $("invBar").style.width = pct + "%";
+  $("invTitle").textContent = pct >= 100 ? "⚡ 発明準備完了!!" : "発明チャージ " + pct + "%";
+  $("invLine").textContent = pct >= 100 ? "第2章でCAE（強度計算）へ進もう" : pct >= 50 ? "半分きた。力の目ができてきてる" : "学ぶほどロボットの骨組みが強くなる";
   const next = LESSONS.map((_, i) => i).find((i) => lessonState(i) === "now");
   const btn = $("btnResume");
   if (count === PROG_KEYS.length) {
@@ -725,7 +898,7 @@ function ensureStage() {
   const brush = brushedTexOf();
 
   // ---- 操作（部品つかみ＋回転） ----
-  let rotY = -0.5, rotX = 0.12, dragging = false, touched = false, px = 0, py = 0;
+  let rotY = -0.5, rotX = 0.12, zT = 5.6, dragging = false, touched = false, px = 0, py = 0;
   let mode = "orbit", startX = 0, startY = 0, startLoad = 0, downTime = 0, movedPx = 0;
   const ray = new THREE.Raycaster();
   const ndc = new THREE.Vector2();
@@ -745,6 +918,7 @@ function ensureStage() {
   }
   el.addEventListener("pointerdown", (e) => {
     touched = true;
+    $("btnToReveal").disabled = false; // 3Dに触った＝実験した扱い
     if (ST.broken) { rebuildScene(); return; }
     dragging = true; px = e.clientX; py = e.clientY;
     downTime = performance.now(); movedPx = 0;
@@ -787,7 +961,7 @@ function ensureStage() {
   });
   el.addEventListener("wheel", (e) => {
     e.preventDefault();
-    camera.position.z = Math.max(3.0, Math.min(8.5, camera.position.z + e.deltaY * 0.004));
+    zT = Math.max(3.0, Math.min(8.5, zT + e.deltaY * 0.004));
   }, { passive: false });
 
   function resize() {
@@ -804,7 +978,13 @@ function ensureStage() {
     group, camera, brush, steel: steelTex,
     sceneApi: null, broken: false, springing: false, timeScale: 1, shake: 0,
     resize,
-    resetView() { rotY = -0.5; rotX = 0.12; touched = false; camera.position.z = 5.6; },
+    resetView() { rotY = -0.5; rotX = 0.12; zT = 5.6; touched = false; },
+    setView(ry, rx, z) {
+      if (ry !== undefined) rotY = ry;
+      if (rx !== undefined) rotX = rx;
+      if (z !== undefined) zT = z;
+      touched = true;
+    },
     clearScene() {
       for (let i = group.children.length - 1; i >= 0; i--) {
         const c = group.children[i];
@@ -840,6 +1020,7 @@ function ensureStage() {
     if (!touched) rotY += 0.002;
     group.rotation.y += (rotY - group.rotation.y) * 0.12;
     group.rotation.x += (rotX - group.rotation.x) * 0.12;
+    camera.position.z += (zT - camera.position.z) * 0.09;
 
     if (ST.springing && !ST.broken) {
       const v = +$("loadRange").value;
@@ -1950,6 +2131,618 @@ function setMicro(on) {
 }
 
 /* ================================================================
+   🎬 カード専用3D（説明1枚＝専用アニメ1本、全21本）
+================================================================ */
+function setChips(html) { $("stageChips").innerHTML = html || ""; }
+// 小さな曲げ梁メーカー（上青・下赤の頂点色つき）
+function cbeamCS(L, halfH, maxD, y0) {
+  const geo = new THREE.BoxGeometry(L, halfH * 2, 0.5, 48, 4, 4);
+  const pos = geo.attributes.position;
+  const base = pos.array.slice();
+  const colAttr = new THREE.BufferAttribute(new Float32Array(pos.count * 3), 3);
+  geo.setAttribute("color", colAttr);
+  const mesh = new THREE.Mesh(geo, new THREE.MeshStandardMaterial(steelMaps({ vertexColors: true })));
+  mesh.castShadow = true;
+  mesh.position.y = y0 || 0;
+  ST.group.add(mesh);
+  function set(load, cantilever) {
+    const a = pos.array, c = colAttr.array;
+    for (let i = 0; i < pos.count; i++) {
+      const i3 = i * 3;
+      const x = base[i3], y = base[i3 + 1];
+      let shp, s;
+      if (cantilever) {
+        const xh = Math.max(0, (x + L / 2) / L);
+        shp = xh * xh;
+        a[i3 + 1] = y - maxD * load * shp;
+        s = -(y / halfH) * load * (1 - xh) * 1.4;
+      } else {
+        shp = Math.cos(Math.PI * x / L);
+        a[i3 + 1] = y - maxD * load * shp;
+        s = -(y / halfH) * shp * load * 1.45;
+      }
+      s = Math.max(-1, Math.min(1, s));
+      let r = 1, g = 1, b = 1;
+      if (s > 0) { r = 1 + 0.5 * s; g = 1 - 0.72 * s; b = 1 - 0.8 * s; }
+      else if (s < 0) { const q = -s; r = 1 - 0.7 * q; g = 1 - 0.25 * q; b = 1 + 0.5 * q; }
+      c[i3] = r; c[i3 + 1] = g; c[i3 + 2] = b;
+    }
+    pos.needsUpdate = true;
+    colAttr.needsUpdate = true;
+    geo.computeVertexNormals();
+  }
+  set(0);
+  return { mesh, set };
+}
+// 粒の箱（ぎゅうぎゅう度の見える化）
+function driftBoxCS(cx, cy, w, h, n, color, size) {
+  const geo = new THREE.BufferGeometry();
+  const pa = new Float32Array(n * 3);
+  geo.setAttribute("position", new THREE.BufferAttribute(pa, 3));
+  const pts = new THREE.Points(geo, new THREE.PointsMaterial({ color: color || 0x8fe4ff, size: size || 0.06, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false }));
+  ST.group.add(pts);
+  const els = [];
+  for (let i = 0; i < n; i++) els.push({ x: cx + (Math.random() - 0.5) * w, y: cy + (Math.random() - 0.5) * h, ph: Math.random() * 6.28 });
+  return {
+    pts,
+    tick(dt, t, speed) {
+      for (let i = 0; i < els.length; i++) {
+        const e = els[i];
+        e.x += (speed + Math.sin(t * 5 + e.ph) * 0.05) * dt;
+        if (e.x > cx + w / 2) e.x = cx - w / 2;
+        pa[i * 3] = e.x;
+        pa[i * 3 + 1] = e.y + Math.cos(t * 4 + e.ph) * 0.02;
+        pa[i * 3 + 2] = 0.05;
+      }
+      geo.attributes.position.needsUpdate = true;
+    }
+  };
+}
+function glassBarCS(cx, cy, w, h) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.4),
+    new THREE.MeshStandardMaterial({ color: 0xcfe0ea, metalness: 0, roughness: 0.08, transparent: true, opacity: 0.16 }));
+  m.position.set(cx, cy, 0);
+  ST.group.add(m);
+  return m;
+}
+
+const CARD_SCENES = {
+  /* ===== L1 力ってなに？ ===== */
+  l1: [
+    // ①力は見えない（矢印が現れると箱が動く）
+    function () {
+      const cube = new THREE.Mesh(new THREE.BoxGeometry(0.55, 0.55, 0.55), steelMatOf({ color: 0x9fb0c4 }));
+      cube.position.set(-0.8, -0.6, 0);
+      cube.castShadow = true;
+      ST.group.add(cube);
+      const arr = forceArrow(0xff9d4d);
+      ST.group.add(arr);
+      setChips('<div class="chip" id="csChip" style="left:22%; top:16%">力は目に見えない…</div>');
+      ST.setView(-0.3, 0.25, 4.4);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) {
+        t2 += dt;
+        const cyc = t2 % 4;
+        const on = cyc > 1 && cyc < 3;
+        arr.visible = on;
+        if (on) {
+          cube.position.x = Math.min(0.9, cube.position.x + dt * 0.55);
+          arr.aim(new THREE.Vector3(cube.position.x - 0.3, -0.6, 0), new THREE.Vector3(1, 0, 0));
+          arr.setLen(0.7);
+        }
+        if (cyc >= 3.9) cube.position.x = -0.8;
+        const c = $("csChip");
+        if (c) c.textContent = on ? "矢印（力）が押すと動く" : "力は目に見えない…";
+      } };
+    },
+    // ②矢印＝大きさ＋向き
+    function () {
+      const block = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.7, 0.7), steelMatOf({ color: 0x9fb0c4 }));
+      block.position.y = -0.5;
+      block.castShadow = true;
+      ST.group.add(block);
+      const arr = forceArrow(0xff9d4d);
+      ST.group.add(arr);
+      setChips('<div class="chip" id="csChip" style="left:20%; top:16%">長さ＝大きさ</div>');
+      ST.setView(-0.3, 0.25, 4.2);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) {
+        t2 += dt;
+        const cyc = t2 % 6;
+        const c = $("csChip");
+        if (cyc < 3) { // 大きさが変わる
+          const l = 0.4 + (Math.sin(cyc * 2.1) + 1) * 0.35;
+          arr.aim(new THREE.Vector3(-1.05, -0.5, 0), new THREE.Vector3(1, 0, 0));
+          arr.setLen(l);
+          if (c) c.textContent = "長さ＝大きさ（" + Math.round(l * 100) + "kgのイメージ）";
+        } else { // 向きが変わる
+          const dirs = [[1, 0, 0], [0, -1, 0], [-1, 0, 0], [0, 1, 0]];
+          const d = dirs[Math.floor((cyc - 3) / 0.75) % 4];
+          const v = new THREE.Vector3(d[0], d[1], d[2]);
+          arr.aim(new THREE.Vector3(-0.5 * v.x - block.position.x * 0, -0.5, 0).sub(v.clone().multiplyScalar(0.55)).setY(-0.5 - v.y * 0.55), v);
+          arr.setLen(0.7);
+          if (c) c.textContent = "向き＝どっちへ押すか";
+        }
+      } };
+    },
+    // ③弾性＝バネで戻る
+    function () {
+      const pts = [];
+      for (let i = 0; i <= 80; i++) {
+        const th = i / 80 * Math.PI * 10;
+        pts.push(new THREE.Vector3(Math.cos(th) * 0.24, -1.0 + i / 80 * 0.85, Math.sin(th) * 0.24));
+      }
+      const spring = new THREE.Mesh(
+        new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 160, 0.03, 8),
+        steelMatOf({ color: 0x8a94a0 })
+      );
+      spring.castShadow = true;
+      ST.group.add(spring);
+      const block = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.3, 0.7), steelMatOf({ color: 0x9fb0c4 }));
+      block.castShadow = true;
+      ST.group.add(block);
+      setChips('<div class="chip" id="csChip" style="left:14%; top:16%">押す→ちぢむ／離す→戻る（弾性）</div>');
+      ST.setView(-0.3, 0.2, 4.2);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) {
+        t2 += dt;
+        const k = 1 - 0.35 * (Math.sin(t2 * 2.2) * 0.5 + 0.5);
+        spring.scale.y = k;
+        spring.position.y = -1.0 + 1.0 * (1 - k) * 0;
+        block.position.y = -1.0 + 0.85 * k + 0.17;
+        const c = $("csChip");
+        if (c) c.textContent = k < 0.75 ? "押す→バネがちぢむ" : "離す→スッと戻る（＝弾性）";
+      } };
+    }
+  ],
+
+  /* ===== L2 応力 ===== */
+  l2: [
+    // ①ぎゅうぎゅう度（同じ粒の数、細い方が混む）
+    function () {
+      glassBarCS(0, 0.42, 2.4, 0.62);
+      glassBarCS(0, -0.72, 2.4, 0.24);
+      const p1 = driftBoxCS(0, 0.42, 2.3, 0.5, 26, 0x8fe4ff, 0.07);
+      const p2 = driftBoxCS(0, -0.72, 2.3, 0.16, 26, 0xffb0a0, 0.07);
+      setChips('<div class="chip" style="left:6%; top:22%">太い＝同じ力でもゆったり</div>' +
+               '<div class="chip red" style="left:6%; top:62%">細い＝ぎゅうぎゅう（応力 大）</div>');
+      ST.setView(-0.15, 0.15, 4.3);
+      ST.sceneApi = { tick(dt, now) { const t = now * 0.001; p1.tick(dt, t, 0.4); p2.tick(dt, t, 0.4); } };
+    },
+    // ②くびれ＝断面小＝そこが危ない
+    function () {
+      const wide1 = new THREE.Mesh(new THREE.BoxGeometry(0.85, 0.5, 0.4), new THREE.MeshStandardMaterial(steelMaps({})));
+      wide1.position.set(-0.85, -0.35, 0);
+      const wide2 = wide1.clone();
+      wide2.position.x = 0.85;
+      const neckMat = new THREE.MeshStandardMaterial(steelMaps({ emissive: 0xff3300, emissiveIntensity: 0.5 }));
+      const neck = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.2, 0.4), neckMat);
+      neck.position.y = -0.35;
+      [wide1, wide2, neck].forEach((m) => { m.castShadow = true; ST.group.add(m); });
+      setChips('<div class="chip red" style="left:30%; top:26%">くびれ＝断面が小さい＝応力 大</div>' +
+               '<div class="chip" style="left:22%; top:66%">壊れるのはいつも「細いところ」</div>');
+      ST.setView(-0.25, 0.2, 4.2);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) { t2 += dt; neckMat.emissiveIntensity = 0.35 + 0.35 * Math.sin(t2 * 4); } };
+    },
+    // ③式：応力＝力÷断面積
+    function () {
+      const arr = forceArrow(0xff9d4d);
+      ST.group.add(arr);
+      const plate = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.9, 0.9), new THREE.MeshStandardMaterial(steelMaps({})));
+      plate.position.set(0.1, -0.45, 0);
+      plate.castShadow = true;
+      ST.group.add(plate);
+      const meterMat = new THREE.MeshStandardMaterial({ color: 0x4fd1ff, emissive: 0x2ea8ff, emissiveIntensity: 0.6 });
+      const meter = new THREE.Mesh(new THREE.BoxGeometry(0.2, 1, 0.2), meterMat);
+      ST.group.add(meter);
+      setChips('<div class="chip" id="csChip" style="left:16%; top:14%">応力 ＝ 力 ÷ 断面積（切り口の広さ）</div>');
+      ST.setView(-0.2, 0.15, 4.2);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt, now) {
+        t2 += dt;
+        const phase = Math.floor(t2 / 2.6) % 3;
+        const F = phase === 1 ? 1.5 : 1.0;
+        const A = phase === 2 ? 1.8 : 1.0;
+        const s = F / A;
+        arr.aim(new THREE.Vector3(-1.15, -0.45, 0), new THREE.Vector3(1, 0, 0));
+        arr.setLen(0.45 + F * 0.35);
+        plate.scale.y = A;
+        plate.scale.z = A;
+        rampColor(Math.min(1, s * 0.65), tc());
+        meterMat.color.copy(tc());
+        meterMat.emissive.copy(tc());
+        const h = Math.max(0.1, s * 0.9);
+        meter.scale.y = h;
+        meter.position.set(1.15, -0.9 + h / 2, 0);
+        const c = $("csChip");
+        if (c) c.textContent = phase === 0 ? "応力 ＝ 力 ÷ 断面積（切り口の広さ）" : phase === 1 ? "力UP → 応力UP（危険側へ）" : "断面積UP → 応力DOWN（安全側へ）";
+      } };
+    }
+  ],
+
+  /* ===== L3 ひずみ ===== */
+  l3: [
+    // ①ひずみ＝のび÷元の長さ
+    function () {
+      const bar = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.3, 0.4), new THREE.MeshStandardMaterial(steelMaps({})));
+      bar.position.y = -0.45;
+      bar.castShadow = true;
+      ST.group.add(bar);
+      const ghost = new THREE.LineSegments(
+        new THREE.EdgesGeometry(new THREE.BoxGeometry(2.0, 0.3, 0.4)),
+        new THREE.LineBasicMaterial({ color: 0x4fd1ff, transparent: true, opacity: 0.7 })
+      );
+      ghost.position.y = -0.45;
+      ST.group.add(ghost);
+      setChips('<div class="chip" id="csChip" style="left:18%; top:16%">のび÷元の長さ＝ひずみ</div>');
+      ST.setView(-0.2, 0.15, 4.2);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) {
+        t2 += dt;
+        const k = (Math.sin(t2 * 1.6) + 1) / 2;
+        bar.scale.x = 1 + k * 0.18;
+        const c = $("csChip");
+        if (c) c.textContent = "のび " + (k * 18).toFixed(0) + "% ÷ 元の長さ ＝ ひずみ（青ワク＝元）";
+      } };
+    },
+    // ②材料でのび方がちがう（ヤング率）
+    function () {
+      const mats = [
+        ["鉄", steelMatOf(), 0.05, 0.42],
+        ["アルミ", steelMatOf({ color: 0xf2f5f8, roughness: 0.5 }), 0.15, -0.18],
+        ["ゴム", new THREE.MeshStandardMaterial({ color: 0x2e3338, metalness: 0, roughness: 0.95 }), 0.55, -0.78]
+      ];
+      const bars = mats.map(([nm, m, k, y]) => {
+        const b = new THREE.Mesh(new THREE.BoxGeometry(1.7, 0.24, 0.35), m);
+        b.position.set(-0.2, y, 0);
+        b.castShadow = true;
+        ST.group.add(b);
+        return { b, k };
+      });
+      setChips('<div class="chip" style="left:5%; top:18%">鉄＝のびない（ヤング率 大）</div>' +
+               '<div class="chip" style="left:5%; top:44%">アルミ＝3倍のびる</div>' +
+               '<div class="chip" style="left:5%; top:72%">ゴム＝ケタちがい</div>');
+      ST.setView(-0.15, 0.12, 4.4);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) {
+        t2 += dt;
+        const k = (Math.sin(t2 * 1.6) + 1) / 2;
+        bars.forEach(({ b, k: kk }) => { b.scale.x = 1 + k * kk; b.position.x = -0.2 + (1.7 * k * kk) / 2; });
+      } };
+    },
+    // ③割合だから公平にくらべられる
+    function () {
+      const short = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.24, 0.35), new THREE.MeshStandardMaterial(steelMaps({})));
+      short.position.set(-0.75, 0.15, 0);
+      const long = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.24, 0.35), new THREE.MeshStandardMaterial(steelMaps({})));
+      long.position.set(-0.25, -0.65, 0);
+      [short, long].forEach((m) => { m.castShadow = true; ST.group.add(m); });
+      setChips('<div class="chip" id="csChip" style="left:12%; top:16%">同じ材料なら「割合」は同じ</div>');
+      ST.setView(-0.2, 0.15, 4.3);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) {
+        t2 += dt;
+        const k = (Math.sin(t2 * 1.6) + 1) / 2 * 0.12;
+        short.scale.x = 1 + k;
+        long.scale.x = 1 + k;
+        const c = $("csChip");
+        if (c) c.textContent = "のびの量はちがっても、割合（ひずみ）は同じ " + (k * 100).toFixed(0) + "%";
+      } };
+    }
+  ],
+
+  /* ===== L4 曲げ ===== */
+  l4: [
+    // ①上下のつなひき（色つき曲げループ）
+    function () {
+      const beam = cbeamCS(2.6, 0.2, 0.35, -0.3);
+      setChips('<div class="chip" style="left:6%; top:20%">上＝ちぢむ（青）</div>' +
+               '<div class="chip" style="left:6%; top:56%">下＝のびる（赤）</div>');
+      ST.setView(-0.25, 0.2, 4.2);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) { t2 += dt; beam.set((Math.sin(t2 * 1.6) + 1) / 2); } };
+    },
+    // ②中立軸（まん中の白い线）
+    function () {
+      const beam = cbeamCS(2.4, 0.24, 0.3, -0.3);
+      beam.set(0.85);
+      const nMat = new THREE.MeshStandardMaterial({ color: 0xffffff, emissive: 0xd0f0ff, emissiveIntensity: 1.1 });
+      for (let i = 0; i <= 12; i++) {
+        const x = -1.2 + i * 0.2;
+        const seg = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.015, 0.52), nMat);
+        seg.position.set(x, -0.3 - 0.3 * 0.85 * Math.cos(Math.PI * x / 2.4), 0);
+        ST.group.add(seg);
+      }
+      setChips('<div class="chip" style="left:12%; top:16%">白い線＝中立軸（のびもちぢみもゼロ）</div>' +
+               '<div class="chip" style="left:16%; top:72%">働いてるのは上下の面だけ</div>');
+      ST.setView(-0.25, 0.15, 4.0);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) { t2 += dt; nMat.emissiveIntensity = 0.8 + 0.4 * Math.sin(t2 * 3); } };
+    },
+    // ③同じ板でも「縦」は強い
+    function () {
+      const flat = cbeamCS(2.4, 0.06, 0.55, 0.25);   // 寝かせ＝ぐにゃり
+      const tall = cbeamCS(2.4, 0.28, 0.06, -0.75);  // 縦（高さがある）＝ほぼたわまない
+      setChips('<div class="chip red" style="left:6%; top:22%">寝かせた板＝ぐにゃり</div>' +
+               '<div class="chip" style="left:6%; top:62%">縦に使うと…ビクともしない</div>');
+      ST.setView(-0.25, 0.18, 4.3);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) {
+        t2 += dt;
+        const k = (Math.sin(t2 * 1.6) + 1) / 2;
+        flat.set(k);
+        tall.set(k);
+      } };
+    }
+  ],
+
+  /* ===== L5 応力集中 ===== */
+  l5: [
+    // ①力は穴をよけて流れる（流線）
+    function () {
+      const holeR = 0.22;
+      const sh = shapeFromPts([[-1.25, -0.6], [1.25, -0.6], [1.25, 0.6], [-1.25, 0.6]]);
+      const hole = new THREE.Path();
+      hole.absarc(0, 0, holeR, 0, Math.PI * 2, true);
+      sh.holes.push(hole);
+      const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.12, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 2, curveSegments: 32 });
+      geo.center();
+      const plate = new THREE.Mesh(geo, new THREE.MeshStandardMaterial(steelMaps({})));
+      plate.castShadow = true;
+      ST.group.add(plate);
+      const n = 60;
+      const pgeo = new THREE.BufferGeometry();
+      const pa = new Float32Array(n * 3);
+      pgeo.setAttribute("position", new THREE.BufferAttribute(pa, 3));
+      const pts = new THREE.Points(pgeo, new THREE.PointsMaterial({ color: 0xffd27a, size: 0.055, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending, depthWrite: false }));
+      ST.group.add(pts);
+      const els = [];
+      for (let i = 0; i < n; i++) els.push({ x: -1.4 + Math.random() * 2.8, y0: (Math.random() - 0.5) * 1.0 });
+      setChips('<div class="chip" style="left:16%; top:16%">力の川は穴をよける→ふちで渋滞</div>');
+      ST.setView(-0.15, 0.2, 4.0);
+      ST.sceneApi = { tick(dt) {
+        for (let i = 0; i < els.length; i++) {
+          const e = els[i];
+          e.x += dt * 0.5;
+          if (e.x > 1.4) { e.x = -1.4; e.y0 = (Math.random() - 0.5) * 1.0; }
+          const r2 = e.x * e.x + e.y0 * e.y0;
+          let y = e.y0 * (1 + (holeR * holeR) / (r2 + 0.02));
+          const lim = Math.sqrt(Math.max(0, holeR * holeR * 1.3 - e.x * e.x));
+          if (Math.abs(y) < lim) y = (e.y0 >= 0 ? 1 : -1) * lim;
+          pa[i * 3] = e.x;
+          pa[i * 3 + 1] = Math.max(-0.57, Math.min(0.57, y));
+          pa[i * 3 + 2] = 0.1;
+        }
+        pgeo.attributes.position.needsUpdate = true;
+      } };
+    },
+    // ②ふちは約3倍（ズーム＋脈打つリング）
+    function () {
+      const holeR = 0.34;
+      const sh = shapeFromPts([[-1.2, -0.75], [1.2, -0.75], [1.2, 0.75], [-1.2, 0.75]]);
+      const hole = new THREE.Path();
+      hole.absarc(0, 0, holeR, 0, Math.PI * 2, true);
+      sh.holes.push(hole);
+      const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.12, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 2, curveSegments: 40 });
+      geo.center();
+      const pos = geo.attributes.position;
+      const colAttr = new THREE.BufferAttribute(new Float32Array(pos.count * 3), 3);
+      geo.setAttribute("color", colAttr);
+      const c = colAttr.array;
+      for (let i = 0; i < pos.count; i++) {
+        const i3 = i * 3;
+        const x = pos.array[i3], y = pos.array[i3 + 1];
+        let d = Math.max(holeR, Math.sqrt(x * x + y * y));
+        const s = Math.min(1, 0.62 * (0.3 + 0.7 * Math.pow(holeR / d, 1.7)) * 1.6);
+        rampColor(s, tc());
+        const w = s * 0.85;
+        c[i3] = 1 - w + tc().r * 1.5 * w;
+        c[i3 + 1] = 1 - w + tc().g * 1.5 * w;
+        c[i3 + 2] = 1 - w + tc().b * 1.5 * w;
+      }
+      const plate = new THREE.Mesh(geo, new THREE.MeshStandardMaterial(steelMaps({ vertexColors: true })));
+      plate.castShadow = true;
+      ST.group.add(plate);
+      const ringMat = new THREE.MeshStandardMaterial({ color: 0xff5d4d, emissive: 0xff5d4d, emissiveIntensity: 0.8 });
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(holeR + 0.03, 0.02, 10, 40), ringMat);
+      ring.position.z = 0.08;
+      ST.group.add(ring);
+      setChips('<div class="chip red" style="left:22%; top:16%">ふちの応力＝まわりの約3倍！</div>');
+      ST.setView(-0.1, 0.1, 3.4);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) { t2 += dt; ringMat.emissiveIntensity = 0.5 + 0.5 * Math.sin(t2 * 4); ring.scale.setScalar(1 + 0.03 * Math.sin(t2 * 4)); } };
+    },
+    // ③とがった角 vs R（丸み）
+    function () {
+      function notchPlate(z, sharp) {
+        const pts2 = sharp
+          ? [[-0.9, -0.45], [0.9, -0.45], [0.9, 0.45], [0.12, 0.45], [0, 0.05], [-0.12, 0.45], [-0.9, 0.45]]
+          : [[-0.9, -0.45], [0.9, -0.45], [0.9, 0.45], [-0.9, 0.45]];
+        const sh = shapeFromPts(pts2);
+        if (!sharp) {
+          const hole = new THREE.Path();
+          hole.absarc(0, 0.32, 0.16, 0, Math.PI * 2, true);
+          sh.holes.push(hole);
+        }
+        const geo = new THREE.ExtrudeGeometry(sh, { depth: 0.1, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 2, curveSegments: 28 });
+        geo.center();
+        const m = new THREE.Mesh(geo, new THREE.MeshStandardMaterial(steelMaps({})));
+        m.position.set(0, -0.35, z);
+        m.castShadow = true;
+        ST.group.add(m);
+        return m;
+      }
+      notchPlate(-0.55, true);
+      notchPlate(0.55, false);
+      const hotMat = new THREE.MeshStandardMaterial({ color: 0xff5d4d, emissive: 0xff3020, emissiveIntensity: 1 });
+      const hot = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 10), hotMat);
+      hot.position.set(0, -0.3 + 0.05 - 0.45 + 0.5, -0.49);
+      hot.position.set(0, -0.72 + 0.42, -0.49);
+      ST.group.add(hot);
+      setChips('<div class="chip red" style="left:6%; top:26%">奥＝とがった切欠き→一点に集中✕</div>' +
+               '<div class="chip" style="left:6%; top:62%">手前＝丸い穴（R）→分散○</div>');
+      ST.setView(-0.35, 0.35, 4.1);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) { t2 += dt; hotMat.emissiveIntensity = 0.6 + 0.6 * Math.sin(t2 * 5); } };
+    }
+  ],
+
+  /* ===== L6 安全率 ===== */
+  l6: [
+    // ①安全率＝壊れる力÷使う力（メーター）
+    function () {
+      const zones = [[0.4 * Math.PI, 0.6 * Math.PI, 0x3ef0a0], [0.2 * Math.PI, 0.2 * Math.PI, 0xffd64f], [0, 0.2 * Math.PI, 0xff5d4d]];
+      zones.forEach(([rot, arc, col]) => {
+        const seg = new THREE.Mesh(new THREE.TorusGeometry(1.05, 0.07, 12, 40, arc),
+          new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.5 }));
+        seg.rotation.z = rot;
+        seg.position.y = -0.5;
+        ST.group.add(seg);
+      });
+      const needle = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.0, 0.05), steelMatOf({ color: 0xeef2f6 }));
+      needle.geometry.translate(0, 0.5, 0);
+      needle.position.y = -0.5;
+      ST.group.add(needle);
+      setChips('<div class="chip" id="csChip" style="left:16%; top:14%">安全率 ＝ 壊れる力 ÷ 使う力</div>');
+      ST.setView(0, 0.1, 3.8);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) {
+        t2 += dt;
+        const f = 0.25 + (Math.sin(t2 * 0.9) + 1) / 2 * 0.55;
+        needle.rotation.z = Math.PI / 2 - Math.PI * f;
+        const fs = (1 / Math.max(0.25, f)).toFixed(1);
+        const c = $("csChip");
+        if (c) c.textContent = "使う力が増える→安全率 " + fs + (f > 0.7 ? " ⚠️" : " 👍");
+      } };
+    },
+    // ②80kgで壊れる棚に50kg＝1.6は足りない
+    function () {
+      const bar = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.16, 0.5), new THREE.MeshStandardMaterial(steelMaps({})));
+      bar.position.y = -0.2;
+      bar.castShadow = true;
+      ST.group.add(bar);
+      const mark = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.4, 0.55),
+        new THREE.MeshStandardMaterial({ color: 0xff5d4d, emissive: 0xff5d4d, emissiveIntensity: 0.8 }));
+      mark.position.set(0.88, -0.2, 0);
+      ST.group.add(mark);
+      const weight = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5), steelMatOf({ color: 0x6a5a42 }));
+      weight.castShadow = true;
+      ST.group.add(weight);
+      setChips('<div class="chip red" style="right:5%; top:26%">←ここまで来たら壊れる（80kg）</div>' +
+               '<div class="chip" id="csChip" style="left:6%; top:64%">50kgで使用中…余裕1.6倍だけ</div>');
+      ST.setView(-0.2, 0.2, 4.2);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) {
+        t2 += dt;
+        const k = (Math.sin(t2 * 1.2) + 1) / 2;
+        const kg = 30 + k * 40; // 30〜70kgをうろうろ
+        weight.position.set(-0.88 + (kg / 80) * 1.76, 0.15, 0);
+        const c = $("csChip");
+        if (c) c.textContent = Math.round(kg) + "kgで使用中… 安全率 " + (80 / kg).toFixed(1) + (80 / kg < 2 ? " ⚠️2を切ってる" : " 👍");
+      } };
+    },
+    // ③2〜3が定番（用途で決まる）
+    function () {
+      const bands = [[0x3ef0a0, "一般機械 2〜3", -0.15], [0xffd64f, "人が乗る物 4〜", -0.55], [0xff9d4d, "ワイヤー・吊り具 6〜", -0.95]];
+      bands.forEach(([col, _, y], i) => {
+        const b = new THREE.Mesh(new THREE.BoxGeometry(2.2 - i * 0.4, 0.22, 0.4),
+          new THREE.MeshStandardMaterial({ color: col, emissive: col, emissiveIntensity: 0.35 }));
+        b.position.set(0, y + 0.35, 0);
+        b.castShadow = true;
+        ST.group.add(b);
+      });
+      setChips('<div class="chip" style="left:8%; top:22%">一般機械＝2〜3</div>' +
+               '<div class="chip" style="left:8%; top:46%">人が乗る＝4以上</div>' +
+               '<div class="chip" style="left:8%; top:70%">吊り具＝6以上（命がかかる順に大きく）</div>');
+      ST.setView(-0.2, 0.15, 4.3);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) { t2 += dt; } };
+    }
+  ],
+
+  /* ===== EX 固定 ===== */
+  lex: [
+    // ①動けない場所が踏んばる（片持ちの根元が赤）
+    function () {
+      const wall = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.5, 1.1), steelMatOf({ color: 0x454c55 }));
+      wall.position.set(-1.35, -0.35, 0);
+      wall.castShadow = true;
+      ST.group.add(wall);
+      const beam = cbeamCS(2.3, 0.09, 0.5, -0.2);
+      beam.mesh.position.x = -0.1;
+      setChips('<div class="chip red" style="left:10%; top:30%">根元＝動けない＝全部受け止める</div>');
+      ST.setView(-0.25, 0.2, 4.2);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) { t2 += dt; beam.set((Math.sin(t2 * 1.6) + 1) / 2, true); } };
+    },
+    // ②てこ：先を押すほど根元がツラい
+    function () {
+      const wall = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.5, 1.1), steelMatOf({ color: 0x454c55 }));
+      wall.position.set(-1.35, -0.35, 0);
+      wall.castShadow = true;
+      ST.group.add(wall);
+      const beam = cbeamCS(2.3, 0.09, 0.35, -0.2);
+      beam.mesh.position.x = -0.1;
+      beam.set(0.75, true);
+      const arr = forceArrow(0xff5d4d);
+      ST.group.add(arr);
+      setChips('<div class="chip" id="csChip" style="left:14%; top:16%">同じ力でも、先を押すほど根元は倍返し</div>');
+      ST.setView(-0.25, 0.2, 4.2);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) {
+        t2 += dt;
+        const k = (Math.sin(t2 * 1.1) + 1) / 2;
+        const x = -0.6 + k * 1.5;
+        arr.aim(new THREE.Vector3(x, 0.45, 0), new THREE.Vector3(0, -1, 0));
+        arr.setLen(0.55);
+        beam.set(0.25 + k * 0.7, true);
+        const c = $("csChip");
+        if (c) c.textContent = k > 0.7 ? "先っぽを押す＝根元の負担MAX（てこ）" : "根元寄りを押す＝根元はまだラク";
+      } };
+    },
+    // ③CAEでは固定（緑矢印）の近くをまず見る
+    function () {
+      const wall = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.5, 1.1), steelMatOf({ color: 0x454c55 }));
+      wall.position.set(-1.35, -0.35, 0);
+      wall.castShadow = true;
+      ST.group.add(wall);
+      const beam = cbeamCS(2.3, 0.09, 0.4, -0.2);
+      beam.mesh.position.x = -0.1;
+      beam.set(0.7, true);
+      // 固定の緑矢印（SolidWorks Simulationふう）
+      const fixMat = new THREE.MeshStandardMaterial({ color: 0x3ef0a0, emissive: 0x3ef0a0, emissiveIntensity: 0.7 });
+      for (let i = 0; i < 4; i++) {
+        const cone = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.18, 10), fixMat);
+        cone.rotation.z = Math.PI / 2;
+        cone.position.set(-1.32, -0.2 - 0.24 + 0.16 * i, (i % 2 === 0 ? 0.3 : -0.3));
+        ST.group.add(cone);
+      }
+      // 荷重の紫矢印
+      const loadArr = forceArrow(0xa07bff);
+      loadArr.aim(new THREE.Vector3(0.95, 0.35, 0), new THREE.Vector3(0, -1, 0));
+      loadArr.setLen(0.6);
+      ST.group.add(loadArr);
+      setChips('<div class="chip" style="left:5%; top:56%">緑＝固定（SolidWorksの記号）</div>' +
+               '<div class="chip" style="right:5%; top:20%">紫＝荷重</div>' +
+               '<div class="chip red" style="left:16%; top:34%">まず見るのは固定の近く</div>');
+      ST.setView(-0.25, 0.2, 4.1);
+      let t2 = 0;
+      ST.sceneApi = { tick(dt) { t2 += dt; fixMat.emissiveIntensity = 0.5 + 0.4 * Math.sin(t2 * 3); } };
+    }
+  ]
+};
+
+function buildCardScene(id, i) {
+  if (!ST || ST.fake) return;
+  ST.clearScene();
+  ST.resetView();
+  const f = CARD_SCENES[id] && CARD_SCENES[id][i];
+  if (f) f(); else BUILDERS[id]();
+  requestAnimationFrame(() => ST.resize());
+}
+
+/* ================================================================
    レッスンの流れ：予想 → 実験 → 種明かし → クイズ → クリア
 ================================================================ */
 let curIdx = 0, cur = null, missionPick = -1, cardIdx = 0;
@@ -2020,14 +2813,15 @@ $("btnToReveal").addEventListener("click", () => {
   const hit = missionPick === m.ans;
   $("rvBanner").innerHTML = (hit ? "🎯 予想的中！" : "💡 実験で見えたね！") + "<small>こたえ：" + m.ansLine + "</small>";
   cardIdx = 0;
-  renderCard();
   setPhase("phReveal");
+  renderCard();
 });
 
 function renderCard() {
   $("rvCard").innerHTML = "<div>" + cur.cards[cardIdx] + "</div>";
   $("rvDots").innerHTML = cur.cards.map((_, i) => (i <= cardIdx ? "<span>●</span>" : "○")).join("");
   $("btnCardNext").textContent = cardIdx < cur.cards.length - 1 ? "つぎ →" : "ミニクイズへ →";
+  buildCardScene(cur.id, cardIdx); // 説明1枚＝専用3Dアニメ1本
 }
 $("btnCardNext").addEventListener("click", () => {
   if (cardIdx < cur.cards.length - 1) { cardIdx++; renderCard(); }
@@ -2068,6 +2862,7 @@ $("btnQuizDone").addEventListener("click", () => {
   bumpStreak();
   saveProgress();
   $("clearStamp").innerHTML = cur.tag + " CLEAR!<small>今朝の15分 完了</small>";
+  $("teaserBox").innerHTML = "🔮 <b>これが分かると…</b><br>" + (cur.teaser || "");
   const s = progress.streak;
   $("clearMsg").innerHTML = "🔥 " + s.n + "週れんぞく<br>" + (curIdx < LESSONS.length - 1 ? "次回：" + LESSONS[curIdx + 1].tag + " " + LESSONS[curIdx + 1].title : "次回：章ボス戦！");
   setPhase("phClear");
