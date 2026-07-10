@@ -1,5 +1,5 @@
 /* FORCE FORGE service worker v2 */
-const CACHE = "force-forge-v2";
+const CACHE = "force-forge-cache-v2";
 const SHELL = ["./", "./index.html", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", (e) => {

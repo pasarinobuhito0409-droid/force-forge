@@ -218,9 +218,240 @@
   .stamp small { display: block; font-size: 11px; font-weight: 700; }
   .clearmsg { margin-top: 18px; font-size: 15px; color: #b3c5d8; line-height: 1.85; }
   .bossscore { margin-top: 30px; font-size: 42px; font-weight: 900; color: #eaf6ff; text-shadow: 0 0 18px rgba(79,209,255,0.7); }
+
+  /* ================================================================
+     FORGE v2 追加装備 ── force-forge色（#4fd1ff シアン／#a07bff パープル／#ffb45d オレンジ）
+  ================================================================ */
+
+  /* ===== 打刻スプラッシュ「試験機がロゴを試す」 ===== */
+  #splash {
+    position: fixed; inset: 0; z-index: 90; background: #05070b;
+    display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px;
+    transition: opacity 0.45s; overflow: hidden;
+  }
+  #splash.off { opacity: 0; pointer-events: none; }
+  #spRig { position: absolute; inset: 0; pointer-events: none; }
+  .splwrap { position: relative; padding: 10px 30px; text-align: center; }
+  .spjaw { position: absolute; left: 50%; width: 158px; height: 20px; margin-left: -79px; border-radius: 4px;
+    background: linear-gradient(180deg, #cfd8e3, #7f8ea0); box-shadow: 0 0 14px rgba(0,0,0,0.5); transition: transform 0.7s cubic-bezier(0.3,0,0.2,1); }
+  .spjaw.top { top: -34px; transform: translateY(-70px); }
+  .spjaw.top.clamp { transform: translateY(0); }
+  .spjaw.bot { bottom: -34px; transform: translateY(70px); }
+  .spjaw.bot.clamp { transform: translateY(0); }
+  .sptitle {
+    font-size: 33px; font-weight: 900; letter-spacing: 4px; color: #eaf6ff;
+    text-shadow: 0 0 4px #ff5d4d; opacity: 0.92; position: relative; display: inline-block;
+    transform: scaleY(1);
+  }
+  .sptitle.pull { transform: scaleY(1.045); text-shadow: 0 0 22px rgba(255,93,77,0.9); color: #ffd9d0; }
+  .sptitle.lock { transform: scaleY(1); text-shadow: 0 0 18px rgba(79,209,255,0.85); color: #eaf6ff; }
+  .spsub { font-size: 11.5px; color: #7f96ac; letter-spacing: 2px; opacity: 0; transition: opacity 0.45s; margin-top: 10px; }
+  .spsub.lit { opacity: 1; }
+  .spskip { margin-top: 4px; font-size: 10.5px; color: #33465e; opacity: 0; transition: opacity 0.45s; }
+  .spskip.lit { opacity: 1; }
+
+  /* ===== 育つ試験ラボ（ホームヒーロー・本物Three.js） ===== */
+  .labhero { margin-top: 14px; border-radius: 14px; overflow: hidden; border: 1px solid #1d2c42; background: linear-gradient(165deg, #0c1420, #0a0f18); }
+  .labhero .lstage { position: relative; height: 176px; touch-action: none; cursor: grab; }
+  .labhero .lstage canvas { display: block; }
+  .labhero .lfallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; color: #6b7f96; font-size: 12px; text-align: center; padding: 0 20px; }
+  .labhero .lline { padding: 9px 14px 11px; font-size: 12.5px; color: #9fb4cb; text-align: center; }
+  .labhero .lline b { color: #9fdcff; font-size: 13.5px; }
+  .labhero .lbar { margin: 7px 3px 0; height: 8px; border-radius: 5px; background: #0e1622; overflow: hidden; }
+  .labhero .lbar div { height: 100%; width: 0%; background: linear-gradient(90deg, #4fd1ff, #a07bff); transition: width 0.8s; }
+
+  /* ===== ⚡FORGEレベル（共有XP） ===== */
+  .xphead { margin-top: 10px; display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 12px;
+    border: 1px solid rgba(255,180,93,0.4); background: rgba(255,180,93,0.06); }
+  .xphead .xlv { font-size: 13.5px; font-weight: 900; color: #ffd9a3; white-space: nowrap; }
+  .xphead .xbarwrap { flex: 1; }
+  .xphead .xbar { height: 7px; border-radius: 5px; background: #14100a; overflow: hidden; }
+  .xphead .xbar div { height: 100%; width: 0%; background: linear-gradient(90deg, #ffb45d, #ff5d4d); box-shadow: 0 0 8px rgba(255,180,93,0.6); transition: width 0.6s; }
+  .xphead .xnext { font-size: 10px; color: #b99a6e; margin-top: 3px; }
+
+  /* ===== FORGE PASSPORT ===== */
+  .passport { margin-top: 14px; border: 1.5px solid rgba(160,123,255,0.5); border-radius: 13px; padding: 11px 12px; background: rgba(160,123,255,0.05); }
+  .passport .pt { font-size: 12px; font-weight: 900; color: #d9c8ff; margin-bottom: 8px; }
+  .pbadges { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pbadge { flex: 1; min-width: 70px; text-align: center; border: 1px solid #24344a; border-radius: 10px; padding: 7px 3px; background: #0b1220; font-size: 10px; color: #8fa6bd; text-decoration: none; }
+  .pbadge.lvchip { background: linear-gradient(160deg, rgba(255,180,93,0.16), rgba(255,93,77,0.08)); border-color: rgba(255,180,93,0.5); }
+  .pbemoji { font-size: 15px; line-height: 1; }
+  .pbname { margin-top: 3px; font-size: 10px; font-weight: 800; color: #9fb4cb; }
+  .pbpct { margin-top: 2px; font-size: 11.5px; font-weight: 900; color: #7fdcff; }
+  .pbbar { margin-top: 4px; height: 4px; border-radius: 3px; background: #101825; overflow: hidden; }
+  .pbbar div { height: 100%; background: linear-gradient(90deg, #4fd1ff, #a07bff); }
+
+  /* ===== 復習キュー／DAILYカード ===== */
+  .rqcard, .dailycard {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    margin-top: 12px; padding: 12px 14px; border-radius: 13px;
+    border: 1.5px solid rgba(255,180,93,0.7); background: rgba(255,180,93,0.08);
+    cursor: pointer; font: inherit; width: 100%; text-align: left;
+  }
+  .rqcard .rqt, .dailycard .rqt { font-size: 14px; font-weight: 900; color: #ffd9a3; }
+  .rqcard .rqs, .dailycard .rqs { font-size: 10.5px; color: #c9a86a; margin-top: 2px; }
+  .rqcard .rqarrow, .dailycard .rqarrow { font-size: 18px; color: #ffd9a3; }
+  .dailycard { border-color: rgba(160,123,255,0.75); background: rgba(160,123,255,0.10); }
+  .dailycard .rqt { color: #d9c8ff; }
+  .dailycard .rqs { color: #a891d6; }
+  .dailycard .rqarrow { color: #d9c8ff; }
+
+  /* ===== 🦠サビ要約チップ ===== */
+  .rustchip {
+    display: block; width: 100%; margin-top: 10px; padding: 8px 12px; border-radius: 10px;
+    border: 1px solid rgba(255,93,77,0.5); background: rgba(255,93,77,0.07); color: #ffbcae;
+    font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; text-align: center;
+  }
+
+  /* ===== 🎯称号棚 ===== */
+  .titleshelf { margin-top: 12px; display: flex; gap: 7px; flex-wrap: wrap; }
+  .titlebadge { flex: 1; min-width: 78px; text-align: center; padding: 8px 4px; border-radius: 10px; border: 1px solid #24344a; background: #0b1220; font-size: 10px; color: #7f96ac; }
+  .titlebadge.got { border-color: rgba(255,180,93,0.6); background: rgba(255,180,93,0.08); color: #ffd9a3; }
+  .titlebadge .tbicon { font-size: 16px; }
+  .titlebadge .tbname { margin-top: 3px; font-weight: 800; }
+
+  /* ===== ドリル画面 ===== */
+  .drillcard {
+    border: 1.5px solid rgba(255,180,93,0.6); border-radius: 16px; padding: 18px 16px;
+    background: linear-gradient(160deg, rgba(255,180,93,0.08), rgba(7,10,16,0.2));
+  }
+  .drillhead { font-size: 12px; color: #ffcf94; font-weight: 800; letter-spacing: 1px; }
+  .drillq { font-size: 17.5px; font-weight: 800; color: #f2fafc; line-height: 1.7; margin-top: 10px; }
+  .drilltag { display: inline-block; margin-top: 8px; font-size: 11px; color: #93a5b3; }
+  .okngrow { display: flex; gap: 10px; margin-top: 16px; }
+  .okngrow button {
+    flex: 1; padding: 18px 6px; border-radius: 14px; font: inherit; font-weight: 900; font-size: 18px; cursor: pointer;
+    border: 2px solid #24344a; background: #0b1220; color: #dfeaf6;
+  }
+  .okngrow button.pickOK { border-color: #3ef0a0; color: #3ef0a0; }
+  .okngrow button.pickNG { border-color: #ff5d4d; color: #ff5d4d; }
+  .okngrow button.correct { background: rgba(62,240,160,0.15); box-shadow: 0 0 14px rgba(62,240,160,0.3); }
+  .okngrow button.wrong { background: rgba(255,93,77,0.15); box-shadow: 0 0 14px rgba(255,93,77,0.3); }
+  .okngrow button.dim { opacity: 0.4; }
+  .drillexp {
+    margin-top: 14px; padding: 12px 14px; border-radius: 10px; border-left: 3px solid #ffcf94;
+    background: rgba(255,180,93,0.08); font-size: 14px; color: #ffe3c4; line-height: 1.7;
+  }
+  .drillresultrow { display: flex; justify-content: center; gap: 8px; margin: 20px 0 6px; }
+  .drillresultrow span { width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 900; }
+  .drillresultrow span.o { background: rgba(62,240,160,0.18); color: #3ef0a0; border: 1.5px solid #3ef0a0; }
+  .drillresultrow span.x { background: rgba(255,93,77,0.18); color: #ff5d4d; border: 1.5px solid #ff5d4d; }
+  .weaklist { margin-top: 16px; font-size: 13px; color: #93a5b3; line-height: 1.9; text-align: left; }
+  .weaklist b { color: #ffcf94; }
+
+  /* ===== 🎯自信ベット（全設問共通） ===== */
+  .confgate { margin-top: 14px; padding: 12px 13px; border-radius: 12px; border: 1.5px dashed rgba(79,209,255,0.5); background: rgba(79,209,255,0.05); }
+  .confq { font-size: 12.5px; font-weight: 800; color: #9fdcff; text-align: center; margin-bottom: 9px; }
+  .confrow { display: flex; gap: 9px; }
+  .confbtn { flex: 1; padding: 12px 4px; border-radius: 11px; border: 1.5px solid #2a3c56; background: #0b1220; color: #dfeaf6; font: inherit; font-size: 13.5px; font-weight: 800; cursor: pointer; }
+  .confbtn.sure { border-color: rgba(255,180,93,0.7); color: #ffd9a3; }
+  .confbtn.half { border-color: rgba(79,209,255,0.6); color: #9fdcff; }
+  .calmeter { margin-top: 10px; font-size: 11.5px; color: #8fa6bd; text-align: center; }
+  .calmeter b { color: #ffd9a3; }
+
+  /* ===== 塗装→力学街道マスターマップ＋サビ ===== */
+  .mapstage { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+  .mapstagebox { border-radius: 14px; padding: 13px 14px; border: 1px solid #182436; background: linear-gradient(165deg, #0d1524, #0a0f1a); }
+  .mapstagebox.current { border-color: rgba(79,209,255,0.7); box-shadow: 0 0 16px rgba(79,209,255,0.2); }
+  .mapstagebox .msTitle { font-size: 13.5px; font-weight: 900; color: #eaf6ff; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .mapstagebox .mspin { color: #ffcf94; font-size: 13px; }
+  .mapstagebox .msDesc { margin-top: 6px; font-size: 12px; color: #93a5b3; line-height: 1.6; }
+  .mapchaps { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .mapchap { font-size: 11px; padding: 5px 9px; border-radius: 7px; border: 1px solid #24344a; color: #7f96a3; background: #0b1220; cursor: default; position: relative; }
+  .mapchap.done { border-color: #4fd1ff; color: #cdeeff; background: rgba(79,209,255,0.1); }
+  .mapchap.now { border-color: #ffb45d; color: #ffd9a3; background: rgba(255,180,93,0.14); }
+  .mapchap.rustable { cursor: pointer; }
+  .mapchap.dull { filter: saturate(0.6); }
+  .mapchap.rust1 { border-color: #c98a4a; color: #e8c39a; background: repeating-radial-gradient(circle at 30% 40%, rgba(201,138,74,0.28) 0 2px, transparent 2px 8px), rgba(201,138,74,0.10); }
+  .mapchap.rust2 { border-color: #ff5d4d; color: #ffbcae; background: repeating-radial-gradient(circle at 30% 40%, rgba(255,93,77,0.32) 0 2px, transparent 2px 7px), rgba(255,93,77,0.12); animation: rustpulse 1.8s infinite; }
+  @keyframes rustpulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,93,77,0.4); } 55% { box-shadow: 0 0 0 6px rgba(255,93,77,0); } }
+  .mapchap .rusttip { display: block; font-size: 9px; margin-top: 2px; }
+  .mapbros { margin-top: 18px; padding-top: 14px; border-top: 1px dashed #24344a; }
+  .mapbros .mbTitle { font-size: 12px; color: #5d7690; font-weight: 800; margin-bottom: 8px; }
+  .mapbroslink { display: block; padding: 10px 12px; margin-top: 7px; border-radius: 10px; border: 1px solid #182436; background: #0b1220; color: #8fa6bd; font-size: 12.5px; text-decoration: none; }
+  .mapbroslink b { color: #9fdcff; }
+  .mapteachbtn { display: block; width: 100%; margin-top: 16px; padding: 12px; border-radius: 12px; border: 1.5px solid rgba(160,123,255,0.6); background: rgba(160,123,255,0.08); color: #d9c8ff; font: inherit; font-weight: 800; font-size: 13px; cursor: pointer; }
+
+  /* 再塗装（repaint）アニメ：ノード上をスプレー霧が走り光沢が戻る */
+  @keyframes repaintSweep { 0% { transform: translateX(-120%); opacity: 0; } 20% { opacity: 1; } 100% { transform: translateX(120%); opacity: 0; } }
+  .repainting { position: relative; overflow: hidden; }
+  .repainting::after {
+    content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent, rgba(79,209,255,0.55), rgba(160,123,255,0.6), transparent);
+    animation: repaintSweep 0.9s ease-out;
+  }
+
+  .btnrow2 { display: flex; gap: 9px; margin-top: 14px; }
+  .btnrow2 .bb {
+    flex: 1; text-align: center; padding: 13px 6px; border-radius: 13px; font-size: 13.5px; font-weight: 900;
+    border: 1.5px solid rgba(255,180,93,0.6); color: #ffd9a3; background: rgba(255,180,93,0.08); cursor: pointer; font-family: inherit;
+  }
+  .btnrow2 .bb.map { border-color: rgba(79,209,255,0.6); color: #9fdcff; background: rgba(79,209,255,0.08); }
+
+  /* 📷 現場の目モーダル */
+  #photoModal { display: none; position: fixed; inset: 0; z-index: 60; background: rgba(3,5,9,.88); align-items: center; justify-content: center; padding: 14px; }
+  .pm-sheet { position: relative; width: min(560px, 100%); max-height: 92vh; overflow-y: auto; background: #0d1420; border: 1px solid #24344a; border-radius: 16px; padding: 14px 14px 18px; }
+  #pmClose { position: absolute; top: 8px; right: 8px; width: 34px; height: 34px; border-radius: 50%; border: 1px solid #2a3c56; background: #121b28; color: #cfd6df; font-size: 15px; z-index: 2; }
+  #pmTitle { font-weight: 800; font-size: 15px; color: #ffd9a3; margin: 2px 40px 10px 2px; }
+  #pmFig { position: relative; border-radius: 12px; overflow: hidden; background: #060a10; }
+  #pmFig img { display: block; width: 100%; height: auto; }
+  .pm-marker { position: absolute; transform: translate(-50%, -50%); display: flex; align-items: center; gap: 6px; pointer-events: none; }
+  .pm-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #4fd1ff; background: rgba(79,209,255,.25); animation: pmPulse 1.6s infinite; flex: none; }
+  .pm-label { background: rgba(6,9,15,.85); border: 1px solid #4fd1ff; color: #dff5f8; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; max-width: 52vw; line-height: 1.4; }
+  @keyframes pmPulse { 0% { box-shadow: 0 0 0 0 rgba(79,209,255,.6); } 70% { box-shadow: 0 0 0 12px rgba(79,209,255,0); } 100% { box-shadow: 0 0 0 0 rgba(79,209,255,0); } }
+  #pmCap { color: #c6cdd6; font-size: 12.5px; line-height: 1.75; margin: 10px 2px 4px; }
+  .pm-video { display: inline-block; margin: 8px 0 2px; padding: 9px 14px; border-radius: 999px; background: #b8352f; color: #fff; font-weight: 800; font-size: 12.5px; text-decoration: none; }
+  #pmCredit { color: #7b838d; font-size: 10.5px; margin-top: 8px; }
+
+  /* 🎰 ガチャモーダル */
+  #gachaModal { display: none; position: fixed; inset: 0; z-index: 65; background: rgba(3,5,9,.9); align-items: center; justify-content: center; padding: 20px; }
+  .gc-sheet { position: relative; width: min(340px, 100%); border-radius: 18px; padding: 26px 20px; text-align: center;
+    background: linear-gradient(165deg, #0d1524, #080c14); border: 1.5px solid #24344a; }
+  .gc-sheet.rare { border-color: rgba(200,210,220,0.8); box-shadow: 0 0 30px rgba(200,210,220,0.35); }
+  .gc-sheet.ultra { border-color: rgba(255,200,90,0.9); box-shadow: 0 0 40px rgba(255,200,90,0.5); }
+  .gc-roll { font-size: 46px; animation: gcspin 0.8s steps(6); }
+  @keyframes gcspin { 0% { transform: rotateY(0); } 100% { transform: rotateY(720deg); } }
+  .gc-title { margin-top: 14px; font-size: 15px; font-weight: 900; color: #eaf6ff; }
+  .gc-badge { margin-top: 8px; font-size: 20px; font-weight: 900; }
+  .gc-badge.normal { color: #9fb4cb; }
+  .gc-badge.rare { color: #cdd8e2; text-shadow: 0 0 12px rgba(210,220,230,0.7); }
+  .gc-badge.ultra { color: #ffd35d; text-shadow: 0 0 16px rgba(255,211,93,0.85); }
+  .gc-sub { margin-top: 10px; font-size: 12px; color: #8fa6bd; line-height: 1.6; }
+  .gc-close { display: block; width: 100%; margin-top: 18px; padding: 12px; border: none; border-radius: 12px; font: inherit; font-weight: 900; color: #071019;
+    background: linear-gradient(135deg, #4fd1ff, #67e8ff); cursor: pointer; }
+  #gcCurveWrap { margin-top: 10px; }
+  #gcCurveWrap canvas { width: 100%; height: auto; border-radius: 10px; background: #05070c; }
+
+  /* 🎓 教えるモード */
+  .teachpromise { margin-top: 10px; font-size: 11.5px; color: #7f96ac; text-align: center; }
+  .teachbox { margin-top: 16px; padding: 13px 14px; border-radius: 13px; border: 1.5px solid rgba(160,123,255,0.55); background: rgba(160,123,255,0.06); text-align: left; }
+  .teachbox .tqh { font-size: 12.5px; font-weight: 800; color: #d9c8ff; margin-bottom: 8px; }
+  .teachbox textarea { width: 100%; min-height: 60px; border-radius: 10px; border: 1.5px solid #2a3c56; background: #0b1220; color: #dfeaf6; font: inherit; font-size: 13.5px; padding: 9px 10px; resize: vertical; }
+  .teachbox .trow { display: flex; gap: 8px; margin-top: 9px; }
+  .teachbox .trow button { flex: 1; padding: 10px 4px; border-radius: 10px; font: inherit; font-weight: 800; font-size: 12.5px; cursor: pointer; border: 1.5px solid #2a3c56; background: #0b1220; color: #cdd8e2; }
+  .teachbox .trow button.send { border-color: rgba(160,123,255,0.75); color: #d9c8ff; background: rgba(160,123,255,0.14); }
+  #teachModal { display: none; position: fixed; inset: 0; z-index: 62; background: rgba(3,5,9,.88); align-items: center; justify-content: center; padding: 14px; }
+  .tm-sheet { position: relative; width: min(520px, 100%); max-height: 82vh; overflow-y: auto; background: #0d1420; border: 1px solid #24344a; border-radius: 16px; padding: 16px 16px 18px; }
+  .tm-title { font-weight: 900; font-size: 15px; color: #d9c8ff; margin-bottom: 10px; }
+  .tm-item { border-top: 1px solid #182436; padding: 10px 0; font-size: 13px; color: #c6cdd6; line-height: 1.6; }
+  .tm-item .tmh { font-size: 11.5px; color: #7f96ac; margin-bottom: 3px; }
+  .tm-empty { color: #5d7690; font-size: 13px; text-align: center; padding: 20px 0; }
+  #tmClose { position: absolute; top: 8px; right: 8px; width: 34px; height: 34px; border-radius: 50%; border: 1px solid #2a3c56; background: #121b28; color: #cfd6df; font-size: 15px; }
+  .rqteach { margin-top: 10px; padding: 9px 11px; border-radius: 9px; background: rgba(160,123,255,0.08); border-left: 3px solid #a07bff; font-size: 12.5px; color: #d9c8ff; }
 </style>
 </head>
 <body>
+
+<div id="splash">
+  <canvas id="spRig"></canvas>
+  <div class="splwrap">
+    <div class="spjaw top" id="spJawT"></div>
+    <div class="sptitle" id="sptitle">FORCE <b>FORGE</b></div>
+    <div class="spjaw bot" id="spJawB"></div>
+  </div>
+  <div class="spsub" id="spsub">CAE×力学 ── 万能試験機がロゴを試す・朝15分道場</div>
+  <div class="spskip" id="spskip">タップでスキップ</div>
+</div>
+
 <canvas id="bgfx"></canvas>
 <div id="app">
 
@@ -228,8 +459,33 @@
   <section id="viewHome" class="view active">
     <div class="home-logo">FORCE FORGE</div>
     <div class="home-sub">CAE×力学 ── 朝15分・触って壊して覚える道場</div>
+
+    <div class="xphead">
+      <div class="xlv" id="xpLv">⚡FORGE Lv.1</div>
+      <div class="xbarwrap">
+        <div class="xbar"><div id="xpBar"></div></div>
+        <div class="xnext" id="xpNext"></div>
+      </div>
+    </div>
+
+    <button class="dailycard" id="btnDaily" style="display:none">
+      <div><div class="rqt" id="dailyTitle">🔀 FORGE DAILY ── 家族ミックス5問</div><div class="rqs">兄弟アプリの復習を交ぜて記憶を強く（3分）</div></div>
+      <div class="rqarrow">→</div>
+    </button>
+    <button class="rqcard" id="btnRQ" style="display:none">
+      <div><div class="rqt" id="rqTitle">⚡ 今日の復習 0問</div><div class="rqs">忘れかけた頃に再登場（2分）</div></div>
+      <div class="rqarrow">→</div>
+    </button>
+    <button class="rustchip" id="btnRustChip" style="display:none">🦠 錆びかけ 0件 ── タップで街道へ</button>
+
     <button class="resume" id="btnResume"></button>
     <div class="goalbanner">🎯 ゴール：壊れない機械を数字で語れる設計者</div>
+
+    <div class="labhero">
+      <div class="lstage" id="labStage"></div>
+      <div class="lline"><b id="labTitle">工程 1/8：架台（試験機のベース）</b><div class="lbar"><div id="labBar"></div></div></div>
+    </div>
+
     <div class="invmeter">
       <svg width="64" height="84" viewBox="0 0 64 84">
         <defs>
@@ -259,13 +515,24 @@
         <div class="bar"><div id="invBar"></div></div>
       </div>
     </div>
+    <div class="passport">
+      <div class="pt">🛂 FORGE PASSPORT ── 兄弟アプリの進捗が1画面に</div>
+      <div class="pbadges" id="passportBadges"></div>
+    </div>
+    <div class="titleshelf" id="titleShelf"></div>
+    <div class="calmeter" id="calMeter"></div>
+
     <div class="prog-row"><span id="progText"></span><div class="prog-bar"><div class="prog-fill" id="progFill"></div></div><span>クリア</span></div>
     <div class="chap-title">第1章 力を見る <span>（力学のきそ・全7回＋番外EX）</span></div>
     <div class="nodes" id="nodes1"></div>
+    <div class="btnrow2">
+      <button class="bb" id="btnDrillHome">⚔ 判断ドリル<br><small style="font-weight:600">（5問・2分）</small></button>
+      <button class="bb map" id="btnMapHome">🛣 力学街道<br><small style="font-weight:600">マスターマップ</small></button>
+    </div>
     <div class="chap2">🔒 第2章 未来よち（CAE）L8〜L14<br>第1章クリアで解放（次のアップデートで配信）</div>
     <div class="streak" id="streakLine"></div>
     <div class="installhint">スマホ：ブラウザの共有メニュー →「ホーム画面に追加」でアプリになる</div>
-    <div class="verline">FORCE FORGE v1.5 ─ 力の流線背景＋発明メーター＋説明カード全21枚に専用3Dアニメ</div>
+    <div class="verline">FORCE FORGE v2 ─ 判断ドリル24問＋復習キュー＋力学街道＋FORGE PASSPORT／DAILY／サビ／自信ベット／教える／ガチャ＋XP</div>
   </section>
 
   <!-- ============ レッスン ============ -->
@@ -291,6 +558,7 @@
       </div>
       <div id="msOpts"></div>
       <div class="mhint">↑ 予想してタップ（外れてもOK。実験で確かめる）</div>
+      <div class="teachpromise">🎓 クリア後、新人への一言説明を書く</div>
     </div>
 
     <div id="phExp" class="phase">
@@ -300,6 +568,7 @@
       <div class="extra" id="extraCtrls"></div>
       <div class="trynote" id="expNote"></div>
       <button class="cta alt" id="btnMicro">🔬 ミクロの目（原子で見る）</button>
+      <button class="cta alt" id="btnPhoto" style="display:none">📷 現場の目</button>
       <button class="cta" id="btnToReveal" disabled>答え合わせ →</button>
     </div>
 
@@ -314,6 +583,7 @@
       <div class="qhead">ミニクイズ ── 1問だけ</div>
       <div class="q" id="qzQ"></div>
       <div id="qzOpts"></div>
+      <div id="qzConfHost"></div>
       <div class="expl" id="qzExp" style="display:none"></div>
       <button class="cta" id="btnQuizDone" style="display:none">クリア！ →</button>
     </div>
@@ -322,6 +592,14 @@
       <div class="stamp" id="clearStamp"></div>
       <div class="teaser" id="teaserBox"></div>
       <div class="clearmsg" id="clearMsg"></div>
+      <div class="teachbox" id="teachBoxLesson">
+        <div class="tqh">🎓 明日入る新人に、今日のことを1〜2行で説明して</div>
+        <textarea id="teachTxtLesson" placeholder="例：たわみはスパンの3乗で効くから、支持を足すのが一番効く…"></textarea>
+        <div class="trow">
+          <button id="btnTeachLaterLesson">あとで</button>
+          <button class="send" id="btnTeachSendLesson">送信 +5XP</button>
+        </div>
+      </div>
       <button class="cta" id="btnGoHome">マップへもどる</button>
     </div>
   </section>
@@ -336,16 +614,175 @@
       <div class="qhead" id="bsProgress"></div>
       <div class="q" id="bsQ"></div>
       <div id="bsOpts"></div>
+      <div id="bsConfHost"></div>
       <div class="expl" id="bsExp" style="display:none"></div>
       <button class="cta" id="btnBossNext" style="display:none">つぎ →</button>
     </div>
     <div id="bossResult" class="center" style="display:none">
       <div class="bossscore" id="bsScore"></div>
       <div class="clearmsg" id="bsMsg"></div>
+      <div class="teachbox" id="teachBoxBoss" style="display:none">
+        <div class="tqh">🎓 明日入る新人に、今日のことを1〜2行で説明して</div>
+        <textarea id="teachTxtBoss" placeholder="例：固定の近くをまず見る。動けない場所が力を全部受け止める…"></textarea>
+        <div class="trow">
+          <button id="btnTeachLaterBoss">あとで</button>
+          <button class="send" id="btnTeachSendBoss">送信 +5XP</button>
+        </div>
+      </div>
       <button class="cta" id="btnBossHome">マップへもどる</button>
     </div>
   </section>
 
+  <!-- ============ 判断ドリル ============ -->
+  <section id="viewDrill" class="view">
+    <div class="lesson-top">
+      <button class="backbtn" id="btnBackD">←</button>
+      <span class="tag">⚔ DRILL</span><span>力学設計判断ドリル</span>
+    </div>
+    <div id="drillPlay">
+      <div class="drillcard">
+        <div class="drillhead" id="dqProgress"></div>
+        <div class="drillq" id="dqText"></div>
+        <div class="drilltag" id="dqTag"></div>
+      </div>
+      <div class="okngrow" id="dqOpts">
+        <button id="btnOK">OK</button>
+        <button id="btnNG">NG</button>
+      </div>
+      <div id="dConfHost"></div>
+      <div class="drillexp" id="dqExp" style="display:none"></div>
+      <button class="cta" id="btnDrillNext" style="display:none">つぎ →</button>
+    </div>
+    <div id="drillResult" class="center" style="display:none">
+      <div class="bossscore" id="dResultScore"></div>
+      <div class="drillresultrow" id="dResultRow"></div>
+      <div class="weaklist" id="dWeak"></div>
+      <button class="cta" id="btnDrillResultHome">マップへもどる</button>
+    </div>
+  </section>
+
+  <!-- ============ 復習キュー ============ -->
+  <section id="viewReview" class="view">
+    <div class="lesson-top">
+      <button class="backbtn" id="btnBackRQ">←</button>
+      <span class="tag">⚡ REVIEW</span><span>今日の復習</span>
+    </div>
+    <div id="reviewPlay">
+      <div class="drillcard">
+        <div class="drillhead" id="rqProgress"></div>
+        <div class="drillq" id="rqText"></div>
+      </div>
+      <div id="rqOpts"></div>
+      <div id="rqConfHost"></div>
+      <div class="drillexp" id="rqExp" style="display:none"></div>
+      <button class="cta" id="btnRQNext" style="display:none">つぎ →</button>
+    </div>
+    <div id="reviewResult" class="center" style="display:none">
+      <div class="bossscore" id="rqResultScore"></div>
+      <div class="clearmsg">🔥 忘れかけた記憶をしっかり固定した</div>
+      <button class="cta" id="btnRQHome">マップへもどる</button>
+    </div>
+  </section>
+
+  <!-- ============ FORGE DAILY ============ -->
+  <section id="viewDaily" class="view">
+    <div class="lesson-top">
+      <button class="backbtn" id="btnBackDaily">←</button>
+      <span class="tag">🔀 DAILY</span><span>家族ミックス5問</span>
+    </div>
+    <div id="dailyPlay">
+      <div class="drillcard">
+        <div class="drillhead" id="dyProgress"></div>
+        <div id="dySrcChip"></div>
+        <div class="drillq" id="dyText"></div>
+      </div>
+      <div id="dyOpts"></div>
+      <div id="dyConfHost"></div>
+      <div class="drillexp" id="dyExp" style="display:none"></div>
+      <button class="cta" id="btnDailyNext" style="display:none">つぎ →</button>
+    </div>
+    <div id="dailyResult" class="center" style="display:none">
+      <div class="bossscore" id="dyResultScore"></div>
+      <div class="clearmsg">🔀 家族の記憶を一緒に強くした</div>
+      <button class="cta" id="btnDailyHome">マップへもどる</button>
+    </div>
+  </section>
+
+  <!-- ============ 力学街道マスターマップ ============ -->
+  <section id="viewMap" class="view">
+    <div class="lesson-top">
+      <button class="backbtn" id="btnBackMap">←</button>
+      <span class="tag">🛣 MAP</span><span>力学街道マスターマップ</span>
+    </div>
+    <div class="teaser" style="margin-top:0">力を見る基礎から始まり、<b>壊れない機械を数字で語れる</b>設計者になるまでの道。レッスンの丸が錆びていたらタップして再塗装しろ。</div>
+    <div class="mapstage" id="mapStage"></div>
+    <button class="mapteachbtn" id="btnTeachNote">🎓 俺の言葉ノート</button>
+    <div class="mapbros">
+      <div class="mbTitle">別街道（兄弟アプリ）</div>
+      <a class="mapbroslink" href="https://pasarinobuhito0409-droid.github.io/arc-forge/" target="_blank" rel="noopener"><b>ARC FORGE</b> ── 溶接×設計</a>
+      <a class="mapbroslink" href="https://pasarinobuhito0409-droid.github.io/coat-forge/" target="_blank" rel="noopener"><b>COAT FORGE</b> ── 塗装×設計</a>
+      <a class="mapbroslink" href="https://pasarinobuhito0409-droid.github.io/volt-forge/" target="_blank" rel="noopener"><b>VOLT FORGE</b> ── 電気設計</a>
+      <a class="mapbroslink" href="https://pasarinobuhito0409-droid.github.io/bend-forge/" target="_blank" rel="noopener"><b>BEND FORGE</b> ── 板金設計</a>
+      <a class="mapbroslink" href="https://pasarinobuhito0409-droid.github.io/gear-forge/" target="_blank" rel="noopener"><b>GEAR FORGE</b> ── 機械設計</a>
+    </div>
+  </section>
+
+  <!-- ============ 🦠 再塗装（サビ落とし） ============ -->
+  <section id="viewRepaint" class="view">
+    <div class="lesson-top">
+      <button class="backbtn" id="btnBackRepaint">←</button>
+      <span class="tag">🦠 再塗装</span><span id="rpTitle"></span>
+    </div>
+    <div id="repaintPlay">
+      <div class="drillcard">
+        <div class="drillhead" id="rpProgress"></div>
+        <div class="drillq" id="rpText"></div>
+      </div>
+      <div id="rpOpts"></div>
+      <div id="rpConfHost"></div>
+      <div class="drillexp" id="rpExp" style="display:none"></div>
+      <button class="cta" id="btnRepaintNext" style="display:none">つぎ →</button>
+    </div>
+    <div id="repaintResult" class="center" style="display:none">
+      <div class="bossscore">✨</div>
+      <div class="clearmsg" id="rpMsg">光沢がもどった。錆が落ちた！</div>
+      <button class="cta" id="btnRepaintHome">マップへもどる</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- 📷 現場の目：本物写真モーダル -->
+<div id="photoModal">
+  <div class="pm-sheet">
+    <button id="pmClose" aria-label="閉じる">✕</button>
+    <div id="pmTitle"></div>
+    <div id="pmFig"></div>
+    <div id="pmCap"></div>
+    <a id="pmVideo" class="pm-video" target="_blank" rel="noopener">▶ 動画で見る（ユーチューブ検索へ）</a>
+    <div id="pmCredit"></div>
+  </div>
+</div>
+
+<!-- 🎰 ご褒美ガチャモーダル -->
+<div id="gachaModal">
+  <div class="gc-sheet" id="gcSheet">
+    <div class="gc-roll" id="gcRoll">🎰</div>
+    <div class="gc-title" id="gcTitle">抽選中…</div>
+    <div class="gc-badge" id="gcBadge"></div>
+    <div id="gcCurveWrap" style="display:none"><canvas id="gcCurve" width="280" height="120"></canvas></div>
+    <div class="gc-sub" id="gcSub"></div>
+    <button class="gc-close" id="btnGachaClose">とじる</button>
+  </div>
+</div>
+
+<!-- 🎓 俺の言葉ノート -->
+<div id="teachModal">
+  <div class="tm-sheet">
+    <button id="tmClose" aria-label="閉じる">✕</button>
+    <div class="tm-title">🎓 俺の言葉ノート</div>
+    <div id="tmList"></div>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -672,7 +1109,7 @@ function bumpStreak() {
 // ---------------- 画面切りかえ ----------------
 const $ = (id) => document.getElementById(id);
 function showView(name) {
-  ["viewHome", "viewLesson", "viewBoss"].forEach((v) => $(v).classList.toggle("active", v === name));
+  ["viewHome", "viewLesson", "viewBoss", "viewDrill", "viewReview", "viewDaily", "viewMap", "viewRepaint"].forEach((v) => $(v).classList.toggle("active", v === name));
   window.scrollTo(0, 0);
 }
 function setPhase(name) {
@@ -685,6 +1122,502 @@ function setPhase(name) {
   window.scrollTo(0, 0);
 }
 function vib(p) { try { navigator.vibrate && navigator.vibrate(p); } catch (e) {} }
+function escapeHtml(s) { return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])); }
+function stripTags(s) { return String(s).replace(/<[^>]+>/g, ""); }
+
+/* ================================================================
+   ⚡ FORGE レベル（共有XP・forge-xp-v1）
+================================================================ */
+const XP_KEY = "forge-xp-v1";
+function loadXP() {
+  try { const raw = localStorage.getItem(XP_KEY); const o = raw ? JSON.parse(raw) : null; return (o && typeof o.xp === "number") ? o.xp : 0; }
+  catch (e) { return 0; }
+}
+function saveXP(xp) { try { localStorage.setItem(XP_KEY, JSON.stringify({ xp })); } catch (e) {} }
+function addXP(n) { if (!n) return loadXP(); const xp = Math.max(0, loadXP() + n); saveXP(xp); return xp; }
+function xpLevel(xp) { return 1 + Math.floor(Math.max(0, xp) / 120); }
+function renderXPHeader() {
+  const xp = loadXP();
+  const lv = xpLevel(xp);
+  const curFloor = (lv - 1) * 120, nextFloor = lv * 120;
+  const pct = Math.max(0, Math.min(100, Math.round(((xp - curFloor) / (nextFloor - curFloor)) * 100)));
+  const lvEl = $("xpLv"); if (lvEl) lvEl.textContent = "⚡FORGE Lv." + lv;
+  const bar = $("xpBar"); if (bar) bar.style.width = pct + "%";
+  const nx = $("xpNext"); if (nx) nx.textContent = "次のLvまで " + Math.max(0, nextFloor - xp) + "XP";
+}
+
+/* ================================================================
+   🎰 称号（共有・forge-titles-v1）＋ FORCE 固有称号
+================================================================ */
+const TITLES_KEY = "forge-titles-v1";
+const APP_TITLES = {
+  basic: { id: "force-basic", name: "力の見習い", emoji: "🔧" },
+  rare:  { id: "force-rare",  name: "応力ハンター", emoji: "🥈" },
+  ultra: { id: "force-ultra", name: "万能試験機の主", emoji: "🥇" }
+};
+const GENERIC_RARE_TITLES = [
+  { id: "g-asa", name: "朝の鍛冶屋" }, { id: "g-kotu", name: "コツコツの鬼" },
+  { id: "g-sabi", name: "サビ落とし職人" }, { id: "g-zumen", name: "図面の虫" },
+  { id: "g-genba", name: "現場の目利き" }
+];
+function loadTitles() {
+  try { const raw = localStorage.getItem(TITLES_KEY); const a = raw ? JSON.parse(raw) : null; return Array.isArray(a) ? a : []; }
+  catch (e) { return []; }
+}
+function saveTitles(list) { try { localStorage.setItem(TITLES_KEY, JSON.stringify(list)); } catch (e) {} }
+function hasTitle(id) { return loadTitles().some((t) => t && t.id === id); }
+function grantTitle(id, name, appKey) {
+  const list = loadTitles();
+  if (list.find((t) => t && t.id === id)) return false;
+  list.push({ id, name, app: appKey || "force", ts: Date.now() });
+  saveTitles(list);
+  return true;
+}
+function renderTitleShelf() {
+  const wrap = $("titleShelf");
+  if (!wrap) return;
+  const ownedIds = new Set(loadTitles().map((t) => t.id));
+  const showcase = [APP_TITLES.basic, APP_TITLES.rare, APP_TITLES.ultra];
+  wrap.innerHTML = showcase.map((t) => {
+    const got = ownedIds.has(t.id);
+    return '<div class="titlebadge' + (got ? " got" : "") + '"><div class="tbicon">' + (got ? t.emoji : "🔒") + '</div><div class="tbname">' + (got ? t.name : "???") + "</div></div>";
+  }).join("");
+}
+
+/* ================================================================
+   🎯 自信ベット（メタ認知較正・全設問共通・forge-conf-v1）
+   実装は1関数（applyConfidence）に共通化し、全設問UIから呼ぶ。
+================================================================ */
+const CONF_KEY = "forge-conf-v1";
+function loadConf() {
+  try { const raw = localStorage.getItem(CONF_KEY); const o = raw ? JSON.parse(raw) : null; return (o && Array.isArray(o.hits)) ? o : { hits: [] }; }
+  catch (e) { return { hits: [] }; }
+}
+function saveConf(o) { try { localStorage.setItem(CONF_KEY, JSON.stringify(o)); } catch (e) {} }
+function pushConf(correct) {
+  const o = loadConf();
+  o.hits.push(correct ? 1 : 0);
+  if (o.hits.length > 40) o.hits = o.hits.slice(-40);
+  saveConf(o);
+}
+function calibPct() {
+  const o = loadConf();
+  if (o.hits.length < 10) return null;
+  const hit = o.hits.reduce((a, b) => a + b, 0);
+  return Math.round((hit / o.hits.length) * 100);
+}
+function renderCalMeter() {
+  const el = $("calMeter"); if (!el) return;
+  const p = calibPct();
+  el.innerHTML = p === null ? "🎯 自信の精度 ── 計測中（あと" + Math.max(0, 10 - loadConf().hits.length) + "問）" : "🎯 自信の精度 <b>" + p + "%</b>";
+}
+function mountConfidenceGate(hostEl, onPick) {
+  if (!hostEl) { onPick("half"); return; }
+  hostEl.innerHTML = "";
+  const box = document.createElement("div");
+  box.className = "confgate";
+  box.innerHTML = '<div class="confq">どれくらい自信ある？</div><div class="confrow">' +
+    '<button type="button" class="confbtn sure">💪 自信あり</button>' +
+    '<button type="button" class="confbtn half">🤔 五分五分</button></div>';
+  hostEl.appendChild(box);
+  box.querySelector(".sure").addEventListener("click", () => { box.remove(); onPick("sure"); });
+  box.querySelector(".half").addEventListener("click", () => { box.remove(); onPick("half"); });
+}
+/* 配点：💪正解+3／🤔正解+2／🤔不正解+1／💪不正解 0（＋RQ最優先は呼び出し側でrqForceNow） */
+function confidenceXP(correct, conf) {
+  if (conf === "sure") return correct ? 3 : 0;
+  return correct ? 2 : 1;
+}
+function applyConfidence(correct, conf) {
+  const xp = confidenceXP(correct, conf);
+  if (conf === "sure") pushConf(correct);
+  addXP(xp);
+  renderXPHeader();
+  renderCalMeter();
+  return (conf === "sure" && !correct) ? '<div class="rqteach">⚠ 過信サビ ── ここが一番伸びる場所</div>' : "";
+}
+/* 自アプリRQへの最優先登録つきラッパー（quiz/boss/drill/reviewから使用） */
+function gradeConfidence(correct, conf, rqId, rqPayload) {
+  const note = applyConfidence(correct, conf);
+  if (conf === "sure" && !correct && rqId) rqForceNow(rqId, rqPayload);
+  return note;
+}
+
+/* ================================================================
+   ⚡ 復習キュー v2（force-forge-rq-v1・自己完結ペイロード）
+================================================================ */
+const RQ_KEY = "force-forge-rq-v1";
+const RQ_INTERVALS = [1, 3, 7, 18, 45, 112];
+const RQ_DAY_LIMIT = 5;
+let reviewQueue = [];
+try { const raw = localStorage.getItem(RQ_KEY); const a = raw ? JSON.parse(raw) : null; reviewQueue = Array.isArray(a) ? a : []; }
+catch (e) { reviewQueue = []; }
+function saveRQ() { try { localStorage.setItem(RQ_KEY, JSON.stringify(reviewQueue)); } catch (e) {} }
+function rqUpsert(id, payload) {
+  const now = Date.now();
+  let item = reviewQueue.find((r) => r.id === id);
+  if (!item) { item = Object.assign({ id, due: now + 86400000, interval: 1, v: 2 }, payload); reviewQueue.push(item); }
+  else Object.assign(item, payload, { due: now + 86400000, interval: 1, v: 2 });
+  saveRQ();
+  return item;
+}
+function rqForceNow(id, payload) {
+  const item = rqUpsert(id, payload);
+  item.due = Date.now();
+  saveRQ();
+  return item;
+}
+function rqAnswer(item, correct) {
+  if (correct) {
+    const idx = RQ_INTERVALS.indexOf(item.interval);
+    item.interval = idx >= 0 && idx < RQ_INTERVALS.length - 1 ? RQ_INTERVALS[idx + 1] : Math.round((item.interval || 1) * 2.5);
+  } else item.interval = 1;
+  item.due = Date.now() + item.interval * 86400000;
+  saveRQ();
+}
+function rqDueList() { const now = Date.now(); return reviewQueue.filter((r) => r && r.due <= now).slice(0, RQ_DAY_LIMIT); }
+
+/* ================================================================
+   ⚔ 判断ドリル24問（DESIGN_V2.md D6 全文）
+================================================================ */
+const DRILLS = [
+  { id: "load1", tag: "荷重(load)", situation: "片持ちブラケットの根元を薄板にスポット2点だけで留めた", ans: "NG",
+    reason: "根元にはモーメント（回す力）が集中する。留め点が力の腕の支点になり荷重の何倍もの力がかかる。", fix: "対策：根元はボルト3点以上かリブ追加。モーメント＝力×距離で見積もる。" },
+  { id: "load2", tag: "荷重(load)", situation: "長い棚受けで、荷重点のすぐ近くに支持を追加した", ans: "OK",
+    reason: "モーメントの腕を短くするのが最強の補強。板厚2倍より支持1つ。", fix: "たわみはスパンの3乗で効く。" },
+  { id: "load3", tag: "荷重(load)", situation: "荷重の方向を確認せず、見た目の対称でボルトを配置した", ans: "NG",
+    reason: "方向でボルトにかかるのがせん断か引張か抜けか変わる。", fix: "対策：まず力の矢印を描く。それから配置。" },
+  { id: "load4", tag: "荷重(load)", situation: "重量物の吊り点を、重心を挟んで2点にした", ans: "OK",
+    reason: "1点吊りは回転して振れる。重心を挟めば姿勢が安定。", fix: "重心位置は3D CADの質量特性で出る。" },
+  { id: "conc1", tag: "応力集中(conc)", situation: "切欠きの角をピン角（R無し）で設計した", ans: "NG",
+    reason: "角には応力集中（力の流れの渋滞）。亀裂はそこから始まる。", fix: "対策：Rを付ける。Rは大きいほど優しい。" },
+  { id: "conc2", tag: "応力集中(conc)", situation: "板の穴を、力の流れ方向に長い長円にした", ans: "OK",
+    reason: "流れに沿う長円は集中係数が小さい。横向き長円は最悪。", fix: "穴は力の川の中の岩。流線を想像。" },
+  { id: "conc3", tag: "応力集中(conc)", situation: "繰返し荷重部の溶接止端をそのままにした", ans: "NG",
+    reason: "疲労亀裂は止端（ビードの端の谷）から生まれる。", fix: "対策：止端仕上げ・連続溶接・応力の低い位置へ移す。" },
+  { id: "conc4", tag: "応力集中(conc)", situation: "段付き軸の肩のRをできるだけ大きく取った", ans: "OK",
+    reason: "段差は集中の名所。肩Rが命綱。", fix: "隣の部品と干渉するなら逃げ溝という手もある。" },
+  { id: "stiff1", tag: "剛性(stiff)", situation: "「強度計算OKだからたわみもOK」と判断した", ans: "NG",
+    reason: "強度（壊れない）と剛性（たわまない）は別物。", fix: "対策：たわみは断面二次モーメントとヤング率で別計算。" },
+  { id: "stiff2", tag: "剛性(stiff)", situation: "薄板の面がベコベコ振動するのでビード（絞りリブ）を入れた", ans: "OK",
+    reason: "面外の剛性は形で稼ぐのが最安。", fix: "ビード1本は板厚アップより軽くて安い。" },
+  { id: "stiff3", tag: "剛性(stiff)", situation: "板厚2倍でたわみが半分になると見積もった", ans: "NG",
+    reason: "曲げ剛性は板厚の3乗。2倍なら1/8になる。", fix: "逆に言うと薄くできる余地の発見にも3乗則を使え。" },
+  { id: "stiff4", tag: "剛性(stiff)", situation: "長スパン中央荷重で、支持を中央寄りに移した", ans: "OK",
+    reason: "たわみはスパンの3乗で効く。スパン短縮が最強。", fix: "支持追加＝設計者の必殺技。" },
+  { id: "matl1", tag: "材料(matl)", situation: "剛性を上げたくてSS400をS45Cに変えた", ans: "NG",
+    reason: "鋼のヤング率はほぼ全部同じ（約206GPa）。強度は上がるが硬さ（たわみ）は変わらない。", fix: "対策：剛性は形（断面）で稼ぐ。" },
+  { id: "matl2", tag: "材料(matl)", situation: "アルミ化で同じ断面のままたわみ同等を期待した", ans: "NG",
+    reason: "アルミのヤング率は鋼の約1/3。同じ断面なら3倍たわむ。", fix: "対策：断面を高く・厚く。軽さと剛性はトレードオフ設計。" },
+  { id: "matl3", tag: "材料(matl)", situation: "振動する部品を降伏点ギリギリの静的計算だけで設計した", ans: "NG",
+    reason: "繰返し荷重は疲労限度（ずっと下）で決まる。", fix: "対策：疲労は別の物差し。応力振幅で評価。" },
+  { id: "matl4", tag: "材料(matl)", situation: "SUS同士の摺動部にかじり対策（異種材・表面処理）を検討した", ans: "OK",
+    reason: "ステンレス同士は焼き付き（かじり）の名所。", fix: "異種材組合せ・硬質処理・潤滑が定石。" },
+  { id: "bc1", tag: "CAE境界(bc)", situation: "CAEで完全固定にしたが実物はボルト2本", ans: "NG",
+    reason: "完全固定は現実より硬く出る＝たわみを小さく見せる危険側の嘘。", fix: "対策：ボルト位置だけ拘束・接触を模擬・実測と較正。" },
+  { id: "bc2", tag: "CAE境界(bc)", situation: "集中荷重1点で入れたが実物は面で当たる", ans: "NG",
+    reason: "点荷重の直下は応力が無限大方向＝意味のない赤。", fix: "対策：実際の当たり面に面圧で入れる。" },
+  { id: "bc3", tag: "CAE境界(bc)", situation: "メッシュを細かくするほど角の応力が上がり続けたので、特異点と判断してRを付けて再計算した", ans: "OK",
+    reason: "ピン角の応力は収束しない（特異点）。", fix: "現実のRを入れるのが正しい対処。" },
+  { id: "bc4", tag: "CAE境界(bc)", situation: "対称な形と荷重なので半分モデル＋対称拘束で解析した", ans: "OK",
+    reason: "計算時間半分・精度同じ。", fix: "対称面の拘束条件を間違えないこと。" },
+  { id: "sf1", tag: "安全率(sf)", situation: "カタログの静的安全率3を振動機械にそのまま使った", ans: "NG",
+    reason: "動的荷重・疲労は静的の物差しでは測れない。", fix: "対策：用途別の安全率（衝撃・疲労・人命関与で別）。" },
+  { id: "sf2", tag: "安全率(sf)", situation: "「人は乗らない前提」でカバーを薄くした", ans: "NG",
+    reason: "予見できる誤使用（乗る・掴む・ぶつける）も設計条件。", fix: "対策：乗られても壊れないか、乗れない形にする。" },
+  { id: "sf3", tag: "安全率(sf)", situation: "不安なので全体の板厚を一律アップした", ans: "NG",
+    reason: "重く高くなるだけ。効かない場所の肉は無駄。", fix: "対策：応力の高い場所にだけ効く形（リブ・支持）を足す。" },
+  { id: "sf4", tag: "安全率(sf)", situation: "荷重条件・材料・安全率の根拠を検討書に残した", ans: "OK",
+    reason: "10年後の自分と後任への最強の贈り物。", fix: "根拠が残る設計者は信頼される。" }
+];
+/* ドリルtag→レッスンfresh対応（既存LESSONSを読み、最も近い物理へ割当・報告書に記載）
+   load→l1(力) ／ conc→l5(応力集中・完全一致) ／ stiff→l4(曲げ＝たわみ) ／
+   matl→l3(ひずみ・ヤング率) ／ bc→lex(固定＝CAE境界条件をlexが直接教える) ／ sf→l6(安全率・完全一致) */
+const DRILL_TAG_LESSON = { load: "l1", conc: "l5", stiff: "l4", matl: "l3", bc: "lex", sf: "l6" };
+function drillLessonId(drillId) {
+  const tag = drillId.replace(/[0-9]+$/, "");
+  return DRILL_TAG_LESSON[tag] || null;
+}
+
+const DRILL_STORE_KEY = "force-forge-drill-v1";
+let drillStats = { seen: {}, wrong: {}, correctCount: 0, totalCount: 0 };
+try { const raw = localStorage.getItem(DRILL_STORE_KEY); if (raw) drillStats = Object.assign(drillStats, JSON.parse(raw)); } catch (e) {}
+function saveDrillStats() { try { localStorage.setItem(DRILL_STORE_KEY, JSON.stringify(drillStats)); } catch (e) {} }
+function shuffleArr(arr) {
+  for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; }
+  return arr;
+}
+function pickDrillSet(n) {
+  const unseen = DRILLS.filter((d) => !drillStats.seen[d.id]);
+  const wrongIds = Object.keys(drillStats.wrong).filter((id) => drillStats.wrong[id] > 0);
+  const wrongPool = DRILLS.filter((d) => wrongIds.includes(d.id));
+  const pool = [];
+  const pushUnique = (arr) => { arr.forEach((d) => { if (!pool.find((p) => p.id === d.id)) pool.push(d); }); };
+  pushUnique(shuffleArr(unseen.slice()));
+  pushUnique(shuffleArr(wrongPool.slice()));
+  pushUnique(shuffleArr(DRILLS.slice()));
+  return pool.slice(0, n);
+}
+
+/* ================================================================
+   🦠 サビマップ（force-forge-fresh-v1）
+================================================================ */
+const FRESH_KEY = "force-forge-fresh-v1";
+let freshMap = {};
+try { const raw = localStorage.getItem(FRESH_KEY); const o = raw ? JSON.parse(raw) : null; freshMap = (o && typeof o === "object") ? o : {}; }
+catch (e) { freshMap = {}; }
+function saveFresh() { try { localStorage.setItem(FRESH_KEY, JSON.stringify(freshMap)); } catch (e) {} }
+function touchFresh(lessonId) { if (!lessonId) return; freshMap[lessonId] = Date.now(); saveFresh(); }
+function rustClassOf(lessonId) {
+  if (!progress.done[lessonId]) return null; // 未クリアはサビ対象外
+  const t = freshMap[lessonId];
+  if (!t) return "";
+  const days = (Date.now() - t) / 86400000;
+  if (days < 3) return "fresh";
+  if (days < 10) return "";
+  if (days < 21) return "dull";
+  if (days < 45) return "rust1";
+  return "rust2";
+}
+function rustTipOf(cls) {
+  if (cls === "dull") return "彩度が少し落ちた";
+  if (cls === "rust1") return "🦠 錆点あり";
+  if (cls === "rust2") return "🦠 再塗装しろ";
+  return "";
+}
+function rustNodesSummary() {
+  let n = 0;
+  PROG_KEYS.forEach((id) => { const c = rustClassOf(id); if (c === "rust1" || c === "rust2") n++; });
+  return n;
+}
+function seedFresh() {
+  let changed = false;
+  PROG_KEYS.forEach((id) => { if (progress.done[id] && !freshMap[id]) { freshMap[id] = Date.now(); changed = true; } });
+  if (changed) saveFresh();
+}
+
+/* ================================================================
+   🛂 FORGE PASSPORT（兄弟5アプリ＋Lv・読み取りのみ）
+================================================================ */
+const PASSPORT_APPS = [
+  { key: "arc",  emoji: "⚡", name: "ARC",  store: "arc-forge-v2",  total: 7, url: "https://pasarinobuhito0409-droid.github.io/arc-forge/" },
+  { key: "coat", emoji: "🎨", name: "COAT", store: "coat-forge-v1", total: 7, url: "https://pasarinobuhito0409-droid.github.io/coat-forge/" },
+  { key: "volt", emoji: "💡", name: "VOLT", store: "volt-forge-v1", total: 7, url: "https://pasarinobuhito0409-droid.github.io/volt-forge/" },
+  { key: "bend", emoji: "📐", name: "BEND", store: "bend-forge-v1", total: 7, url: "https://pasarinobuhito0409-droid.github.io/bend-forge/" },
+  { key: "gear", emoji: "⚙",  name: "GEAR", store: "gear-forge-v1", total: 7, url: "https://pasarinobuhito0409-droid.github.io/gear-forge/" }
+];
+const APP_EMOJI = { force: "🔧", arc: "⚡", coat: "🎨", volt: "💡", bend: "📐", gear: "⚙" };
+const APP_NAME = { force: "FORCE", arc: "ARC", coat: "COAT", volt: "VOLT", bend: "BEND", gear: "GEAR" };
+function passportReadPct(app) {
+  try {
+    const raw = localStorage.getItem(app.store);
+    if (!raw) return null;
+    const obj = JSON.parse(raw);
+    const done = obj && obj.done ? obj.done : null;
+    if (!done || typeof done !== "object") return null;
+    const n = Object.keys(done).filter((k) => done[k]).length;
+    return Math.max(0, Math.min(100, Math.round((n / app.total) * 100)));
+  } catch (e) { return null; }
+}
+function renderPassport() {
+  const wrap = $("passportBadges");
+  if (!wrap) return;
+  wrap.innerHTML = "";
+  const lvBadge = document.createElement("div");
+  lvBadge.className = "pbadge lvchip";
+  lvBadge.innerHTML = '<div class="pbemoji">⚡</div><div class="pbname">Lv</div><div class="pbpct">' + xpLevel(loadXP()) + "</div>";
+  wrap.appendChild(lvBadge);
+  PASSPORT_APPS.forEach((app) => {
+    let pct = null;
+    try { pct = passportReadPct(app); } catch (e) { pct = null; }
+    const a = document.createElement("a");
+    a.className = "pbadge";
+    a.href = app.url; a.target = "_blank"; a.rel = "noopener";
+    const pctText = pct === null ? "—" : pct + "%";
+    a.innerHTML = '<div class="pbemoji">' + app.emoji + '</div><div class="pbname">' + app.name + '</div><div class="pbpct">' + pctText + '</div><div class="pbbar"><div style="width:' + (pct || 0) + '%"></div></div>';
+    wrap.appendChild(a);
+  });
+}
+
+/* ================================================================
+   🎓 教えるモード（forge-teach-v1・最大200件）
+================================================================ */
+const TEACH_KEY = "forge-teach-v1";
+function loadTeach() {
+  try { const raw = localStorage.getItem(TEACH_KEY); const a = raw ? JSON.parse(raw) : null; return Array.isArray(a) ? a : []; }
+  catch (e) { return []; }
+}
+function saveTeach(list) { try { localStorage.setItem(TEACH_KEY, JSON.stringify(list.slice(-200))); } catch (e) {} }
+function addTeach(lesson, txt) {
+  if (!txt || !txt.trim()) return;
+  const list = loadTeach();
+  list.push({ app: "force", lesson, txt: txt.trim(), ts: Date.now() });
+  saveTeach(list);
+  addXP(5);
+  renderXPHeader();
+}
+function findTeachFor(app, lesson) {
+  if (!lesson) return null;
+  const list = loadTeach();
+  for (let i = list.length - 1; i >= 0; i--) if (list[i].app === app && list[i].lesson === lesson) return list[i];
+  return null;
+}
+function renderTeachNote() {
+  const wrap = $("tmList");
+  const list = loadTeach().slice().reverse();
+  if (!list.length) { wrap.innerHTML = '<div class="tm-empty">まだノートがない。レッスンをクリアして書いてみろ。</div>'; return; }
+  wrap.innerHTML = list.map((t) => '<div class="tm-item"><div class="tmh">' + (APP_EMOJI[t.app] || "🔧") + " " + (APP_NAME[t.app] || t.app) + " ── " + escapeHtml(t.lesson) + "</div>" + escapeHtml(t.txt) + "</div>").join("");
+}
+
+/* ================================================================
+   🎰 ご褒美ガチャ＋称号演出
+================================================================ */
+function drawUltraCurve() {
+  const cv = $("gcCurve");
+  if (!cv) return;
+  const ctx = cv.getContext("2d");
+  let t = 0;
+  function frame() {
+    t += 0.01;
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.strokeStyle = "#3a3320"; ctx.lineWidth = 1;
+    ctx.strokeRect(10, 10, cv.width - 20, cv.height - 20);
+    ctx.beginPath();
+    ctx.strokeStyle = "#ffd35d"; ctx.lineWidth = 3;
+    const n = Math.min(1, t) * 60;
+    for (let i = 0; i <= n; i++) {
+      const x = 14 + i * ((cv.width - 28) / 60);
+      const s = i / 60;
+      const y = (cv.height - 14) - (s < 0.6 ? s * 1.5 : 0.9 - (s - 0.6) * 0.4) * (cv.height - 24);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+    ctx.stroke();
+    if (t < 1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+function revealGacha(tier) {
+  const sheet = $("gcSheet");
+  sheet.className = "gc-sheet " + tier;
+  $("gcRoll").textContent = tier === "ultra" ? "🥇" : tier === "rare" ? "🥈" : "🎁";
+  $("gcCurveWrap").style.display = "none";
+  if (tier === "normal") {
+    $("gcTitle").textContent = "いつものスタンプ";
+    $("gcBadge").textContent = "🎁 よくやった！";
+    $("gcBadge").className = "gc-badge normal";
+    $("gcSub").textContent = "継続が力になる。次も期待。";
+    vib(15);
+  } else if (tier === "rare") {
+    const t = GENERIC_RARE_TITLES[(Math.random() * GENERIC_RARE_TITLES.length) | 0];
+    const got = grantTitle(t.id, t.name, "force");
+    $("gcTitle").textContent = "🥈 レア演出！";
+    $("gcBadge").textContent = t.name;
+    $("gcBadge").className = "gc-badge rare";
+    $("gcSub").textContent = got ? "称号「" + t.name + "」を獲得！" : "称号「" + t.name + "」（獲得済み）";
+    vib([20, 30, 20]);
+    renderTitleShelf();
+  } else {
+    const t = APP_TITLES.ultra;
+    const got = grantTitle(t.id, t.name, "force");
+    $("gcTitle").textContent = "🥇 超レア演出！！万能試験機が金色の試験片を掲げる";
+    $("gcBadge").textContent = t.name;
+    $("gcBadge").className = "gc-badge ultra";
+    $("gcSub").textContent = got ? "称号「" + t.name + "」を獲得！" : "称号「" + t.name + "」（獲得済み）";
+    vib([30, 40, 30, 40, 60]);
+    $("gcCurveWrap").style.display = "block";
+    drawUltraCurve();
+    renderTitleShelf();
+  }
+}
+function openGacha(doubled) {
+  const sheet = $("gcSheet");
+  sheet.className = "gc-sheet";
+  $("gcRoll").textContent = "🎰";
+  $("gcTitle").textContent = "抽選中…";
+  $("gcBadge").textContent = ""; $("gcBadge").className = "gc-badge";
+  $("gcSub").textContent = "";
+  $("gcCurveWrap").style.display = "none";
+  $("gachaModal").style.display = "flex";
+  vib(10);
+  setTimeout(() => {
+    const r = Math.random();
+    const ultraP = doubled ? 0.08 : 0.04;
+    const rareP = doubled ? 0.32 : 0.16;
+    let tier = "normal";
+    if (r < ultraP) tier = "ultra";
+    else if (r < ultraP + rareP) tier = "rare";
+    revealGacha(tier);
+  }, 800);
+}
+
+/* ================================================================
+   🔀 FORGE DAILY（forge-daily-v1・兄弟5アプリ+自アプリのRQを交ぜる）
+================================================================ */
+const SIBLING_RQ = [
+  { key: "arc", rqKey: "arc-forge-rq-v1" },
+  { key: "coat", rqKey: "coat-forge-rq-v1" },
+  { key: "volt", rqKey: "volt-forge-rq-v1" },
+  { key: "bend", rqKey: "bend-forge-rq-v1" },
+  { key: "gear", rqKey: "gear-forge-rq-v1" }
+];
+const DAILY_KEY = "forge-daily-v1";
+function todayStr() { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+function dailyDoneToday() {
+  try { const raw = localStorage.getItem(DAILY_KEY); const o = raw ? JSON.parse(raw) : null; return !!(o && o.date === todayStr()); }
+  catch (e) { return false; }
+}
+function markDailyDone(n) { try { localStorage.setItem(DAILY_KEY, JSON.stringify({ date: todayStr(), doneCount: n || 0 })); } catch (e) {} }
+function collectDailyPool() {
+  const now = Date.now();
+  const pool = [];
+  const all = [{ key: "force", rqKey: RQ_KEY }].concat(SIBLING_RQ);
+  all.forEach((appDef) => {
+    try {
+      let arr;
+      if (appDef.key === "force") arr = reviewQueue;
+      else { const raw = localStorage.getItem(appDef.rqKey); arr = raw ? JSON.parse(raw) : []; }
+      if (!Array.isArray(arr)) return;
+      arr.forEach((item) => {
+        if (item && item.v === 2 && typeof item.due === "number" && item.due <= now && item.q && Array.isArray(item.opts)) {
+          pool.push({ app: appDef.key, rqKey: appDef.rqKey, id: item.id, due: item.due, q: item.q, opts: item.opts, ans: item.ans, exp: item.exp, tag: item.tag });
+        }
+      });
+    } catch (e) { /* 壊れたJSONは黙ってスキップ */ }
+  });
+  return pool;
+}
+function pickDailySet() {
+  const pool = collectDailyPool().sort((a, b) => a.due - b.due); // ①超過日数降順＝最古のdueから
+  const byApp = {}; const order = [];
+  pool.forEach((item) => { if (!byApp[item.app]) { byApp[item.app] = []; order.push(item.app); } byApp[item.app].push(item); });
+  const picked = [];
+  let more = true;
+  while (more && picked.length < 5) {
+    more = false;
+    for (const ak of order) { if (byApp[ak].length) { picked.push(byApp[ak].shift()); more = true; if (picked.length >= 5) break; } }
+  }
+  return picked;
+}
+function dailyWriteBack(pick, correct, forceNow) {
+  try {
+    const isOwn = pick.app === "force";
+    let arr;
+    if (isOwn) arr = reviewQueue;
+    else { const raw = localStorage.getItem(pick.rqKey); arr = raw ? JSON.parse(raw) : null; }
+    if (!Array.isArray(arr)) return;
+    const item = arr.find((r) => r && r.id === pick.id);
+    if (!item) return;
+    if (correct) {
+      const idx = RQ_INTERVALS.indexOf(item.interval);
+      item.interval = idx >= 0 && idx < RQ_INTERVALS.length - 1 ? RQ_INTERVALS[idx + 1] : Math.round((item.interval || 1) * 2.5);
+      item.due = Date.now() + item.interval * 86400000;
+    } else {
+      item.interval = 1;
+      item.due = forceNow ? Date.now() : Date.now() + 86400000;
+    }
+    if (isOwn) saveRQ(); else localStorage.setItem(pick.rqKey, JSON.stringify(arr));
+  } catch (e) { /* 書き戻し失敗は黙ってスキップ（新規作成・削除は絶対にしない） */ }
+}
 
 // ---------------- ホーム描画 ----------------
 function lessonState(i) {
@@ -733,6 +1666,253 @@ function renderHome() {
   }
   const s = progress.streak;
   $("streakLine").textContent = (s.n > 0 ? "🔥 " + s.n + "週れんぞく" : "🔥 今週から積み上げ開始") + "／壊した部品 " + (progress.broken || 0) + "個";
+  renderV2Home(count);
+}
+
+/* ================================================================
+   FORGE v2 ホーム統括描画（XP／PASSPORT／称号／較正／育つ試験ラボ／
+   DAILY／RQ／サビ要約チップ）
+================================================================ */
+function renderV2Home(count) {
+  renderXPHeader();
+  renderPassport();
+  renderTitleShelf();
+  renderCalMeter();
+  renderLabHero(count);
+
+  const due = rqDueList();
+  const rqBtn = $("btnRQ");
+  if (due.length > 0) { rqBtn.style.display = "flex"; $("rqTitle").textContent = "⚡ 今日の復習 " + due.length + "問"; rqBtn.onclick = openReview; }
+  else rqBtn.style.display = "none";
+
+  const dailyBtn = $("btnDaily");
+  const dPool = collectDailyPool();
+  const doneToday = dailyDoneToday();
+  if (dPool.length >= 2 || doneToday) {
+    dailyBtn.style.display = "flex";
+    if (doneToday) {
+      $("dailyTitle").textContent = "🔀 本日のDAILYは完了 ✓";
+      dailyBtn.style.opacity = "0.6";
+      dailyBtn.onclick = null;
+    } else {
+      $("dailyTitle").textContent = "🔀 FORGE DAILY ── 家族ミックス5問";
+      dailyBtn.style.opacity = "1";
+      dailyBtn.onclick = openDaily;
+    }
+  } else {
+    dailyBtn.style.display = "none";
+  }
+
+  const rustN = rustNodesSummary();
+  const rustBtn = $("btnRustChip");
+  if (rustN > 0) {
+    rustBtn.style.display = "block";
+    rustBtn.textContent = "🦠 錆びかけ " + rustN + "件 ── タップで街道へ";
+    rustBtn.onclick = () => { renderMap(); showView("viewMap"); };
+  } else rustBtn.style.display = "none";
+}
+
+/* ================================================================
+   🔧 育つ試験ラボ（ホームヒーロー・本物Three.js・D2）
+   クリア数0〜7で8工程が進む：①架台②コラム③チャック④試験片
+   ⑤ひずみゲージ＋配線⑥モニタ（応力ひずみ曲線）⑦防護カバー
+   ⑧全クリ＝自動試験ループ（引張→くびれ→破断スロー→交換）
+================================================================ */
+const LAB_STAGES = [
+  "架台（試験機のベース）", "コラム（本体の柱が立つ）", "チャック（上下のツカミ）",
+  "試験片セット（丸棒）", "ひずみゲージ＋配線", "モニタ（応力ひずみ曲線）",
+  "防護カバー", "全自動試験ループ✨"
+];
+let LH = null;
+function labStateFor(cleared) { return Math.max(0, Math.min(7, cleared | 0)); }
+function ensureLabHero() {
+  if (LH) return LH;
+  const host = $("labStage");
+  if (!host) return null;
+  if (typeof THREE === "undefined") {
+    host.insertAdjacentHTML("beforeend", '<div class="lfallback">3D表示にはネット接続が必要です<br>（工程 1/8）</div>');
+    LH = { fake: true };
+    return LH;
+  }
+  let renderer;
+  try { renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true }); }
+  catch (e) {
+    host.insertAdjacentHTML("beforeend", '<div class="lfallback">3D表示ができません</div>');
+    LH = { fake: true };
+    return LH;
+  }
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 3));
+  renderer.outputEncoding = THREE.sRGBEncoding;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  const w0 = Math.max(1, host.clientWidth), h0 = Math.max(1, host.clientHeight);
+  renderer.setSize(w0, h0);
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  host.insertBefore(renderer.domElement, host.firstChild);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(36, w0 / h0, 0.1, 60);
+  camera.position.set(0.55, 0.3, 4.3);
+  camera.lookAt(0.15, 0.02, 0);
+  scene.add(new THREE.HemisphereLight(0xbcd0e0, 0x141a22, 0.45));
+  const key = new THREE.DirectionalLight(0xdfeeff, 1.0);
+  key.position.set(2.4, 4, 2.2);
+  key.castShadow = true;
+  key.shadow.mapSize.set(1024, 1024);
+  scene.add(key);
+  const rimA = new THREE.PointLight(0x4fd1ff, 0.7, 14); rimA.position.set(-3, 1.4, -2); scene.add(rimA);
+  const rimB = new THREE.PointLight(0xa07bff, 0.5, 14); rimB.position.set(3, 0.8, -2.4); scene.add(rimB);
+  const group = new THREE.Group();
+  scene.add(group);
+
+  // ① 架台
+  const base = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.22, 1.1), new THREE.MeshStandardMaterial({ map: tableTexOf(), metalness: 0.7, roughness: 0.55 }));
+  base.position.y = -0.85;
+  base.receiveShadow = true; base.castShadow = true;
+  group.add(base);
+
+  // ② コラム
+  const col = new THREE.Mesh(new THREE.BoxGeometry(0.22, 2.1, 0.22), new THREE.MeshStandardMaterial({ color: 0x3c434e, metalness: 0.75, roughness: 0.4 }));
+  col.position.set(-0.75, 0.15, -0.3);
+  col.castShadow = true;
+  col.visible = false;
+  col.scale.set(0.001, 0.001, 0.001);
+  group.add(col);
+
+  // ③ チャック（上下）
+  function mkChuck() {
+    return new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.2, 0.34), new THREE.MeshStandardMaterial({ color: 0x555e6a, metalness: 0.8, roughness: 0.4 }));
+  }
+  const chuckTop = mkChuck(), chuckBot = mkChuck();
+  chuckTop.position.set(0.15, 0.62, 0); chuckBot.position.set(0.15, -0.5, 0);
+  chuckTop.castShadow = true; chuckBot.castShadow = true;
+  chuckTop.visible = false; chuckBot.visible = false;
+  chuckTop.scale.set(0.001, 0.001, 0.001); chuckBot.scale.set(0.001, 0.001, 0.001);
+  group.add(chuckTop); group.add(chuckBot);
+  const chuckTopY0 = 0.62;
+
+  // ④ 試験片
+  const spec = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 1.0, 20), new THREE.MeshStandardMaterial({ color: 0xc9d3dd, metalness: 0.85, roughness: 0.32 }));
+  spec.position.set(0.15, 0.06, 0);
+  spec.castShadow = true;
+  spec.visible = false;
+  spec.scale.set(0.001, 0.001, 0.001);
+  group.add(spec);
+
+  // ⑤ ひずみゲージ＋配線
+  const gauge = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.03, 0.02), new THREE.MeshStandardMaterial({ color: 0xffd35d, metalness: 0.3, roughness: 0.5 }));
+  gauge.position.set(0.15, 0.06, 0.05);
+  gauge.visible = false;
+  group.add(gauge);
+  const wireGeo = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0.15, 0.06, 0.05), new THREE.Vector3(0.7, -0.1, 0.3), new THREE.Vector3(0.95, -0.1, 0.3)
+  ]);
+  const wire = new THREE.Line(wireGeo, new THREE.LineBasicMaterial({ color: 0xffd35d }));
+  wire.visible = false;
+  group.add(wire);
+
+  // ⑥ モニタ（応力ひずみ曲線がキャンバステクスチャに描かれていく）
+  const monCv = document.createElement("canvas"); monCv.width = 128; monCv.height = 96;
+  const monCtx = monCv.getContext("2d");
+  const monTex = new THREE.CanvasTexture(monCv);
+  const mon = new THREE.Mesh(new THREE.PlaneGeometry(0.34, 0.26), new THREE.MeshBasicMaterial({ map: monTex }));
+  mon.position.set(0.96, -0.05, 0.3);
+  mon.rotation.y = -0.5;
+  mon.visible = false;
+  group.add(mon);
+  const monFrame = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.30, 0.03), new THREE.MeshStandardMaterial({ color: 0x1c222c, metalness: 0.4, roughness: 0.6 }));
+  monFrame.position.set(0.96, -0.05, 0.285);
+  monFrame.rotation.y = -0.5;
+  monFrame.visible = false;
+  group.add(monFrame);
+  function drawCurve(frac) {
+    monCtx.fillStyle = "#04140f"; monCtx.fillRect(0, 0, 128, 96);
+    monCtx.strokeStyle = "#4fd1ff"; monCtx.lineWidth = 2;
+    monCtx.beginPath();
+    const n = Math.max(1, Math.floor(Math.max(0, Math.min(1, frac)) * 60));
+    for (let i = 0; i <= n; i++) {
+      const s = i / 60;
+      const x = 6 + s * 116;
+      const y = 90 - (s < 0.6 ? s * 1.4 : 0.84 - (s - 0.6) * 0.3) * 80;
+      if (i === 0) monCtx.moveTo(x, y); else monCtx.lineTo(x, y);
+    }
+    monCtx.stroke();
+    monTex.needsUpdate = true;
+  }
+  drawCurve(0.02);
+
+  // ⑦ 防護カバー
+  const cage = new THREE.Mesh(new THREE.BoxGeometry(0.62, 1.5, 0.62), new THREE.MeshBasicMaterial({ color: 0x4fd1ff, wireframe: true, transparent: true, opacity: 0.35 }));
+  cage.position.set(0.15, 0.06, 0);
+  cage.visible = false;
+  group.add(cage);
+
+  let vel = 0, dragging = false, px = 0, autoY = -0.35;
+  const el = renderer.domElement;
+  el.style.cursor = "grab";
+  el.addEventListener("pointerdown", (e) => { dragging = true; px = e.clientX; el.style.cursor = "grabbing"; try { el.setPointerCapture(e.pointerId); } catch (er) {} });
+  el.addEventListener("pointermove", (e) => { if (!dragging) return; vel += (e.clientX - px) * 0.01; px = e.clientX; });
+  el.addEventListener("pointerup", () => { dragging = false; el.style.cursor = "grab"; vib(8); });
+  window.addEventListener("resize", () => {
+    const w = host.clientWidth, h = host.clientHeight;
+    if (!w || !h) return;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  });
+
+  let curStage = 0, tAll = 0, curveT = 0, lastT = performance.now();
+  function grow(mesh, on, dt) {
+    if (!mesh) return;
+    if (on) { mesh.visible = true; const s = Math.min(1, (mesh.scale.x || 0.001) + dt * 2.4); mesh.scale.set(s, s, s); }
+    else { mesh.visible = false; mesh.scale.set(0.001, 0.001, 0.001); }
+  }
+  function loop(now) {
+    requestAnimationFrame(loop);
+    const dt = Math.min(0.05, (now - lastT) / 1000);
+    lastT = now;
+    vel *= 0.94;
+    autoY += vel * dt * 0.6 + dt * 0.05;
+    group.rotation.y = autoY;
+
+    const st = curStage;
+    grow(col, st >= 1, dt);
+    grow(chuckTop, st >= 2, dt); grow(chuckBot, st >= 2, dt);
+    grow(spec, st >= 3, dt);
+    gauge.visible = st >= 4; wire.visible = st >= 4;
+    mon.visible = st >= 5; monFrame.visible = st >= 5;
+    cage.visible = st >= 6;
+    if (st >= 5 && !LH.allDone) { curveT = Math.min(1, curveT + dt * 0.2); drawCurve(0.05 + curveT * 0.85); }
+
+    if (LH.allDone) {
+      tAll += dt;
+      const cyc = tAll % 6.4;
+      let pull = 0, neck = 0, fractureT = 0;
+      if (cyc < 3.0) pull = cyc / 3.0;
+      else if (cyc < 4.0) { pull = 1; neck = (cyc - 3.0) / 1.0; }
+      else if (cyc < 5.2) { pull = 1; neck = 1; fractureT = (cyc - 4.0) / 1.2; }
+      spec.visible = fractureT < 0.94;
+      spec.scale.y = 1 + pull * 0.22;
+      spec.scale.x = spec.scale.z = Math.max(0.15, 1 - neck * 0.4);
+      chuckTop.position.y = chuckTopY0 + pull * 0.1;
+      drawCurve(0.05 + Math.min(1, pull * 0.5 + neck * 0.35 + fractureT * 0.15));
+    }
+
+    const w = host.clientWidth, h = host.clientHeight;
+    if (w > 0 && h > 0 && isFinite(group.rotation.y)) renderer.render(scene, camera);
+  }
+  LH = { fake: false, allDone: false, setStage(n) { curStage = labStateFor(n); } };
+  requestAnimationFrame(loop);
+  return LH;
+}
+function renderLabHero(cleared) {
+  const n = labStateFor(cleared);
+  const titleEl = $("labTitle"), barEl = $("labBar");
+  if (titleEl) titleEl.innerHTML = "工程 " + (n + 1) + "/8：" + LAB_STAGES[n];
+  if (barEl) barEl.style.width = Math.round(((n + 1) / 8) * 100) + "%";
+  const lh = ensureLabHero();
+  if (!lh || lh.fake) return;
+  lh.allDone = cleared >= PROG_KEYS.length; // 8項目(l1-l6+lex+l7)全クリで自動試験ループ
+  lh.setStage(cleared);
 }
 
 /* ================================================================
@@ -2751,6 +3931,8 @@ function openLesson(i) {
   curIdx = i;
   cur = LESSONS[i];
   missionPick = -1;
+  $("teachBoxLesson").style.display = "none";
+  $("teachTxtLesson").value = "";
   showView("viewLesson");
   $("lsTag").textContent = cur.tag;
   $("lsTitle").textContent = cur.title;
@@ -2791,6 +3973,7 @@ function startExp() {
 
   microOn = false;
   $("btnMicro").textContent = "🔬 ミクロの目（原子で見る）";
+  $("btnPhoto").style.display = PHOTOS[cur.id] ? "" : "none";
   ensureStage();
   if (ST.fake) { btn.disabled = false; return; }
   ST.clearScene();
@@ -2799,6 +3982,7 @@ function startExp() {
   ST.resize();
 }
 $("btnMicro").addEventListener("click", () => setMicro(!microOn));
+$("btnPhoto").addEventListener("click", openPhoto);
 
 function onLoadInput() {
   const v = +$("loadRange").value;
@@ -2834,6 +4018,7 @@ function startQuiz() {
   $("qzQ").textContent = qz.q;
   $("qzExp").style.display = "none";
   $("btnQuizDone").style.display = "none";
+  $("qzConfHost").innerHTML = "";
   const wrap = $("qzOpts");
   wrap.innerHTML = "";
   let answered = false;
@@ -2844,14 +4029,23 @@ function startQuiz() {
     b.addEventListener("click", () => {
       if (answered) return;
       answered = true;
-      wrap.querySelectorAll(".opt").forEach((x, xi) => {
-        if (xi === qz.ans) x.classList.add("correct");
-        else if (xi === idx) x.classList.add("wrong");
-        else x.classList.add("dim");
+      wrap.querySelectorAll(".opt").forEach((x) => x.classList.add("dim"));
+      b.classList.remove("dim");
+      mountConfidenceGate($("qzConfHost"), (conf) => {
+        const correct = idx === qz.ans;
+        wrap.querySelectorAll(".opt").forEach((x, xi) => {
+          x.classList.remove("dim");
+          if (xi === qz.ans) x.classList.add("correct");
+          else if (xi === idx) x.classList.add("wrong");
+          else x.classList.add("dim");
+        });
+        const payload = { q: qz.q, opts: qz.opts, ans: qz.ans, exp: qz.exp, app: "force", tag: cur.id };
+        if (!correct) rqUpsert("quiz-" + cur.id, payload);
+        const note = gradeConfidence(correct, conf, "quiz-" + cur.id, payload);
+        $("qzExp").innerHTML = qz.exp + note;
+        $("qzExp").style.display = "block";
+        $("btnQuizDone").style.display = "block";
       });
-      $("qzExp").innerHTML = qz.exp;
-      $("qzExp").style.display = "block";
-      $("btnQuizDone").style.display = "block";
     });
     wrap.appendChild(b);
   });
@@ -2861,12 +4055,23 @@ $("btnQuizDone").addEventListener("click", () => {
   progress.done[cur.id] = true;
   bumpStreak();
   saveProgress();
+  touchFresh(cur.id);
   $("clearStamp").innerHTML = cur.tag + " CLEAR!<small>今朝の15分 完了</small>";
   $("teaserBox").innerHTML = "🔮 <b>これが分かると…</b><br>" + (cur.teaser || "");
   const s = progress.streak;
   $("clearMsg").innerHTML = "🔥 " + s.n + "週れんぞく<br>" + (curIdx < LESSONS.length - 1 ? "次回：" + LESSONS[curIdx + 1].tag + " " + LESSONS[curIdx + 1].title : "次回：章ボス戦！");
+  addXP(20);
+  renderXPHeader();
+  $("teachBoxLesson").style.display = "block";
   setPhase("phClear");
+  openGacha(false);
 });
+
+$("btnTeachSendLesson").addEventListener("click", () => {
+  addTeach(cur.id, $("teachTxtLesson").value);
+  $("teachBoxLesson").style.display = "none";
+});
+$("btnTeachLaterLesson").addEventListener("click", () => { $("teachBoxLesson").style.display = "none"; });
 
 $("btnGoHome").addEventListener("click", () => { renderHome(); showView("viewHome"); });
 $("btnBack").addEventListener("click", () => { renderHome(); showView("viewHome"); });
@@ -2877,6 +4082,8 @@ $("btnBack").addEventListener("click", () => { renderHome(); showView("viewHome"
 let bIdx = 0, bScore = 0;
 function openBoss() {
   bIdx = 0; bScore = 0;
+  $("teachBoxBoss").style.display = "none";
+  $("teachTxtBoss").value = "";
   showView("viewBoss");
   $("bossPlay").style.display = "block";
   $("bossResult").style.display = "none";
@@ -2888,6 +4095,7 @@ function renderBossQ() {
   $("bsQ").textContent = q.q;
   $("bsExp").style.display = "none";
   $("btnBossNext").style.display = "none";
+  $("bsConfHost").innerHTML = "";
   const wrap = $("bsOpts");
   wrap.innerHTML = "";
   let answered = false;
@@ -2898,16 +4106,25 @@ function renderBossQ() {
     b.addEventListener("click", () => {
       if (answered) return;
       answered = true;
-      if (idx === q.ans) bScore++;
-      wrap.querySelectorAll(".opt").forEach((x, xi) => {
-        if (xi === q.ans) x.classList.add("correct");
-        else if (xi === idx) x.classList.add("wrong");
-        else x.classList.add("dim");
+      wrap.querySelectorAll(".opt").forEach((x) => x.classList.add("dim"));
+      b.classList.remove("dim");
+      mountConfidenceGate($("bsConfHost"), (conf) => {
+        const correct = idx === q.ans;
+        if (correct) { bScore++; vib([16, 30, 10]); }
+        wrap.querySelectorAll(".opt").forEach((x, xi) => {
+          x.classList.remove("dim");
+          if (xi === q.ans) x.classList.add("correct");
+          else if (xi === idx) x.classList.add("wrong");
+          else x.classList.add("dim");
+        });
+        const payload = { q: q.q, opts: q.opts, ans: q.ans, exp: q.exp, app: "force", tag: "l7" };
+        if (!correct) rqUpsert("boss-" + bIdx, payload);
+        const note = gradeConfidence(correct, conf, "boss-" + bIdx, payload);
+        $("bsExp").innerHTML = q.exp + note;
+        $("bsExp").style.display = "block";
+        $("btnBossNext").style.display = "block";
+        $("btnBossNext").textContent = bIdx < BOSS.length - 1 ? "つぎ →" : "結果を見る →";
       });
-      $("bsExp").innerHTML = q.exp;
-      $("bsExp").style.display = "block";
-      $("btnBossNext").style.display = "block";
-      $("btnBossNext").textContent = bIdx < BOSS.length - 1 ? "つぎ →" : "結果を見る →";
     });
     wrap.appendChild(b);
   });
@@ -2922,18 +4139,508 @@ $("btnBossNext").addEventListener("click", () => {
       progress.done["l7"] = true;
       bumpStreak();
       saveProgress();
-      $("bsMsg").innerHTML = "🏆 第1章 制覇！<br>第2章「未来よち（CAE）」は次のアップデートで配信。<br>それまで週1でボス戦の復習もアリ。";
+      touchFresh("l7");
+      addXP(40);
+      renderXPHeader();
+      const firstBoss = !hasTitle(APP_TITLES.basic.id);
+      if (firstBoss) grantTitle(APP_TITLES.basic.id, APP_TITLES.basic.name, "force");
+      renderTitleShelf();
+      $("bsMsg").innerHTML = "🏆 第1章 制覇！<br>第2章「未来よち（CAE）」は次のアップデートで配信。<br>それまで週1でボス戦の復習もアリ。" +
+        (firstBoss ? "<br>🎖 初回ボス合格称号「" + APP_TITLES.basic.name + "」を獲得！" : "");
+      $("teachBoxBoss").style.display = "block";
+      openGacha(true);
     } else {
       $("bsMsg").innerHTML = "あと少し！ 5問正解でクリア。<br>まちがえたレッスンを触り直してから再挑戦。";
     }
   }
 });
+$("btnTeachSendBoss").addEventListener("click", () => {
+  addTeach("l7", $("teachTxtBoss").value);
+  $("teachBoxBoss").style.display = "none";
+});
+$("btnTeachLaterBoss").addEventListener("click", () => { $("teachBoxBoss").style.display = "none"; });
 $("btnBossHome").addEventListener("click", () => { renderHome(); showView("viewHome"); });
 $("btnBackB").addEventListener("click", () => { renderHome(); showView("viewHome"); });
 
 /* ================================================================
+   📷 現場の目（D5・写真は assets/photo/ に配置済み）
+================================================================ */
+const PHOTOS = {
+  l1: { img: "assets/photo/f1.jpg", title: "本物の万能試験機",
+    cap: "上下のチャックで試験片を掴み、引張って強さを測る機械。教科書の応力ひずみ曲線はここから生まれる。",
+    points: [{ x: 50, y: 45, t: "試験片を掴むチャック" }, { x: 82, y: 88, t: "非常停止＝安全設計" }],
+    credit: "写真: Kerina yin（CC0／Wikimedia Commons）", vq: "引張試験 万能試験機 実験" },
+  l2: { img: "assets/photo/f2.jpg", title: "実物のひずみゲージ",
+    cap: "金属箔のジグザグが伸びると電気抵抗が変わり、ひずみが数字になる。CAEの答え合わせに使う「実測の目」。",
+    points: [{ x: 50, y: 50, t: "ジグザグ箔＝伸びを電気に変換" }],
+    credit: "写真: Cristian V.（CC BY 4.0／Wikimedia Commons）", vq: "ひずみゲージ 原理 貼り方" },
+  l4: { img: "assets/photo/f3.jpg", title: "破断した試験片",
+    cap: "鋳鉄の引張試験後。破面がほぼ真横＝もろい破壊の証拠。材料の性格は破面が語る。",
+    points: [{ x: 50, y: 42, t: "破面＝材料の履歴書" }],
+    credit: "写真: Sigmund（CC BY-SA 3.0／Wikimedia Commons）", vq: "引張試験 破断 破面" },
+  l5: { img: "assets/photo/f4.jpg", title: "実荷重の世界",
+    cap: "クレーンの吊り荷。吊り点・重心・振れ──力の流れを読む頭は、板金設計もクレーンも同じ。",
+    points: [{ x: 50, y: 28, t: "吊り点に全荷重が集中" }],
+    credit: "写真: TeWeBs（CC BY-SA 4.0／Wikimedia Commons）", vq: "玉掛け 重心 吊り方" }
+};
+function openPhoto() {
+  const P = cur ? PHOTOS[cur.id] : null;
+  if (!P) return;
+  vib(10);
+  $("pmTitle").textContent = "📷 " + P.title;
+  $("pmCap").textContent = P.cap;
+  $("pmCredit").textContent = P.credit;
+  const fig = $("pmFig");
+  fig.innerHTML = "";
+  const img = document.createElement("img");
+  img.src = P.img;
+  img.alt = P.title;
+  fig.appendChild(img);
+  P.points.forEach((pt, i) => {
+    const m = document.createElement("div");
+    m.className = "pm-marker";
+    m.style.left = pt.x + "%";
+    m.style.top = pt.y + "%";
+    const dot = document.createElement("span");
+    dot.className = "pm-dot";
+    dot.style.animationDelay = (i * 0.5) + "s";
+    const lab = document.createElement("span");
+    lab.className = "pm-label";
+    lab.textContent = pt.t;
+    m.appendChild(dot); m.appendChild(lab);
+    fig.appendChild(m);
+  });
+  $("pmVideo").href = "https://www.youtube.com/results?search_query=" + encodeURIComponent(P.vq);
+  $("photoModal").style.display = "flex";
+}
+$("pmClose").addEventListener("click", () => { $("photoModal").style.display = "none"; });
+$("photoModal").addEventListener("click", (e) => { if (e.target === $("photoModal")) $("photoModal").style.display = "none"; });
+
+/* ================================================================
+   🛣 力学街道マスターマップ＋🦠再塗装（サビ落とし）
+================================================================ */
+const MASTER_MAP = [
+  { stage: "Stage1", desc: "第1章 力と変形のきそ（現在・全6回＋番外EX＋ボス）" },
+  { stage: "Stage2", desc: "第2章 CAE実務（メッシュと境界条件）" },
+  { stage: "Stage3", desc: "第3章 疲労と振動" },
+  { stage: "Stage4", desc: "第4章 最適化と軽量化" }
+];
+function renderMap() {
+  const wrap = $("mapStage");
+  wrap.innerHTML = "";
+  MASTER_MAP.forEach((st, si) => {
+    const box = document.createElement("div");
+    box.className = "mapstagebox" + (si === 0 ? " current" : "");
+    const pin = si === 0 ? '<span class="mspin">📍現在地</span>' : "";
+    box.innerHTML = '<div class="msTitle">' + st.stage + " " + pin + '</div><div class="msDesc">' + st.desc + "</div>";
+    const chapsWrap = document.createElement("div");
+    chapsWrap.className = "mapchaps";
+    if (si === 0) {
+      const labels = LESSONS.map((L) => L.tag + " " + L.label).concat(["L7 ボス"]);
+      labels.forEach((lb, i) => {
+        const chip = document.createElement("span");
+        const id = PROG_KEYS[i];
+        const done = !!progress.done[id];
+        const now = !done && lessonState(i) === "now";
+        const rc = done ? rustClassOf(id) : null;
+        let cls = "mapchap";
+        if (done) cls += " done"; else if (now) cls += " now";
+        if (rc === "dull") cls += " dull";
+        if (rc === "rust1") cls += " rust1 rustable";
+        if (rc === "rust2") cls += " rust2 rustable";
+        chip.className = cls;
+        chip.innerHTML = (done ? "✓ " : "") + lb + (rustTipOf(rc) ? '<span class="rusttip">' + rustTipOf(rc) + "</span>" : "");
+        if (rc === "rust1" || rc === "rust2") chip.addEventListener("click", () => openRepaint(id, lb));
+        chapsWrap.appendChild(chip);
+      });
+    } else {
+      const chip = document.createElement("span");
+      chip.className = "mapchap";
+      chip.textContent = "🔒 次のアップデートで配信";
+      chapsWrap.appendChild(chip);
+    }
+    box.appendChild(chapsWrap);
+    wrap.appendChild(box);
+  });
+}
+$("btnMapHome").addEventListener("click", () => { renderMap(); showView("viewMap"); });
+$("btnBackMap").addEventListener("click", () => { renderHome(); showView("viewHome"); });
+$("btnDrillHome").addEventListener("click", openDrill);
+$("btnTeachNote").addEventListener("click", () => { renderTeachNote(); $("teachModal").style.display = "flex"; });
+
+/* 再塗装の出題：クイズ問＋ミッション予想問（D3・§3.1）。l7(ボス)はBOSSから2問。 */
+function repaintQuestionsFor(id) {
+  if (id === "l7") return shuffleArr(BOSS.slice()).slice(0, 2).map((b) => ({ q: b.q, opts: b.opts, ans: b.ans, exp: b.exp }));
+  const L = LESSONS.find((x) => x.id === id);
+  if (!L) return [];
+  return [
+    { q: stripTags(L.mission.q), opts: L.mission.opts, ans: L.mission.ans, exp: L.mission.ansLine },
+    { q: L.quiz.q, opts: L.quiz.opts, ans: L.quiz.ans, exp: L.quiz.exp }
+  ];
+}
+let rpId = null, rpSet = [], rpIdx = 0, pendingRepaintFX = null;
+function openRepaint(id, label) {
+  rpId = id;
+  rpSet = repaintQuestionsFor(id);
+  rpIdx = 0;
+  $("rpTitle").textContent = label || id;
+  showView("viewRepaint");
+  $("repaintPlay").style.display = "block";
+  $("repaintResult").style.display = "none";
+  renderRepaintQ();
+}
+function renderRepaintQ() {
+  const q = rpSet[rpIdx];
+  $("rpProgress").textContent = "第" + (rpIdx + 1) + "問 ／ " + rpSet.length + "問中（再塗装）";
+  $("rpText").textContent = stripTags(q.q);
+  $("rpExp").style.display = "none";
+  $("btnRepaintNext").style.display = "none";
+  $("rpConfHost").innerHTML = "";
+  const wrap = $("rpOpts");
+  wrap.innerHTML = "";
+  let answered = false;
+  q.opts.forEach((o, idx) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = (idx + 1) + ". " + o;
+    b.addEventListener("click", () => {
+      if (answered) return;
+      answered = true;
+      wrap.querySelectorAll(".opt").forEach((x) => x.classList.add("dim"));
+      b.classList.remove("dim");
+      mountConfidenceGate($("rpConfHost"), (conf) => {
+        const correct = idx === q.ans;
+        wrap.querySelectorAll(".opt").forEach((x, xi) => {
+          x.classList.remove("dim");
+          if (xi === q.ans) x.classList.add("correct");
+          else if (xi === idx) x.classList.add("wrong");
+          else x.classList.add("dim");
+        });
+        const note = gradeConfidence(correct, conf, "repaint-" + rpId + "-" + rpIdx, { q: q.q, opts: q.opts, ans: q.ans, exp: q.exp, app: "force", tag: rpId });
+        $("rpExp").innerHTML = q.exp + note;
+        $("rpExp").style.display = "block";
+        $("btnRepaintNext").style.display = "block";
+        $("btnRepaintNext").textContent = rpIdx < rpSet.length - 1 ? "つぎ →" : "結果を見る →";
+      });
+    });
+    wrap.appendChild(b);
+  });
+}
+function flashRepaintFX() {
+  if (!pendingRepaintFX) return;
+  const id = pendingRepaintFX; pendingRepaintFX = null;
+  requestAnimationFrame(() => {
+    const idx = PROG_KEYS.indexOf(id);
+    const chips = document.querySelectorAll("#mapStage .mapchap");
+    const chip = chips[idx];
+    if (chip) { chip.classList.remove("rust1", "rust2", "dull"); chip.classList.add("repainting"); setTimeout(() => chip.classList.remove("repainting"), 950); }
+  });
+}
+$("btnRepaintNext").addEventListener("click", () => {
+  if (rpIdx < rpSet.length - 1) { rpIdx++; renderRepaintQ(); }
+  else {
+    $("repaintPlay").style.display = "none";
+    $("repaintResult").style.display = "block";
+    touchFresh(rpId);
+    addXP(10);
+    renderXPHeader();
+    freshMap._rc = (freshMap._rc || 0) + 1;
+    saveFresh();
+    pendingRepaintFX = rpId;
+    if (freshMap._rc % 3 === 0) openGacha(false);
+  }
+});
+$("btnRepaintHome").addEventListener("click", () => { renderMap(); showView("viewMap"); flashRepaintFX(); });
+$("btnBackRepaint").addEventListener("click", () => { renderMap(); showView("viewMap"); flashRepaintFX(); });
+
+/* ================================================================
+   ⚔ 判断ドリル（5問・OK/NG即断・自信ベット適用）
+================================================================ */
+let dSet = [], dIdx = 0, dScore = 0, dResults = [];
+function openDrill() {
+  dSet = pickDrillSet(5);
+  dIdx = 0; dScore = 0; dResults = [];
+  showView("viewDrill");
+  $("drillPlay").style.display = "block";
+  $("drillResult").style.display = "none";
+  renderDrillQ();
+}
+function renderDrillQ() {
+  const d = dSet[dIdx];
+  $("dqProgress").textContent = "第" + (dIdx + 1) + "問 ／ 5問中 ── 正解 " + dScore;
+  $("dqText").textContent = d.situation;
+  $("dqTag").textContent = "分野：" + d.tag;
+  $("dqExp").style.display = "none";
+  $("btnDrillNext").style.display = "none";
+  $("dConfHost").innerHTML = "";
+  const okBtn = $("btnOK"), ngBtn = $("btnNG");
+  okBtn.className = ""; ngBtn.className = "";
+  okBtn.disabled = false; ngBtn.disabled = false;
+  let answered = false;
+  function pick(choice) {
+    if (answered) return;
+    answered = true;
+    okBtn.disabled = true; ngBtn.disabled = true;
+    mountConfidenceGate($("dConfHost"), (conf) => {
+      const correct = choice === d.ans;
+      drillStats.seen[d.id] = true;
+      drillStats.totalCount = (drillStats.totalCount || 0) + 1;
+      if (correct) { drillStats.correctCount = (drillStats.correctCount || 0) + 1; drillStats.wrong[d.id] = 0; dScore++; }
+      else drillStats.wrong[d.id] = (drillStats.wrong[d.id] || 0) + 1;
+      saveDrillStats();
+      dResults.push(correct);
+      const pickBtn = choice === "OK" ? okBtn : ngBtn;
+      const otherBtn = choice === "OK" ? ngBtn : okBtn;
+      pickBtn.classList.add(correct ? "correct" : "wrong");
+      if (d.ans !== choice) (d.ans === "OK" ? okBtn : ngBtn).classList.add("correct");
+      otherBtn.classList.add("dim");
+      const lid = drillLessonId(d.id);
+      const payload = { q: d.situation, opts: ["OK", "NG"], ans: d.ans === "OK" ? 0 : 1, exp: d.reason + " " + d.fix, app: "force", tag: lid || d.tag };
+      if (!correct) rqUpsert("drill-" + d.id, payload);
+      const note = gradeConfidence(correct, conf, "drill-" + d.id, payload);
+      if (correct && lid) touchFresh(lid);
+      $("dqExp").innerHTML = "<b>正解：" + d.ans + "</b><br>" + d.reason + "<br>" + d.fix + note;
+      $("dqExp").style.display = "block";
+      $("btnDrillNext").style.display = "block";
+      $("btnDrillNext").textContent = dIdx < dSet.length - 1 ? "つぎ →" : "結果を見る →";
+      vib(correct ? [20, 20, 40] : 30);
+    });
+  }
+  okBtn.onclick = () => pick("OK");
+  ngBtn.onclick = () => pick("NG");
+}
+$("btnDrillNext").addEventListener("click", () => {
+  if (dIdx < dSet.length - 1) { dIdx++; renderDrillQ(); }
+  else {
+    $("drillPlay").style.display = "none";
+    $("drillResult").style.display = "block";
+    $("dResultScore").textContent = dScore + " / 5";
+    $("dResultRow").innerHTML = dResults.map((r) => '<span class="' + (r ? "o" : "x") + '">' + (r ? "○" : "×") + "</span>").join("");
+    const tagCount = {};
+    Object.keys(drillStats.wrong).forEach((id) => {
+      if (drillStats.wrong[id] > 0) {
+        const d = DRILLS.find((x) => x.id === id);
+        if (d) { const t = d.tag.split("(")[0]; tagCount[t] = (tagCount[t] || 0) + drillStats.wrong[id]; }
+      }
+    });
+    const weakSorted = Object.keys(tagCount).sort((a, b) => tagCount[b] - tagCount[a]);
+    const total = drillStats.totalCount || 1;
+    const rate = Math.round(((drillStats.correctCount || 0) / total) * 100);
+    $("dWeak").innerHTML = "通算正答率 <b>" + rate + "%</b>（" + (drillStats.correctCount || 0) + "/" + total + "問）<br>" +
+      (weakSorted.length ? "弱点分野：<b>" + weakSorted.slice(0, 2).join("・") + "</b>（復習キューに登録済み）" : "まだ弱点なし。いいペース！");
+  }
+});
+$("btnDrillResultHome").addEventListener("click", () => { renderHome(); showView("viewHome"); });
+$("btnBackD").addEventListener("click", () => { renderHome(); showView("viewHome"); });
+
+/* ================================================================
+   ⚡ 復習キュー（上限5問・自信ベット＋教えるノート表示）
+================================================================ */
+let rqSet = [], rqIdx = 0, rqScore = 0;
+function openReview() {
+  rqSet = rqDueList();
+  if (!rqSet.length) { renderHome(); showView("viewHome"); return; }
+  rqIdx = 0; rqScore = 0;
+  showView("viewReview");
+  $("reviewPlay").style.display = "block";
+  $("reviewResult").style.display = "none";
+  renderRQQ();
+}
+function renderRQQ() {
+  const item = rqSet[rqIdx];
+  $("rqProgress").textContent = "第" + (rqIdx + 1) + "問 ／ " + rqSet.length + "問中（忘れかけた頃の再登場）";
+  $("rqText").textContent = stripTags(item.q);
+  $("rqExp").style.display = "none";
+  $("btnRQNext").style.display = "none";
+  $("rqConfHost").innerHTML = "";
+  const wrap = $("rqOpts");
+  wrap.innerHTML = "";
+  let answered = false;
+  (item.opts || []).forEach((o, idx) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = (idx + 1) + ". " + o;
+    b.addEventListener("click", () => {
+      if (answered) return;
+      answered = true;
+      wrap.querySelectorAll(".opt").forEach((x) => x.classList.add("dim"));
+      b.classList.remove("dim");
+      mountConfidenceGate($("rqConfHost"), (conf) => {
+        const correct = idx === item.ans;
+        if (correct) rqScore++;
+        rqAnswer(item, correct);
+        if (correct && item.tag) touchFresh(item.tag);
+        wrap.querySelectorAll(".opt").forEach((x, xi) => {
+          x.classList.remove("dim");
+          if (xi === item.ans) x.classList.add("correct");
+          else if (xi === idx) x.classList.add("wrong");
+          else x.classList.add("dim");
+        });
+        const note = gradeConfidence(correct, conf, item.id, { q: item.q, opts: item.opts, ans: item.ans, exp: item.exp, app: "force", tag: item.tag });
+        const teach = findTeachFor("force", item.tag);
+        $("rqExp").innerHTML = (item.exp || "") + note + (teach ? '<div class="rqteach">🎓 あの日の俺：『' + escapeHtml(teach.txt) + "』</div>" : "");
+        $("rqExp").style.display = "block";
+        $("btnRQNext").style.display = "block";
+        $("btnRQNext").textContent = rqIdx < rqSet.length - 1 ? "つぎ →" : "結果を見る →";
+      });
+    });
+    wrap.appendChild(b);
+  });
+}
+$("btnRQNext").addEventListener("click", () => {
+  if (rqIdx < rqSet.length - 1) { rqIdx++; renderRQQ(); }
+  else {
+    $("reviewPlay").style.display = "none";
+    $("reviewResult").style.display = "block";
+    $("rqResultScore").textContent = rqScore + " / " + rqSet.length;
+    bumpStreak();
+    saveProgress();
+  }
+});
+$("btnRQHome").addEventListener("click", () => { renderHome(); showView("viewHome"); });
+$("btnBackRQ").addEventListener("click", () => { renderHome(); showView("viewHome"); });
+
+/* ================================================================
+   🔀 FORGE DAILY（家族ミックス5問・自信ベット＋書き戻し）
+================================================================ */
+let dailySet = [], dailyIdx = 0, dailyScore = 0;
+function openDaily() {
+  dailySet = pickDailySet();
+  if (dailySet.length < 2) { renderHome(); showView("viewHome"); return; }
+  dailyIdx = 0; dailyScore = 0;
+  showView("viewDaily");
+  $("dailyPlay").style.display = "block";
+  $("dailyResult").style.display = "none";
+  renderDailyQ();
+}
+function renderDailyQ() {
+  const p = dailySet[dailyIdx];
+  $("dyProgress").textContent = "第" + (dailyIdx + 1) + "問 ／ " + dailySet.length + "問中";
+  $("dySrcChip").innerHTML = '<span class="tag">' + (APP_EMOJI[p.app] || "🔧") + " " + (APP_NAME[p.app] || p.app) + "</span>";
+  $("dyText").textContent = stripTags(p.q);
+  $("dyExp").style.display = "none";
+  $("btnDailyNext").style.display = "none";
+  $("dyConfHost").innerHTML = "";
+  const wrap = $("dyOpts");
+  wrap.innerHTML = "";
+  let answered = false;
+  (p.opts || []).forEach((o, idx) => {
+    const b = document.createElement("button");
+    b.className = "opt";
+    b.textContent = (idx + 1) + ". " + o;
+    b.addEventListener("click", () => {
+      if (answered) return;
+      answered = true;
+      wrap.querySelectorAll(".opt").forEach((x) => x.classList.add("dim"));
+      b.classList.remove("dim");
+      mountConfidenceGate($("dyConfHost"), (conf) => {
+        const correct = idx === p.ans;
+        if (correct) dailyScore++;
+        wrap.querySelectorAll(".opt").forEach((x, xi) => {
+          x.classList.remove("dim");
+          if (xi === p.ans) x.classList.add("correct");
+          else if (xi === idx) x.classList.add("wrong");
+          else x.classList.add("dim");
+        });
+        const forceNow = conf === "sure" && !correct;
+        dailyWriteBack(p, correct, forceNow);
+        const note = applyConfidence(correct, conf);
+        const teach = findTeachFor(p.app, p.tag);
+        $("dyExp").innerHTML = (p.exp || "") + note + (teach ? '<div class="rqteach">🎓 あの日の俺：『' + escapeHtml(teach.txt) + "』</div>" : "");
+        $("dyExp").style.display = "block";
+        $("btnDailyNext").style.display = "block";
+        $("btnDailyNext").textContent = dailyIdx < dailySet.length - 1 ? "つぎ →" : "結果を見る →";
+      });
+    });
+    wrap.appendChild(b);
+  });
+}
+$("btnDailyNext").addEventListener("click", () => {
+  if (dailyIdx < dailySet.length - 1) { dailyIdx++; renderDailyQ(); }
+  else {
+    $("dailyPlay").style.display = "none";
+    $("dailyResult").style.display = "block";
+    $("dyResultScore").textContent = dailyScore + " / " + dailySet.length;
+    markDailyDone(dailySet.length);
+    addXP(15);
+    renderXPHeader();
+    openGacha(false);
+  }
+});
+$("btnDailyHome").addEventListener("click", () => { renderHome(); showView("viewHome"); });
+$("btnBackDaily").addEventListener("click", () => { renderHome(); showView("viewHome"); });
+
+/* ================================================================
+   🎰 ガチャモーダル／🎓 俺の言葉ノート ── 共通ボタン配線
+================================================================ */
+$("btnGachaClose").addEventListener("click", () => { $("gachaModal").style.display = "none"; });
+$("gachaModal").addEventListener("click", (e) => { if (e.target === $("gachaModal")) $("gachaModal").style.display = "none"; });
+$("tmClose").addEventListener("click", () => { $("teachModal").style.display = "none"; });
+$("teachModal").addEventListener("click", (e) => { if (e.target === $("teachModal")) $("teachModal").style.display = "none"; });
+
+/* ================================================================
+   打刻スプラッシュ「万能試験機がロゴを試す」（force-forge-splash-day）
+================================================================ */
+(function splash() {
+  const sp = $("splash");
+  if (!sp) return;
+  const cv = $("spRig");
+  const ctx = cv ? cv.getContext("2d") : null;
+  function rs() { if (!cv) return; cv.width = Math.max(2, innerWidth); cv.height = Math.max(2, innerHeight); }
+  rs();
+  window.addEventListener("resize", rs);
+  const SPLASH_KEY = "force-forge-splash-day";
+  let already = false;
+  try {
+    const today = new Date().toDateString();
+    already = localStorage.getItem(SPLASH_KEY) === today;
+    localStorage.setItem(SPLASH_KEY, today);
+  } catch (e) {}
+  const SPEED = already ? 1.9 : 1.0;
+  let closed = false, vibed = false;
+  function close() {
+    if (closed) return;
+    closed = true;
+    sp.classList.add("off");
+    setTimeout(() => { if (sp.parentNode) sp.parentNode.removeChild(sp); }, 480);
+  }
+  sp.addEventListener("pointerdown", close);
+  let t0 = null;
+  function frame(now) {
+    if (closed) return;
+    if (!t0) t0 = now;
+    const t = ((now - t0) / 1000) * SPEED;
+    if (ctx) {
+      ctx.clearRect(0, 0, cv.width, cv.height);
+      if (t > 0.9 && t < 1.9) {
+        const cx = cv.width / 2;
+        for (let i = 0; i < 3; i++) {
+          const y = cv.height * (0.32 + i * 0.12) + Math.sin(t * 9 + i) * 4;
+          ctx.strokeStyle = "rgba(255,93,77," + (0.35 - i * 0.08) + ")";
+          ctx.lineWidth = 2;
+          ctx.beginPath(); ctx.moveTo(cx - 90, y); ctx.lineTo(cx + 90, y); ctx.stroke();
+        }
+      }
+    }
+    const jT = $("spJawT"), jB = $("spJawB"), ttl = $("sptitle");
+    if (t > 0.15 && jT && !jT.classList.contains("clamp")) { jT.classList.add("clamp"); jB.classList.add("clamp"); vib(10); }
+    if (t > 0.9 && ttl) ttl.classList.add("pull");
+    if (t > 1.9) {
+      if (ttl) { ttl.classList.remove("pull"); ttl.classList.add("lock"); }
+      const sub = $("spsub"), skip = $("spskip");
+      if (sub) sub.classList.add("lit");
+      if (skip) skip.classList.add("lit");
+      if (!vibed) { vibed = true; vib([16, 30, 20]); }
+    }
+    if (t < 2.7) requestAnimationFrame(frame); else close();
+  }
+  requestAnimationFrame(frame);
+})();
+
+/* ================================================================
    起動
 ================================================================ */
+seedFresh();
 renderHome();
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
