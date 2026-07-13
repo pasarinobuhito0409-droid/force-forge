@@ -910,7 +910,7 @@ const LESSONS = [
     quiz: {
       q: "力の矢印の「長さ」が表すのは？",
       opts: ["力の大きさ", "力の速さ", "部品の重さ"], ans: 0,
-      exp: "矢印＝「大きさ＋向き」のセット。CAE（パソコンで強度を計算する道具）の画面も矢印だらけ。"
+      exp: "矢印＝「大きさ＋向き」のセット。<br><br>CAE（パソコンで強度を計算する道具）の<br>画面も矢印だらけ。"
     },
     teaser: "CAEの<b>矢印だらけの画面が読める</b>ようになる第一歩"
   },
@@ -933,7 +933,7 @@ const LESSONS = [
     quiz: {
       q: "切り口（断面積）を半分にしたら、応力は？",
       opts: ["半分になる", "変わらない", "2倍になる"], ans: 2,
-      exp: "力÷断面積。分母が半分→答えは2倍。板金の穴や切欠き（きりかき）が怖い理由。"
+      exp: "力÷断面積。<br>分母が半分→答えは2倍。<br><br>板金の穴や切欠き（きりかき）が<br>怖い理由。"
     },
     teaser: "部品の「どこが危ない」を<b>数字で語れる</b>ようになる"
   },
@@ -956,7 +956,7 @@ const LESSONS = [
     quiz: {
       q: "ひずみの単位は？",
       opts: ["mm", "kg", "単位なし"], ans: 2,
-      exp: "「割合」だから単位が消える。％やμ（マイクロ）で書くことが多い。"
+      exp: "「割合」だから単位が消える。<br>％やμ（マイクロ）で<br>書くことが多い。"
     },
     teaser: "鉄かアルミか、<b>材料選びに根拠</b>が持てる（軽量化の入口）"
   },
@@ -979,7 +979,7 @@ const LESSONS = [
     quiz: {
       q: "同じ板を「曲げに強く」するなら？",
       opts: ["幅を2倍にする", "高さを2倍にする", "長さを2倍にする"], ans: 1,
-      exp: "高さは2乗〜3乗で効く。アングル材やリブ（補強の折り曲げ）が強い理由。"
+      exp: "高さは2乗〜3乗で効く。<br><br>アングル材やリブ（補強の折り曲げ）が<br>強い理由。"
     },
     teaser: "リブ・アングルの<b>効く向き</b>がわかる→強い板金レイアウト"
   },
@@ -992,7 +992,7 @@ const LESSONS = [
       ansLine: "ずっと落ちる（ふちに力が集中、約3倍！）"
     },
     sliderLabel: "引く力", grabAxis: "x", springBack: true,
-    note: "🖐 板をつかんで引きちぎれ。55kg〜穴が伸び、65kg〜ヒビ、80kgで…",
+    note: "🖐 板をつかんで引きちぎれ。<br>55kg〜穴が伸び、<br>65kg〜ヒビ、80kgで…",
     legend: ['<span style="color:#6db4ff">■ 青＝ひま</span>', '<span style="color:#58e08c">■ 緑＝ふつう</span>', '<span style="color:#ff7a6e">■ 赤＝限界</span>', '<span style="color:#ffd27a">・光の粒＝力の流れ</span>'],
     cards: [
       "力は穴を<em>よけて</em>流れる。",
@@ -1049,9 +1049,9 @@ const LESSONS = [
     quiz: {
       q: "根元だけ固定の棚（片持ち）。補強を入れるならどこ？",
       opts: ["先っぽ", "真ん中", "根元（固定の近く）"], ans: 2,
-      exp: "応力は固定の近くに集中する。リブや三角の補強は根元に入れるのが一番効く。"
+      exp: "応力は固定の近くに集中する。<br><br>リブや三角の補強は<br>根元に入れるのが一番効く。"
     },
-    teaser: "CAEの<b>固定条件が正しく張れる</b>→SolidWorks Simulationデビュー"
+    teaser: "CAEの<b>固定条件が正しく張れる</b><br>→SolidWorks Simulationデビュー"
   }
 ];
 
@@ -1282,9 +1282,9 @@ function rqDueList() { const now = Date.now(); return reviewQueue.filter((r) => 
 ================================================================ */
 const DRILLS = [
   { id: "load1", tag: "荷重(load)", situation: "片持ちブラケットの根元を薄板にスポット2点だけで留めた", ans: "NG",
-    reason: "根元にはモーメント（回す力）が集中する。留め点が力の腕の支点になり荷重の何倍もの力がかかる。", fix: "対策：根元はボルト3点以上かリブ追加。モーメント＝力×距離で見積もる。" },
+    reason: "根元にはモーメント（回す力）が<br>集中する。<br><br>留め点が力の腕の支点になり<br>荷重の何倍もの力がかかる。", fix: "対策：根元はボルト3点以上か<br>リブ追加。<br>モーメント＝力×距離で見積もる。" },
   { id: "load2", tag: "荷重(load)", situation: "長い棚受けで、荷重点のすぐ近くに支持を追加した", ans: "OK",
-    reason: "モーメントの腕を短くするのが最強の補強。板厚2倍より支持1つ。", fix: "たわみはスパンの3乗で効く。" },
+    reason: "モーメントの腕を短くするのが<br>最強の補強。<br>板厚2倍より支持1つ。", fix: "たわみはスパンの3乗で効く。" },
   { id: "load3", tag: "荷重(load)", situation: "荷重の方向を確認せず、見た目の対称でボルトを配置した", ans: "NG",
     reason: "方向でボルトにかかるのがせん断か引張か抜けか変わる。", fix: "対策：まず力の矢印を描く。それから配置。" },
   { id: "load4", tag: "荷重(load)", situation: "重量物の吊り点を、重心を挟んで2点にした", ans: "OK",
@@ -1306,18 +1306,18 @@ const DRILLS = [
   { id: "stiff4", tag: "剛性(stiff)", situation: "長スパン中央荷重で、支持を中央寄りに移した", ans: "OK",
     reason: "たわみはスパンの3乗で効く。スパン短縮が最強。", fix: "支持追加＝設計者の必殺技。" },
   { id: "matl1", tag: "材料(matl)", situation: "剛性を上げたくてSS400をS45Cに変えた", ans: "NG",
-    reason: "鋼のヤング率はほぼ全部同じ（約206GPa）。強度は上がるが硬さ（たわみ）は変わらない。", fix: "対策：剛性は形（断面）で稼ぐ。" },
+    reason: "鋼のヤング率はほぼ全部同じ<br>（約206GPa）。<br><br>強度は上がるが<br>硬さ（たわみ）は変わらない。", fix: "対策：剛性は形（断面）で稼ぐ。" },
   { id: "matl2", tag: "材料(matl)", situation: "アルミ化で同じ断面のままたわみ同等を期待した", ans: "NG",
     reason: "アルミのヤング率は鋼の約1/3。同じ断面なら3倍たわむ。", fix: "対策：断面を高く・厚く。軽さと剛性はトレードオフ設計。" },
   { id: "matl3", tag: "材料(matl)", situation: "振動する部品を降伏点ギリギリの静的計算だけで設計した", ans: "NG",
     reason: "繰返し荷重は疲労限度（ずっと下）で決まる。", fix: "対策：疲労は別の物差し。応力振幅で評価。" },
-  { id: "matl4", tag: "材料(matl)", situation: "SUS同士の摺動部にかじり対策（異種材・表面処理）を検討した", ans: "OK",
+  { id: "matl4", tag: "材料(matl)", situation: "SUS同士の摺動部に<br>かじり対策（異種材・表面処理）を<br>検討した", ans: "OK",
     reason: "ステンレス同士は焼き付き（かじり）の名所。", fix: "異種材組合せ・硬質処理・潤滑が定石。" },
   { id: "bc1", tag: "CAE境界(bc)", situation: "CAEで完全固定にしたが実物はボルト2本", ans: "NG",
-    reason: "完全固定は現実より硬く出る＝たわみを小さく見せる危険側の嘘。", fix: "対策：ボルト位置だけ拘束・接触を模擬・実測と較正。" },
+    reason: "完全固定は<br>現実より硬く出る<br>＝たわみを小さく見せる<br>危険側の嘘。", fix: "対策：ボルト位置だけ拘束・接触を模擬・実測と較正。" },
   { id: "bc2", tag: "CAE境界(bc)", situation: "集中荷重1点で入れたが実物は面で当たる", ans: "NG",
     reason: "点荷重の直下は応力が無限大方向＝意味のない赤。", fix: "対策：実際の当たり面に面圧で入れる。" },
-  { id: "bc3", tag: "CAE境界(bc)", situation: "メッシュを細かくするほど角の応力が上がり続けたので、特異点と判断してRを付けて再計算した", ans: "OK",
+  { id: "bc3", tag: "CAE境界(bc)", situation: "メッシュを細かくするほど<br>角の応力が上がり続けたので、<br>特異点と判断して<br>Rを付けて再計算した", ans: "OK",
     reason: "ピン角の応力は収束しない（特異点）。", fix: "現実のRを入れるのが正しい対処。" },
   { id: "bc4", tag: "CAE境界(bc)", situation: "対称な形と荷重なので半分モデル＋対称拘束で解析した", ans: "OK",
     reason: "計算時間半分・精度同じ。", fix: "対称面の拘束条件を間違えないこと。" },
@@ -4167,19 +4167,19 @@ $("btnBackB").addEventListener("click", () => { renderHome(); showView("viewHome
 ================================================================ */
 const PHOTOS = {
   l1: { img: "assets/photo/f1.jpg", title: "本物の万能試験機",
-    cap: "上下のチャックで試験片を掴み、引張って強さを測る機械。教科書の応力ひずみ曲線はここから生まれる。",
+    cap: "上下のチャックで試験片を掴み、<br>引張って強さを測る機械。<br><br>教科書の応力ひずみ曲線は<br>ここから生まれる。",
     points: [{ x: 50, y: 45, t: "試験片を掴むチャック" }, { x: 82, y: 88, t: "非常停止＝安全設計" }],
     credit: "写真: Kerina yin（CC0／Wikimedia Commons）", vq: "引張試験 万能試験機 実験" },
   l2: { img: "assets/photo/f2.jpg", title: "実物のひずみゲージ",
-    cap: "金属箔のジグザグが伸びると電気抵抗が変わり、ひずみが数字になる。CAEの答え合わせに使う「実測の目」。",
+    cap: "金属箔のジグザグが伸びると<br>電気抵抗が変わり、<br>ひずみが数字になる。<br><br>CAEの答え合わせに使う<br>「実測の目」。",
     points: [{ x: 50, y: 50, t: "ジグザグ箔＝伸びを電気に変換" }],
     credit: "写真: Cristian V.（CC BY 4.0／Wikimedia Commons）", vq: "ひずみゲージ 原理 貼り方" },
   l4: { img: "assets/photo/f3.jpg", title: "破断した試験片",
-    cap: "鋳鉄の引張試験後。破面がほぼ真横＝もろい破壊の証拠。材料の性格は破面が語る。",
+    cap: "鋳鉄の引張試験後。<br>破面がほぼ真横<br>＝もろい破壊の証拠。<br><br>材料の性格は破面が語る。",
     points: [{ x: 50, y: 42, t: "破面＝材料の履歴書" }],
     credit: "写真: Sigmund（CC BY-SA 3.0／Wikimedia Commons）", vq: "引張試験 破断 破面" },
   l5: { img: "assets/photo/f4.jpg", title: "実荷重の世界",
-    cap: "クレーンの吊り荷。吊り点・重心・振れ──力の流れを読む頭は、板金設計もクレーンも同じ。",
+    cap: "クレーンの吊り荷。<br>吊り点・重心・振れ──<br><br>力の流れを読む頭は、<br>板金設計もクレーンも同じ。",
     points: [{ x: 50, y: 28, t: "吊り点に全荷重が集中" }],
     credit: "写真: TeWeBs（CC BY-SA 4.0／Wikimedia Commons）", vq: "玉掛け 重心 吊り方" }
 };
@@ -4188,7 +4188,7 @@ function openPhoto() {
   if (!P) return;
   vib(10);
   $("pmTitle").textContent = "📷 " + P.title;
-  $("pmCap").textContent = P.cap;
+  $("pmCap").innerHTML = P.cap;
   $("pmCredit").textContent = P.credit;
   const fig = $("pmFig");
   fig.innerHTML = "";
@@ -4368,7 +4368,7 @@ function openDrill() {
 function renderDrillQ() {
   const d = dSet[dIdx];
   $("dqProgress").textContent = "第" + (dIdx + 1) + "問 ／ 5問中 ── 正解 " + dScore;
-  $("dqText").textContent = d.situation;
+  $("dqText").innerHTML = d.situation;
   $("dqTag").textContent = "分野：" + d.tag;
   $("dqExp").style.display = "none";
   $("btnDrillNext").style.display = "none";
