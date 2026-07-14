@@ -437,6 +437,29 @@
   .tm-empty { color: #5d7690; font-size: 13px; text-align: center; padding: 20px 0; }
   #tmClose { position: absolute; top: 8px; right: 8px; width: 34px; height: 34px; border-radius: 50%; border: 1px solid #2a3c56; background: #121b28; color: #cfd6df; font-size: 15px; }
   .rqteach { margin-top: 10px; padding: 9px 11px; border-radius: 9px; background: rgba(160,123,255,0.08); border-left: 3px solid #a07bff; font-size: 12.5px; color: #d9c8ff; }
+
+  /* 🙋 相棒に質問（v2.2） */
+  .askbtn { position: fixed; right: 14px; bottom: 14px; z-index: 30; border: none; border-radius: 999px; padding: 13px 18px; font-weight: 900; font-size: 13.5px; background: linear-gradient(135deg,#4fd1ff,#7ef0c9); color: #06222e; box-shadow: 0 4px 20px #4fd1ff66; cursor: pointer; }
+  #askModal { display: none; position: fixed; inset: 0; z-index: 60; background: rgba(6,8,12,.88); align-items: flex-end; justify-content: center; }
+  .ask-sheet { position: relative; width: min(520px,100%); background: #161b22; border: 1px solid #2b3542; border-radius: 20px 20px 0 0; padding: 16px 16px 22px; }
+  .ask-title { font-weight: 900; font-size: 15px; color: #bfe8ff; margin-bottom: 4px; }
+  .ask-sub { font-size: 11px; color: #7f8a97; margin-bottom: 10px; line-height: 1.7; }
+  .qchips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+  .qc { padding: 10px 13px; border-radius: 999px; border: 1px solid #37424f; background: #1d2530; color: #dfe7f0; font-weight: 800; font-size: 12.5px; cursor: pointer; }
+  .qc.on { border-color: #4fd1ff; background: #12293a; color: #bfe8ff; }
+  #askFree { width: 100%; min-height: 56px; background: #10151c; color: #e2e7ee; border: 1px solid #2e3947; border-radius: 12px; padding: 10px; font-size: 13px; line-height: 1.7; }
+  .ask-preview { margin-top: 10px; background: #10151c; border: 1px dashed #35404d; border-radius: 12px; padding: 10px; font-size: 11.5px; color: #9fb2c2; line-height: 1.8; max-height: 110px; overflow: auto; white-space: pre-wrap; }
+  .ask-send { width: 100%; margin-top: 12px; padding: 14px; border: none; border-radius: 14px; font-weight: 900; font-size: 14px; background: #4fd1ff; color: #06222e; cursor: pointer; box-shadow: 0 0 18px #4fd1ff55; }
+  .ask-log { font-size: 10.5px; color: #6f7a86; margin-top: 8px; text-align: center; }
+  .ask-close { position: absolute; right: 14px; top: 10px; background: none; border: none; color: #8a93a0; font-size: 20px; cursor: pointer; }
+  /* 📌 画鋲の目の例えカード */
+  .anrow { display: flex; gap: 8px; margin-top: 10px; }
+  .an { flex: 1; background: #171d26; border: 1px solid #263140; border-radius: 14px; padding: 10px 6px; text-align: center; }
+  .an .pic { font-size: 30px; }
+  .an .t { font-size: 11px; font-weight: 800; margin-top: 5px; line-height: 1.65; }
+  .an .s { font-size: 10px; color: #8a93a0; margin-top: 4px; line-height: 1.65; }
+  .an.hot { border-color: #e05252; } .an.cool { border-color: #4fd1ff; }
+  .bigchip { position: absolute; left: 50%; top: 10px; transform: translateX(-50%); font-size: 14.5px; font-weight: 900; color: #ffe9a3; background: #151a21ee; border: 1px solid #ffd964; padding: 7px 14px; border-radius: 12px; z-index: 4; white-space: nowrap; pointer-events: none; }
 </style>
 </head>
 <body>
@@ -537,6 +560,7 @@
 
   <!-- ============ レッスン ============ -->
   <section id="viewLesson" class="view">
+    <button class="askbtn" id="askBtn">🙋 相棒に質問</button>
     <div class="lesson-top">
       <button class="backbtn" id="btnBack">←</button>
       <span class="tag" id="lsTag"></span><span id="lsTitle"></span>
@@ -568,6 +592,7 @@
       <div class="extra" id="extraCtrls"></div>
       <div class="trynote" id="expNote"></div>
       <button class="cta alt" id="btnMicro">🔬 ミクロの目（原子で見る）</button>
+      <button class="cta alt" id="btnPin" style="display:none">📌 画鋲の目（応力を体感）</button>
       <button class="cta alt" id="btnPhoto" style="display:none">📷 現場の目</button>
       <button class="cta" id="btnToReveal" disabled>答え合わせ →</button>
     </div>
@@ -3291,6 +3316,7 @@ let microOn = false;
 function setMicro(on) {
   if (!ST || ST.fake || !cur) return;
   microOn = on;
+  if (window.pinOff) window.pinOff();
   const keep = +$("loadRange").value;
   ST.clearScene();
   ST.resetView();
@@ -3974,6 +4000,7 @@ function startExp() {
   microOn = false;
   $("btnMicro").textContent = "🔬 ミクロの目（原子で見る）";
   $("btnPhoto").style.display = PHOTOS[cur.id] ? "" : "none";
+  if (window.resetPin) window.resetPin();
   ensureStage();
   if (ST.fake) { btn.disabled = false; return; }
   ST.clearScene();
@@ -4647,6 +4674,177 @@ if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("./sw.js").catch(() => {});
   });
 }
+</script>
+
+<!-- 🙋 相棒に質問モーダル（v2.2） -->
+<div id="askModal">
+  <div class="ask-sheet">
+    <button class="ask-close" id="askClose">✕</button>
+    <div class="ask-title">🙋 相棒（Claude）に質問</div>
+    <div class="ask-sub" id="askCtxLine">いま勉強中のレッスン情報は自動で伝わる</div>
+    <div class="qchips">
+      <button class="qc" data-q="式や考え方のイメージがわかない">🌀 イメージがわかない</button>
+      <button class="qc" data-q="これを現場（板金・機械設計）でどう使うのか知りたい">🏭 現場でどう使う？</button>
+      <button class="qc" data-q="もっと身近な例で説明してほしい">🍎 身近な例で</button>
+      <button class="qc" data-q="問題の解き方の手順を一歩ずつ教えてほしい">👣 解き方を一歩ずつ</button>
+    </div>
+    <textarea id="askFree" placeholder="自由に書いてもOK（例: 断面積ってどこの面積？）"></textarea>
+    <div class="ask-preview" id="askPreview"></div>
+    <button class="ask-send" id="askSend">Claudeを開いて質問する →</button>
+    <div class="ask-log">📓 質問は「俺の質問ノート」にも自動保存（復習ネタ化）</div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* ================= 📌 画鋲の目（L2専用・応力の体感） ================= */
+(function () {
+  let pinOn = false;
+  let floorGeo = null, basePos = null, colR = null, colRmat = null, bigEl = null;
+
+  window.resetPin = function () {
+    pinOn = false;
+    const b = document.getElementById("btnPin");
+    b.textContent = "📌 画鋲の目（応力を体感）";
+    b.style.display = (cur && cur.id === "l2") ? "" : "none";
+  };
+  window.pinOff = function () { pinOn = false; document.getElementById("btnPin").textContent = "📌 画鋲の目（応力を体感）"; };
+
+  function buildPinScene() {
+    floorGeo = new THREE.PlaneGeometry(8, 4.4, 60, 30);
+    const floor = new THREE.Mesh(floorGeo, new THREE.MeshStandardMaterial({ color: 0x2b3644, roughness: 0.85 }));
+    floor.rotation.x = -Math.PI / 2; floor.position.y = -1.2; ST.group.add(floor);
+    basePos = floorGeo.attributes.position.array.slice();
+
+    function weight(x) {
+      const w = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.7, 1.1), new THREE.MeshStandardMaterial({ color: 0x3d4a5c, metalness: 0.6, roughness: 0.4 }));
+      w.position.set(x, 1.15, 0); w.castShadow = true; ST.group.add(w);
+    }
+    weight(-1.9); weight(1.9);
+    function tag(x, txt) {
+      const cv = document.createElement("canvas"); cv.width = 256; cv.height = 96;
+      const c = cv.getContext("2d"); c.fillStyle = "#ffe9a3"; c.font = "900 52px sans-serif"; c.textAlign = "center"; c.fillText(txt, 128, 62);
+      const t = new THREE.Mesh(new THREE.PlaneGeometry(1.2, 0.45), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(cv), transparent: true }));
+      t.position.set(x, 1.75, 0.62); ST.group.add(t);
+    }
+    tag(-1.9, "100kg"); tag(1.9, "100kg");
+
+    const colMat = new THREE.MeshStandardMaterial({ color: 0x9fb2c4, metalness: 0.7, roughness: 0.35 });
+    const colL = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 1.6, 32), colMat);
+    colL.position.set(-1.9, 0, 0); colL.castShadow = true; ST.group.add(colL);
+    colRmat = colMat.clone();
+    colR = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 1.6, 32), colRmat);
+    colR.position.set(1.9, 0, 0); colR.castShadow = true; ST.group.add(colR);
+
+    setChips('<div class="bigchip" id="pinBig">応力 = 100kg ÷ 100cm² = 1 kg/cm²</div>' +
+      '<span class="chip" style="left:10%; bottom:12px">太い柱（100cm²のまま）</span>' +
+      '<span class="chip" style="right:6%; bottom:12px" id="pinThin">細い柱</span>');
+    ST.setView(0, 0.25, 7.2);
+
+    ST.sceneApi = {
+      update(v) {
+        const areaRatio = 1 - v * 0.985;
+        const areaCm = Math.max(2, Math.round(100 * areaRatio));
+        const r = 0.55 * Math.sqrt(Math.max(0.006, areaRatio));
+        ST.group.remove(colR); colR.geometry.dispose();
+        colR = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 1.6, 32), colRmat);
+        colR.castShadow = true;
+        const stress = 100 / areaCm;
+        const t = Math.min(1, (stress - 1) / 40);
+        colRmat.color.setRGB(0.62 + 0.38 * t, 0.70 - 0.45 * t, 0.77 - 0.6 * t);
+        colRmat.emissive = new THREE.Color(t * 0.5, t * 0.06, 0);
+        const p = floorGeo.attributes.position.array;
+        const sink = Math.min(0.9, t);
+        for (let i = 0; i < p.length; i += 3) {
+          const x = basePos[i], y = basePos[i + 1];
+          const d = Math.hypot(x - 1.9, y);
+          const dent = Math.max(0, sink * (1 - d / (0.4 + (1 - t) * 0.6)));
+          p[i + 2] = basePos[i + 2] - dent;
+        }
+        floorGeo.attributes.position.needsUpdate = true; floorGeo.computeVertexNormals();
+        colR.position.set(1.9, -sink * 0.5, 0);
+        ST.group.add(colR);
+        const big = document.getElementById("pinBig");
+        if (big) big.textContent = "応力 = 100kg ÷ " + areaCm + "cm² = " + stress.toFixed(stress >= 10 ? 0 : 1) + " kg/cm²";
+        const thin = document.getElementById("pinThin");
+        if (thin) thin.textContent = stress > 25 ? "💥 めり込んだ！（画鋲状態）" : stress > 5 ? "⚠ 混み合ってきた" : "細い柱";
+        $("loadVal").textContent = areaCm + "cm²";
+        if (stress > 40 && navigator.vibrate) { try { navigator.vibrate(12); } catch (e) {} }
+      }
+    };
+  }
+
+  document.getElementById("btnPin").addEventListener("click", () => {
+    if (!ST || ST.fake || !cur || cur.id !== "l2") return;
+    pinOn = !pinOn;
+    microOn = false;
+    $("btnMicro").textContent = "🔬 ミクロの目（原子で見る）";
+    ST.clearScene(); ST.resetView();
+    if (pinOn) {
+      document.getElementById("btnPin").textContent = "🖐 引きちぎり実験にもどる";
+      buildPinScene();
+      $("sliderLabel").textContent = "右の柱の断面積";
+      $("expNote").innerHTML = "同じ100kg。<br>スライダーで右の柱を細くすると——<br>力は増えてないのに<b>床にめり込む</b>。<br>応力＝<b>力の混み具合</b>。";
+      setExtraHTML('<div class="anrow">' +
+        '<div class="an cool"><div class="pic">🥿</div><div class="t">かかとが広い靴<br>＝床は平気</div><div class="s">50kg ÷ 100cm²<br>= 0.5kg/cm²</div></div>' +
+        '<div class="an hot"><div class="pic">👠</div><div class="t">ハイヒール<br>＝床がへこむ</div><div class="s">同じ50kg ÷ 1cm²<br>= <b>50kg/cm²</b><br>（100倍！）</div></div>' +
+        '<div class="an hot"><div class="pic">📌</div><div class="t">画鋲が刺さる理由<br>＝針先に全集中</div><div class="s">指の力は1kg。<br>先端0.01cm²なら<br><b>100kg/cm²</b></div></div></div>');
+      $("loadRange").value = 0;
+      ST.sceneApi.update(0);
+    } else {
+      document.getElementById("btnPin").textContent = "📌 画鋲の目（応力を体感）";
+      $("sliderLabel").textContent = cur.sliderLabel;
+      $("expNote").innerHTML = cur.note;
+      setExtraHTML("");
+      BUILDERS[cur.id]();
+      $("loadRange").value = 0;
+      onLoadInput();
+    }
+    ST.resize();
+  });
+})();
+
+/* ================= 🙋 相棒に質問（全レッスン共通） ================= */
+(function () {
+  const modal = document.getElementById("askModal");
+  const free = document.getElementById("askFree");
+  const preview = document.getElementById("askPreview");
+  let picked = [];
+  function ctx() {
+    const lesson = (typeof cur !== "undefined" && cur) ? (cur.tag + "「" + cur.title + "」") : "ホーム";
+    return "【FORCE FORGE（力学3D教科書）で勉強中】\nレッスン: " + lesson +
+      "\n質問者: 板金・機械設計者（小学生にもわかる説明＋身近な例＋現場での使い方で教えてほしい）\n\n質問:\n";
+  }
+  function build() {
+    const qs = [...picked];
+    if (free.value.trim()) qs.push(free.value.trim());
+    const body = qs.length ? qs.map((q) => "・" + q).join("\n") : "・（チップを選ぶか自由に書いてね）";
+    preview.textContent = ctx() + body;
+    return ctx() + body;
+  }
+  document.querySelectorAll(".qc").forEach((b) => b.addEventListener("click", () => {
+    const q = b.dataset.q;
+    if (picked.includes(q)) { picked = picked.filter((x) => x !== q); b.classList.remove("on"); }
+    else { picked.push(q); b.classList.add("on"); }
+    build();
+  }));
+  free.addEventListener("input", build);
+  document.getElementById("askBtn").addEventListener("click", () => {
+    document.getElementById("askCtxLine").innerHTML = "いま勉強中: <b>" + ((typeof cur !== "undefined" && cur) ? (cur.tag + " " + cur.title) : "") + "</b>（自動で伝わる）";
+    modal.style.display = "flex"; build();
+  });
+  document.getElementById("askClose").addEventListener("click", () => { modal.style.display = "none"; });
+  modal.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+  document.getElementById("askSend").addEventListener("click", () => {
+    const q = build();
+    try {
+      const log = JSON.parse(localStorage.getItem("forge-questions-v1") || "[]");
+      log.unshift({ app: "force", lesson: (typeof cur !== "undefined" && cur) ? cur.title : "", q: q, ts: Date.now() });
+      localStorage.setItem("forge-questions-v1", JSON.stringify(log.slice(0, 100)));
+    } catch (e) {}
+    window.open("https://claude.ai/new?q=" + encodeURIComponent(q), "_blank");
+  });
+})();
 </script>
 </body>
 </html>

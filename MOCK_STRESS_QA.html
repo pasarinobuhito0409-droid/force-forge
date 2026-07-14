@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>FORCE 応力体感＋相棒に質問 テスト版</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { background:#10141a; color:#e2e7ee; font-family:system-ui,sans-serif; padding:12px 12px 80px; }
+  .wrap { max-width:520px; margin:0 auto; }
+  h2 { font-size:13.5px; color:#8b93a0; letter-spacing:.12em; margin:22px 2px 8px; border-left:3px solid #4fd1ff; padding-left:8px; }
+  .note { font-size:12px; color:#8a93a0; line-height:1.9; margin:4px 2px 8px; }
+  .stage3d { position:relative; height:44vh; min-height:300px; border-radius:16px; overflow:hidden; background:radial-gradient(130% 110% at 50% 0%, #16233a 0%, #10141a 70%); border:1px solid #263349; touch-action:none; }
+  .chip { position:absolute; z-index:4; pointer-events:none; padding:5px 12px; border-radius:8px; font-size:13px; font-weight:800; color:#eef4f6; background:rgba(10,12,16,0.85); border:1.5px solid rgba(210,230,235,0.7); }
+  .big { position:absolute; left:50%; top:10px; transform:translateX(-50%); font-size:15px; font-weight:900; color:#ffe9a3; background:#151a21ee; border:1px solid #ffd964; padding:7px 16px; border-radius:12px; z-index:4; white-space:nowrap; }
+  .sliderrow { display:flex; align-items:center; gap:10px; margin-top:10px; }
+  .sliderrow input { flex:1; }
+  .val { font-weight:900; color:#ffe9a3; font-size:14px; min-width:120px; text-align:right; }
+  .analogy { display:flex; gap:10px; margin-top:10px; }
+  .an { flex:1; background:#171d26; border:1px solid #263140; border-radius:14px; padding:11px; text-align:center; }
+  .an .pic { font-size:34px; }
+  .an .t { font-size:11.5px; font-weight:800; margin-top:6px; line-height:1.7; }
+  .an .s { font-size:10.5px; color:#8a93a0; margin-top:4px; line-height:1.7; }
+  .an.hot { border-color:#e05252; } .an.cool { border-color:#4fd1ff; }
+
+  .askbtn { position:fixed; right:14px; bottom:14px; z-index:30; border:none; border-radius:999px; padding:14px 20px; font-weight:900; font-size:14px; background:linear-gradient(135deg,#4fd1ff,#7ef0c9); color:#06222e; box-shadow:0 4px 20px #4fd1ff66; cursor:pointer; }
+  #askModal { display:none; position:fixed; inset:0; z-index:40; background:rgba(6,8,12,.88); align-items:flex-end; justify-content:center; }
+  .ask-sheet { position:relative; width:min(520px,100%); background:#161b22; border:1px solid #2b3542; border-radius:20px 20px 0 0; padding:16px 16px 22px; }
+  .ask-title { font-weight:900; font-size:15px; color:#bfe8ff; margin-bottom:4px; }
+  .ask-sub { font-size:11px; color:#7f8a97; margin-bottom:10px; line-height:1.7; }
+  .qchips { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+  .qc { padding:10px 13px; border-radius:999px; border:1px solid #37424f; background:#1d2530; color:#dfe7f0; font-weight:800; font-size:12.5px; cursor:pointer; }
+  .qc.on { border-color:#4fd1ff; background:#12293a; color:#bfe8ff; }
+  #askFree { width:100%; min-height:56px; background:#10151c; color:#e2e7ee; border:1px solid #2e3947; border-radius:12px; padding:10px; font-size:13px; line-height:1.7; }
+  .preview { margin-top:10px; background:#10151c; border:1px dashed #35404d; border-radius:12px; padding:10px; font-size:11.5px; color:#9fb2c2; line-height:1.8; max-height:120px; overflow:auto; white-space:pre-wrap; }
+  .ask-send { width:100%; margin-top:12px; padding:14px; border:none; border-radius:14px; font-weight:900; font-size:14px; background:#4fd1ff; color:#06222e; cursor:pointer; box-shadow:0 0 18px #4fd1ff55; }
+  .ask-log { font-size:10.5px; color:#6f7a86; margin-top:8px; text-align:center; }
+  .ask-close { position:absolute; right:14px; top:10px; background:none; border:none; color:#8a93a0; font-size:20px; cursor:pointer; }
+</style></head><body>
+<div class="wrap">
+
+  <h2>💥 応力を「体」で分からせる ── 画鋲の魔法</h2>
+  <div class="note">
+    同じ<b>100kg</b>を、太い柱と細い柱で床に押しつける。<br>
+    <b>スライダーで右の柱をしぼって</b>いくと——<br>
+    力は同じなのに、細いほうだけ床にめり込む。<br>
+    応力＝<b>力の混み具合</b>。
+  </div>
+  <div class="stage3d" id="stage">
+    <div class="big" id="bigNum">応力 = 100kg ÷ 100cm² = 1 kg/cm²</div>
+    <span class="chip" style="left:12%; bottom:12px">太い柱（100cm²のまま）</span>
+    <span class="chip" style="right:6%; bottom:12px" id="thinChip">細い柱</span>
+  </div>
+  <div class="sliderrow">
+    <span style="font-size:12px;color:#8b93a0">右の柱の断面積</span>
+    <input type="range" id="areaSl" min="0" max="100" value="0">
+    <span class="val" id="areaVal">100 cm²</span>
+  </div>
+
+  <div class="analogy">
+    <div class="an cool"><div class="pic">🥿</div><div class="t">かかとが広い靴<br>＝床は平気</div><div class="s">50kg ÷ 100cm²<br>= 0.5kg/cm²</div></div>
+    <div class="an hot"><div class="pic">👠</div><div class="t">ハイヒール<br>＝床がへこむ</div><div class="s">同じ50kg ÷ 1cm²<br>= <b>50kg/cm²</b><br>（100倍！）</div></div>
+    <div class="an hot"><div class="pic">📌</div><div class="t">画鋲が刺さる理由<br>＝針先に全集中</div><div class="s">指の力は1kg。<br>先端0.01cm²なら<br><b>100kg/cm²</b></div></div>
+  </div>
+  <div class="note" style="margin-top:8px">
+    本編ではここに<b>実物写真</b>も追加。<br>
+    君の板金でいえば——<br>
+    同じ荷重でも<b>板が薄いほど応力は上がる</b>。<br>
+    だから穴のフチ・切欠きが怖い。
+  </div>
+
+  <h2>🙋 新機能「相棒に質問」── 実際に動く</h2>
+  <div class="note">
+    分からない瞬間に右下のボタン。<br>
+    レッスン情報つきの質問文をアプリが代筆→<br>
+    <b>君のClaudeが開いて、俺がそのまま答える</b>。<br>
+    質問は端末にも記録され復習ネタになる。
+  </div>
+
+</div>
+
+<button class="askbtn" id="askBtn">🙋 相棒に質問</button>
+<div id="askModal">
+  <div class="ask-sheet">
+    <button class="ask-close" id="askClose">✕</button>
+    <div class="ask-title">🙋 相棒（Claude）に質問</div>
+    <div class="ask-sub">いま勉強中: <b>FORCE FORGE L2「応力」</b>（自動で伝わる）</div>
+    <div class="qchips">
+      <button class="qc" data-q="式のイメージがわかない">🌀 イメージがわかない</button>
+      <button class="qc" data-q="この式を現場（板金設計）でどう使うのか知りたい">🏭 現場でどう使う？</button>
+      <button class="qc" data-q="もっと身近な例で説明してほしい">🍎 身近な例で</button>
+      <button class="qc" data-q="問題の解き方の手順を一歩ずつ教えてほしい">👣 解き方を一歩ずつ</button>
+    </div>
+    <textarea id="askFree" placeholder="自由に書いてもOK（例: 断面積ってどこの面積？）"></textarea>
+    <div class="preview" id="askPreview"></div>
+    <button class="ask-send" id="askSend">Claudeを開いて質問する →</button>
+    <div class="ask-log">📓 質問は「俺の質問ノート」にも自動保存（復習ネタ化）</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+/* ===== 応力体感3D ===== */
+(function(){
+  const holder=document.getElementById("stage");
+  const W=()=>Math.max(2,holder.clientWidth), H=()=>Math.max(2,holder.clientHeight);
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(3,devicePixelRatio)); renderer.setSize(W(),H());
+  holder.appendChild(renderer.domElement);
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(42,W()/H(),0.1,100);
+  cam.position.set(0,2.1,7.2); cam.lookAt(0,-0.2,0);
+  scene.add(new THREE.AmbientLight(0xffffff,0.75));
+  const dl=new THREE.DirectionalLight(0xfff2d8,0.9); dl.position.set(3,6,4); scene.add(dl);
+  const rim=new THREE.DirectionalLight(0x4fd1ff,0.7); rim.position.set(-4,2,-3); scene.add(rim);
+
+  const floorGeo=new THREE.PlaneGeometry(8,4.4,60,30);
+  const floor=new THREE.Mesh(floorGeo,new THREE.MeshStandardMaterial({color:0x2b3644,roughness:0.85}));
+  floor.rotation.x=-Math.PI/2; floor.position.y=-1.2; scene.add(floor);
+  const basePos=floorGeo.attributes.position.array.slice();
+
+  function weight(x){
+    const w=new THREE.Mesh(new THREE.BoxGeometry(1.5,0.7,1.1), new THREE.MeshStandardMaterial({color:0x3d4a5c,metalness:0.6,roughness:0.4}));
+    w.position.set(x,1.15,0); scene.add(w);
+  }
+  weight(-1.9); weight(1.9);
+  function tag(x,txt){
+    const cv=document.createElement("canvas"); cv.width=256; cv.height=96;
+    const c=cv.getContext("2d"); c.fillStyle="#ffe9a3"; c.font="900 52px sans-serif"; c.textAlign="center"; c.fillText(txt,128,62);
+    const t=new THREE.Mesh(new THREE.PlaneGeometry(1.2,0.45), new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(cv),transparent:true}));
+    t.position.set(x,1.75,0.6); scene.add(t);
+  }
+  tag(-1.9,"100kg"); tag(1.9,"100kg");
+
+  const colMat=new THREE.MeshStandardMaterial({color:0x9fb2c4,metalness:0.7,roughness:0.35});
+  const colL=new THREE.Mesh(new THREE.CylinderGeometry(0.55,0.55,1.6,32), colMat);
+  colL.position.set(-1.9,0,0); scene.add(colL);
+  const colRmat=colMat.clone();
+  let colR=new THREE.Mesh(new THREE.CylinderGeometry(0.55,0.55,1.6,32), colRmat);
+  colR.position.set(1.9,0,0); scene.add(colR);
+
+  let v=0;
+  function apply(){
+    const areaRatio = 1 - v*0.985;
+    const areaCm = Math.max(1.5, Math.round(100*areaRatio));
+    const r = 0.55*Math.sqrt(Math.max(0.006,areaRatio));
+    scene.remove(colR); colR.geometry.dispose();
+    colR=new THREE.Mesh(new THREE.CylinderGeometry(r,r,1.6,32), colRmat);
+    const stress = 100/areaCm;
+    const t=Math.min(1,(stress-1)/40);
+    colRmat.color.setRGB(0.62+0.38*t, 0.70-0.45*t, 0.77-0.6*t);
+    colRmat.emissive=new THREE.Color(t*0.5, t*0.06, 0);
+    const p=floorGeo.attributes.position.array;
+    const sink=Math.min(0.9, t*1.0);
+    for(let i=0;i<p.length;i+=3){
+      const x=basePos[i], y=basePos[i+1];
+      const d=Math.hypot(x-1.9, y-0);
+      const dent = Math.max(0, sink*(1-d/(0.4+(1-t)*0.6)));
+      p[i+2] = basePos[i+2] - dent;
+    }
+    floorGeo.attributes.position.needsUpdate=true; floorGeo.computeVertexNormals();
+    colR.position.set(1.9, -sink*0.5, 0);
+    document.getElementById("bigNum").textContent = "応力 = 100kg ÷ "+areaCm+"cm² = "+stress.toFixed(stress>=10?0:1)+" kg/cm²";
+    document.getElementById("areaVal").textContent = areaCm+" cm²";
+    document.getElementById("thinChip").textContent = stress>25? "💥 めり込んだ！（画鋲状態）" : stress>5? "⚠ 混み合ってきた" : "細い柱";
+    scene.add(colR);
+  }
+  apply();
+  document.getElementById("areaSl").addEventListener("input",function(){ v=+this.value/100; apply(); if(v>0.9&&navigator.vibrate)try{navigator.vibrate(15)}catch(e){} });
+  let t=0;
+  (function anim(){ t+=0.016; cam.position.x=Math.sin(t*0.25)*0.5; cam.lookAt(0,-0.2,0); renderer.render(scene,cam); requestAnimationFrame(anim); })();
+  addEventListener("resize",()=>{ renderer.setSize(W(),H()); cam.aspect=W()/H(); cam.updateProjectionMatrix(); });
+})();
+
+/* ===== 🙋 相棒に質問 ===== */
+(function(){
+  const modal=document.getElementById("askModal");
+  const free=document.getElementById("askFree");
+  const preview=document.getElementById("askPreview");
+  let picked=[];
+  const CTX="【FORCE FORGE（力学3D教科書）で勉強中】\nレッスン: L2 応力（おうりょく）＝力÷断面積\n質問者: 板金・機械設計者（小学生にもわかる説明＋身近な例＋現場での使い方で教えてほしい）\n\n質問:\n";
+  function build(){
+    const qs=[...picked];
+    if(free.value.trim()) qs.push(free.value.trim());
+    const body= qs.length? qs.map(q=>"・"+q).join("\n") : "・（チップを選ぶか自由に書いてね）";
+    preview.textContent = CTX + body;
+    return CTX + body;
+  }
+  document.querySelectorAll(".qc").forEach(b=>b.addEventListener("click",()=>{
+    const q=b.dataset.q;
+    if(picked.includes(q)){ picked=picked.filter(x=>x!==q); b.classList.remove("on"); }
+    else { picked.push(q); b.classList.add("on"); }
+    build();
+  }));
+  free.addEventListener("input",build);
+  document.getElementById("askBtn").addEventListener("click",()=>{ modal.style.display="flex"; build(); });
+  document.getElementById("askClose").addEventListener("click",()=>modal.style.display="none");
+  modal.addEventListener("click",e=>{ if(e.target===modal) modal.style.display="none"; });
+  document.getElementById("askSend").addEventListener("click",()=>{
+    const q=build();
+    try{
+      const log=JSON.parse(localStorage.getItem("forge-questions-v1")||"[]");
+      log.unshift({app:"force", lesson:"L2 応力", q:q, ts:Date.now()});
+      localStorage.setItem("forge-questions-v1", JSON.stringify(log.slice(0,100)));
+    }catch(e){}
+    window.open("https://claude.ai/new?q="+encodeURIComponent(q), "_blank");
+  });
+})();
+</script>
+</body></html>
